@@ -409,3 +409,23 @@ if (howOverlay) {
     if (e.target === howOverlay) hideHow();
   };
 }
+
+const feedbackBtn = document.getElementById("feedbackBtn");
+const feedbackOverlay = document.getElementById("feedbackOverlay");
+const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");
+
+function showFeedback() {
+  if (feedbackOverlay) feedbackOverlay.classList.remove("hidden");
+}
+
+function hideFeedback() {
+  if (feedbackOverlay) feedbackOverlay.classList.add("hidden");
+}
+
+if (feedbackBtn) feedbackBtn.onclick = showFeedback;
+if (feedbackCloseBtn) feedbackCloseBtn.onclick = hideFeedback;
+if (feedbackOverlay) {
+  feedbackOverlay.onclick = (e) => {
+    if (e.target === feedbackOverlay) hideFeedback();
+  };
+}

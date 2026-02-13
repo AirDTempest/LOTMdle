@@ -6,10 +6,13 @@
 <title>LOTMdle</title>
 <meta name="description" content="Guess the hidden Lord of the Mysteries character in 7 tries." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon">
   
 </head>
 <body>
-  <button id="howBtn" class="how-btn" type="button" aria-label="How to play">?</button>
+
+ <button id="howBtn" class="how-btn">?</button>
+<button id="feedbackBtn" class="how-btn" style="top: 68px;" title="Feedback & Bug Reports">💬</button>
 
 <div id="howOverlay" class="overlay hidden">
   <div class="overlay-card">
@@ -105,6 +108,23 @@
     </div>
   </div>
 </div>
+
+
+  <div id="feedbackOverlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>Feedback & Bug Reports</h2>
+      <p>Found a bug? Have a suggestion? Want to report an error in character data?</p>
+      <p>I'd love to hear from you!</p>
+      <div style="margin: 16px 0; padding: 14px; background: #0f0c09; border: 1px solid var(--border2); border-radius: 12px;">
+        <p style="margin: 0 0 10px; font-weight: 600; color: var(--gold);">Contact me:</p>
+        <p style="margin: 6px 0;">📧 Email: <a href="mailto:lotmdle@proton.me" style="color: var(--gold); text-decoration: none;">lotmdle@proton.me</a></p>
+        <p style="margin: 6px 0;">💬 Discord: <strong style="color: var(--gold);">tempescik.</strong></p>
+      </div>
+      <div class="overlay-actions">
+        <button id="feedbackCloseBtn" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
 
 
   <script src="script.js"></script>
