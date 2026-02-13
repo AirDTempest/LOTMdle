@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LOTMdle</title>
-<meta name="description" content="Play LOTMdle, a daily Wordle game based on Lord of the Mysteries. Guess characters like Klein Moretti, Amon, and Audrey Hall based on their pathway, sequence, and faction.">
+<meta name="description" content="Play LOTMdle, a daily Wordle-style game based on Lord of the Mysteries. Guess characters like Klein Moretti, Amon, and Audrey Hall based on their pathway, sequence, and faction.">
   <link rel="stylesheet" href="style.css" />
   <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon">
   <meta name="keywords" content="LOTM, Lord of the Mysteries, LOTMdle, lotmdle">
@@ -15,8 +15,8 @@
 <body>
 
  <button id="howBtn" class="how-btn">?</button>
-<button id="feedbackBtn" class="how-btn" style="top: 68px;" title="Feedback & Bug Reports">💬</button>
-
+<button id="feedbackBtn" class="how-btn" title="Feedback & Bug Reports">💬</button>
+<button id="patchBtn" class="how-btn"  title="Patch Notes">📜</button>
 <div id="howOverlay" class="overlay hidden">
   <div class="overlay-card">
     <h2>How to play</h2>
@@ -28,6 +28,57 @@
     </div>
   </div>
 </div>
+
+
+<div id="patchOverlay" class="overlay hidden">
+  <div class="overlay-card patch-card">
+    <div class="patch-header">
+      <h2>Patch Notes</h2>
+    </div>
+    
+    <div class="patch-content">
+      
+<div class="patch-entry">
+        <div class="patch-title-row">
+          <h3>v1.1 - Beta fix</h3>
+          <span class="patch-date">13.02.2026</span>
+        </div>
+        <ul class="patch-list">
+          <li>Spelling mistakes corrected</li>
+          <li>Suah changed to Male</li>
+          <li>Flegrea changed to Male</li>
+          <li>Game now works on phone!</li>
+          
+        </ul>
+      </div>
+
+      <div class="patch-entry">
+        <div class="patch-title-row">
+          <h3>v1.0 - Beta Release</h3>
+          <span class="patch-date">13.02.2026</span>
+        </div>
+        <ul class="patch-list">
+          <li>🎉 Initial Beta Release!</li>
+          <li>Added 50+ characters from Book 1</li>
+          <li>Daily & Infinite Modes</li>
+          <li>Attributes: Pathway, Sequence, Gender, Age, Faction, Chapter</li>
+          <li>Feedback system implementation</li>
+        </ul>
+      </div>
+
+       
+      
+      
+    </div>
+
+    <div class="overlay-actions">
+      <button id="patchCloseBtn" class="btn">Close</button>
+    </div>
+  </div>
+
+  
+</div>
+
 
   
 
@@ -72,7 +123,7 @@
           <div class="cell">Pathway</div>
           <div class="cell">Seq</div>
           <div class="cell">Faction(s)</div>
-          <div class="cell">First chapter</div>
+          <div class="cell">Chapter</div>
         </div>
       </div>
     </div>
