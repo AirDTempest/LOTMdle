@@ -1,5 +1,5 @@
 const characters = [
-  { name: "Adam", age: "Unk", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemist", "King of Angels"], firstChapter: 448 },
+  { name: "Adam", age: "Unk", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
   { name: "Alger Wilson", age: 32, gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
   { name: "Alista Tudor", age: "Unk", gender: "Male", pathway: "Black Emperor", sequence: 0, factions: ["Demoness Sect"], firstChapter: 9 },
   { name: "Amon", age: "Unk", gender: "Male", pathway: "Error", sequence: 2, factions: ["King of Angels"], firstChapter: 60 },
@@ -12,39 +12,39 @@ const characters = [
   { name: "Cattleya", age: 26, gender: "Female", pathway: "Hermit", sequence: 3, factions: ["Tarot Club", "Moses Ascetic Order"], firstChapter: 294 },
   { name: "Chained God", age: "Unk", gender: "Male", pathway: "Chained", sequence: 1, factions: ["Rose Redemption"], firstChapter: 180 },
   { name: "Colin Iliad", age: 100, gender: "Male", pathway: "Twilight Giant", sequence: 3, factions: ["City of Silver"], firstChapter: 219 },
-  { name: "Daly Simone", age: 24, gender: "Female", pathway: "Death", sequence: 5, factions: ["Nighthawk", "Red Gloves"], firstChapter: 17 },
+  { name: "Daly Simone", age: 24, gender: "Female", pathway: "Death", sequence: 5, factions: ["Nighthawks", "Red Gloves"], firstChapter: 17 },
   { name: "Danitz Dubois", age: 31, gender: "Male", pathway: "Red Priest", sequence: 6, factions: ["Treasure Hunter", "Church of the Fool"], firstChapter: 499 },
   { name: "Derrick Berg", age: 14, gender: "Male", pathway: "Sun", sequence: 4, factions: ["Tarot Club", "City of Silver", "Church of the Fool"], firstChapter: 95 },
   { name: "Dorian Gray Abraham", age: "Unk", gender: "Male", pathway: "Door", sequence: 7, factions: ["Abraham Family"], firstChapter: 404 },
-  { name: "Dunn Smith", age: 35, gender: "Male", pathway: "Darkness", sequence: 7, factions: ["Nighthawks"], firstChapter: 12 },
+  { name: "Dunn Smith", age: 35, gender: "Male", pathway: "Darkness", sequence: 7, factions: ["Nighhawk"], firstChapter: 12 },
   { name: "Emlyn White", age: 37, gender: "Male", pathway: "Moon", sequence: 4, factions: ["Tarot Club", "Sanguines"], firstChapter: 315 },
   { name: "Eternal Blazing Sun", age: "Unk", gender: "Male", pathway: "Sun", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
   { name: "Evernight Goddess", age: "Unk", gender: "Female", pathway: "Darkness", sequence: 0, factions: ["Rose Redemption", "Church of Evernight Goddess", "Transmigrator"], firstChapter: 3 },
-  { name: "Flegrea", age: "Unk", gender: "Female", pathway: "Darkness", sequence: 0, factions: ["None"], firstChapter: 32 },
+  { name: "Flegrea", age: "Unk", gender: "Male", pathway: "Darkness", sequence: 0, factions: ["None"], firstChapter: 32 },
   { name: "Fors Wall", age: 23, gender: "Female", pathway: "Door", sequence: 4, factions: ["Tarot Club", "Church of the Fool", "Abraham Family"], firstChapter: 107 },
   { name: "Frank Lee", age: 34, gender: "Male", pathway: "Druid", sequence: 5, factions: ["None"], firstChapter: 638 },
-  { name: "Frye", age: 30, gender: "Male", pathway: "Death", sequence: 7, factions: ["Nighthawks"], firstChapter: 45 },
+  { name: "Frye", age: 30, gender: "Male", pathway: "Death", sequence: 7, factions: ["Nighhawk"], firstChapter: 45 },
   { name: "God of Combat", age: "Unk", gender: "Male", pathway: "Twilight Giant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
   { name: "God of Knowledge and Wisdom", age: "Unk", gender: "Male", pathway: "Paragon", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 3 },
   { name: "Hidden Sage", age: "Unk", gender: "Male", pathway: "Hermit", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 164 },
   { name: "Ince Zangwill", age: 40, gender: "Male", pathway: "Darkness", sequence: 4, factions: ["None"], firstChapter: 19 },
   { name: "Katarina Pelle", age: 1300, gender: "Female", pathway: "Demoness", sequence: 3, factions: ["Demoness Sect"], firstChapter: 199 },
-  { name: "Klein Moretti", age: 22, gender: "Male", pathway: "Fool", sequence: 0, factions: ["Tarot Club", "Transmigrator", "Church of the Fool", "Nighthawks"], firstChapter: 1 },
+  { name: "Klein Moretti", age: 22, gender: "Male", pathway: "Fool", sequence: 0, factions: ["Tarot Club", "Transmigrator", "Church of the Fool", "Nighhawk"], firstChapter: 1 },
   { name: "Lenevus", age: "Unk", gender: "Male", pathway: "Error", sequence: 8, factions: ["Aurora Order"], firstChapter: 62 },
-  { name: "Lenoard Mitchell", age: 25, gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Tarot Club", "Red Gloves", "Nighthawk"], firstChapter: 10 },
+  { name: "Leonard Mitchell", age: 25, gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Tarot Club", "Red Gloves", "Nighthawks"], firstChapter: 10 },
   { name: "Lilith", age: "Unk", gender: "Female", pathway: "Mother", sequence: 0, factions: ["Sanguines"], firstChapter: 3 },
   { name: "Lord of Storms", age: "Unk", gender: "Male", pathway: "Tyrant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
   { name: "Lovia Tiffany", age: "Unk", gender: "Female", pathway: "Hanged Man", sequence: 4, factions: ["City of Silver"], firstChapter: 202 },
   { name: "Maric", age: "Unk", gender: "Male", pathway: "Chained", sequence: 4, factions: ["Church of the Fool", "Rose School"], firstChapter: 233 },
   { name: "Medici", age: 1300, gender: "Male", pathway: "Red Priest", sequence: 1, factions: ["King of Angels", "Rose Redemption"], firstChapter: 486 },
-  { name: "Old Neil", age: 61, gender: "Male", pathway: "Hermit", sequence: 9, factions: ["Nighthawk"], firstChapter: 25 },
-  { name: "Ourobos", age: 2500, gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["King of Angels", "Aurora Order", "Rose Redemption"], firstChapter: 466 },
+  { name: "Old Neil", age: 61, gender: "Male", pathway: "Hermit", sequence: 9, factions: ["Nighthawks"], firstChapter: 25 },
+  { name: "Ouroboros ", age: 2500, gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["King of Angels", "Aurora Order", "Rose Redemption"], firstChapter: 466 },
   { name: "Pallez Zoroast", age: "Unk", gender: "Male", pathway: "Error", sequence: 2, factions: ["Church of the Fool"], firstChapter: 609 },
   { name: "Reinette Tinekerr", age: 1289, gender: "Female", pathway: "Chained", sequence: 2, factions: ["Church of the Fool", "Rose School"], firstChapter: 547 },
   { name: "Roselle Gustav", age: 227, gender: "Male", pathway: "Black Emperor", sequence: 0, factions: ["Transmigrator", "Twilight Hermit Order"], firstChapter: 4 },
   { name: "Sasir", age: "Unk", gender: "Male", pathway: "Hanged Man", sequence: 1, factions: ["King of Angels", "Rose Redemption"], firstChapter: 4 },
   { name: "Sharron", age: 23, gender: "Female", pathway: "Chained", sequence: 4, factions: ["Church of the Fool", "Rose School"], firstChapter: 246 },
-  { name: "Suah", age: 922, gender: "Female", pathway: "Chained", sequence: 1, factions: ["Church of the Fool", "Rose School"], firstChapter: 729 },
+  { name: "Suah", age: 922, gender: "Male", pathway: "Chained", sequence: 1, factions: ["Church of the Fool", "Rose School"], firstChapter: 729 },
   { name: "Susie", age: "Unk", gender: "Female", pathway: "Visionary", sequence: 5, factions: ["None"], firstChapter: 36 },
   { name: "Trissy", age: 18, gender: "Female", pathway: "Demoness", sequence: 4, factions: ["Demoness Sect"], firstChapter: 56 },
   { name: "Will Auceptin", age: 1, gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["Church of the Fool"], firstChapter: 326 },
@@ -427,5 +427,23 @@ if (feedbackCloseBtn) feedbackCloseBtn.onclick = hideFeedback;
 if (feedbackOverlay) {
   feedbackOverlay.onclick = (e) => {
     if (e.target === feedbackOverlay) hideFeedback();
+  };
+}
+
+const patchBtn = document.getElementById("patchBtn");
+const patchOverlay = document.getElementById("patchOverlay");
+const patchCloseBtn = document.getElementById("patchCloseBtn");
+
+if (patchBtn) {
+  patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
+}
+
+if (patchCloseBtn) {
+  patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
+}
+
+if (patchOverlay) {
+  patchOverlay.onclick = (e) => {
+    if (e.target === patchOverlay) patchOverlay.classList.add("hidden");
   };
 }
