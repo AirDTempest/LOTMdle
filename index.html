@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LOTMdle</title>
+<meta name="description" content="Guess the hidden Lord of the Mysteries character in 7 tries." />
+  <link rel="stylesheet" href="style.css" />
+  
+</head>
+<body>
+  <button id="howBtn" class="how-btn" type="button" aria-label="How to play">?</button>
+
+<div id="howOverlay" class="overlay hidden">
+  <div class="overlay-card">
+    <h2>How to play</h2>
+    <p>Select a character from the list. You have 7 tries.</p>
+    <p>Green: correct. Yellow: close/partial (e.g. sequence ±1, same pathway group). Gray: wrong.</p>
+    <p>In AGE / FIRST CHAPTER arrows show if your guess is too low (↑) or too high (↓).</p>
+    <div class="overlay-actions">
+      <button id="howCloseBtn" class="btn" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
+  
+
+  <div class="app">
+    <div class="sidebar">
+      <div class="mode-bar" role="tablist" aria-label="Game mode">
+  <button id="dailyBtn" class="mode-btn" type="button">Daily</button>
+  <button id="infiniteBtn" class="mode-btn" type="button">Infinite</button>
+</div>
+
+
+      <h1>Guess the LOTM Character</h1>
+      <p class="subtitle">Guess the hidden character in 7 tries.</p>
+      <input
+        type="text"
+        id="searchInput"
+        class="search-box"
+        placeholder="Search character..."
+        oninput="filterList()"
+      />
+      <div id="list" class="list"></div>
+    </div>
+
+    <div class="main">
+      <div class="info-bar">
+        <div id="statusText" class="status">Select a character to start.</div>
+        <div id="attemptsText" class="attempts">Attempts: 0 / 7 </div>
+      </div>
+
+      <div class="legend">
+        <span>Green: correct</span>
+        <span>Yellow: close/partial</span>
+        <span>Gray: wrong</span>
+      </div>
+
+      <div id="grid" class="grid">
+        <!-- Header row -->
+        <div class="row">
+          <div class="cell">Name</div>
+          <div class="cell">Age</div>
+          <div class="cell">Gender</div>
+          <div class="cell">Pathway</div>
+          <div class="cell">Seq</div>
+          <div class="cell">Faction(s)</div>
+          <div class="cell">First chapter</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div id="endOverlay" class="overlay hidden" aria-modal="true" role="dialog">
+  <div class="overlay-card overlay-wordle">
+    <div class="ow-head">
+      <h2 id="endTitle" class="ow-title">Game Over</h2>
+      <button id="closeOverlayBtn" class="ow-x" type="button" aria-label="Close">✕</button>
+    </div>
+
+    <p id="endDesc" class="ow-desc"></p>
+
+    <div class="ow-stats">
+      <div class="ow-stat">
+        <div class="ow-stat-num" id="owTries">0</div>
+        <div class="ow-stat-label">TRIES</div>
+      </div>
+      <div class="ow-stat">
+        <div class="ow-stat-num" id="owMax">0</div>
+        <div class="ow-stat-label">MAX</div>
+      </div>
+      <div class="ow-stat">
+        <div class="ow-stat-num" id="owMode">—</div>
+        <div class="ow-stat-label">MODE</div>
+      </div>
+    </div>
+
+    <div class="ow-share" id="owShare"></div>
+
+    <div class="ow-actions">
+      <button id="playAgainBtn" class="btn ow-primary" type="button">Play again</button>
+      
+    </div>
+  </div>
+</div>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
