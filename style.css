@@ -537,17 +537,8 @@ body{
   border-radius:999px;
 }
 
-@media (max-width:980px){
-  body{ padding:10px; }
-  .app{ height:calc(100dvh - 20px); }
-  .sidebar{ width:clamp(240px,32vw,300px); }
-  :root{ --cols:2.1fr .85fr 1fr 1.35fr .7fr 1.8fr 1.1fr; }
-  .grid > .row > .cell{ font-size:clamp(.72rem,.22vw + .66rem,.9rem); }
-}
 
-@media (max-width:760px){
-  .sidebar{ display:none; }
-}
+
 .grid > .row:first-child > .cell{
   overflow: hidden;
   text-overflow: ellipsis;
@@ -602,3 +593,158 @@ body{
   box-shadow: 0 0 0 3px rgba(217,179,95,.10);
 }
 
+#patchBtn {
+  top: 118px;
+}
+#feedbackBtn {
+  top: 68px;
+}
+
+.patch-card {
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  padding-bottom: 18px;
+}
+
+.patch-header {
+  flex: 0 0 auto;
+  margin-bottom: 14px;
+}
+
+.patch-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-bottom: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(217,179,95,.35) #0f0c09;
+}
+
+.patch-content::-webkit-scrollbar {
+  width: 8px;
+}
+.patch-content::-webkit-scrollbar-track {
+  background: #0f0c09;
+  border-radius: 4px;
+}
+.patch-content::-webkit-scrollbar-thumb {
+  background: rgba(217,179,95,.35);
+  border-radius: 4px;
+}
+
+.patch-entry {
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.patch-entry:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.patch-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.patch-title-row h3 {
+  margin: 0;
+  color: var(--gold);
+  font-family: Cinzel, serif;
+  font-size: clamp(0.95rem, 1vw + 0.8rem, 1.15rem);
+}
+
+.patch-date {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-family: Inter, monospace;
+  opacity: 0.8;
+}
+
+.patch-list {
+  margin: 0;
+  padding-left: 20px;
+  color: rgba(239,231,214,0.85);
+  font-size: clamp(0.85rem, 0.5vw + 0.75rem, 0.95rem);
+  line-height: 1.5;
+}
+
+.patch-list li {
+  margin-bottom: 4px;
+}
+
+
+@media (max-width: 900px) {
+    body {
+        padding: 0;
+        display: block;
+    }
+
+    .app {
+        width: 100%;
+        height: 100dvh;
+        flex-direction: column;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 35vh;
+        min-height: 220px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 10px;
+        flex-shrink: 0;
+    }
+
+    .sidebar .subtitle {
+        display: none;
+    }
+
+    .sidebar h1 {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .main {
+        width: 100%;
+        flex: 1;
+        padding: 10px;
+        overflow: hidden;
+    }
+
+    .grid {
+        overflow-x: auto;
+        display: block;
+        padding-bottom: 5px;
+    }
+
+    .grid > .row {
+        min-width: 800px;
+    }
+
+    body > .mode-bar {
+        top: auto;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        justify-content: center;
+        background: rgba(0,0,0,0.8);
+    }
+
+    :root {
+        --pad: 10px;
+        --gap: 8px;
+        --radius: 0px;
+    }
+}
