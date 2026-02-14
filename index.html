@@ -1,43 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>LOTMdle</title>
-<meta name="description" content="Play LOTMdle, a daily Wordle-style game based on Lord of the Mysteries. Guess characters like Klein Moretti, Amon, and Audrey Hall based on their pathway, sequence, and faction.">
-  <link rel="stylesheet" href="style.css" />
-  <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon">
-  <meta name="keywords" content="LOTM, Lord of the Mysteries, LOTMdle, lotmdle">
-  <meta name="author" content="Tempescik.">
-  <meta property="og:type" content="website">
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOTMDLE</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
- <button id="howBtn" class="how-btn">?</button>
-<button id="feedbackBtn" class="how-btn" title="Feedback & Bug Reports">💬</button>
-<button id="patchBtn" class="how-btn"  title="Patch Notes">📜</button>
-<div id="howOverlay" class="overlay hidden">
-  <div class="overlay-card">
-    <h2>How to play</h2>
-    <p>Select a character from the list. You have 7 tries.</p>
-    <p>Green: correct. Yellow: close/partial (e.g. sequence ±1, same pathway group). Gray: wrong.</p>
-    <p>In AGE / FIRST CHAPTER arrows show if your guess is too low (↑) or too high (↓).</p>
-    <div class="overlay-actions">
-      <button id="howCloseBtn" class="btn" type="button">OK</button>
-    </div>
-  </div>
+    <button class="how-btn" id="howBtn">?</button>
+    <button class="how-btn" id="feedbackBtn">📧</button>
+    <button class="how-btn" id="patchBtn">📋</button>
+    <button class="how-btn" id="themeBtn">🎨</button>
+
+<div class="theme-menu hidden" id="themeMenu">
+    <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
+    <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
 </div>
 
 
-<div id="patchOverlay" class="overlay hidden">
+    <div class="game-container">
+        <div class="game-panel">
+            <h1 class="game-title">LOTMDLE</h1>
+            <p class="game-subtitle">GUESS THE CHARACTER</p>
+
+      
+            <div class="mode-selector">
+                <button class="mode-btn is-active" id="dailyBtn">DAILY</button>
+                <button class="mode-btn" id="infiniteBtn">INFINITE</button>
+            </div>
+
+  
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Enter Character Name (e.g: Klein)"
+                        autocomplete="off"
+                    >
+                </div>
+  
+                <div class="character-list hidden" id="list"></div>
+            </div>
+
+
+            <div class="grid-headers">
+                <div class="header-cell">NAME</div>
+                <div class="header-cell">EPOCH</div>
+                <div class="header-cell">GENDER</div>
+                <div class="header-cell">PATHWAY</div>
+                <div class="header-cell">SEQ</div>
+                <div class="header-cell">FACTION</div>
+                <div class="header-cell">CHAPTER</div>
+            </div>
+
+            <div class="guesses-grid" id="grid"></div>
+
+     
+            <div class="game-status">
+                <span id="statusText">Select a character to start</span>
+                <span id="attemptsText">Attempts: 0 / 7</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="overlay hidden" id="howOverlay">
+        <div class="overlay-card">
+            <h2>How to Play</h2>
+            <p>Select a character from the list. You have 7 tries.</p>
+            <p><strong style="color: var(--good)">Green:</strong> correct. <strong style="color: var(--mid)">Yellow:</strong> close/partial (e.g. sequence ±1, same pathway group). <strong style="color: var(--muted)">Gray:</strong> wrong.</p>
+            <p>In FIRST CHAPTER arrows show if your guess is too low (↑) or too high (↓).</p>
+            <div class="overlay-actions">
+                <button class="btn" id="howCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="overlay hidden" id="feedbackOverlay">
+        <div class="overlay-card">
+            <h2>Feedback</h2>
+            <p>Found a bug? Have a suggestion? Want to report an error in character data?</p>
+            <p>I'd love to hear from you!</p>
+            <p><strong>Contact me:</strong></p>
+            <p>📧 Email: lotmdle@proton.me<br>💬 Discord: tempescik.</p>
+            <div class="overlay-actions">
+                <button class="btn" id="feedbackCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+ <div id="patchOverlay" class="overlay hidden">
   <div class="overlay-card patch-card">
     <div class="patch-header">
       <h2>Patch Notes</h2>
     </div>
-    
+
     <div class="patch-content">
-      
+            
+<div class="patch-entry">
+        <div class="patch-title-row">
+          <h3>v1.2 - Characters Added</h3>
+          <span class="patch-date">13.02.2026</span>
+        </div>
+        <ul class="patch-list">
+            <li>New UI and Better phone access</li>
+          <li>Added: Hermes, Soniathrym, Cohinem, Snowman, Siatas, Mobet Zoroast, Alzuhod, Arianna
+</li>
+<li>changed Sasir Chapter</li>
+<li>changed age to epoch</li>
+
+         
+          
+        </ul>
+      </div>
+
+    
 <div class="patch-entry">
         <div class="patch-title-row">
           <h3>v1.1 - Beta fix</h3>
@@ -80,108 +162,36 @@
 </div>
 
 
-  
 
-  <div class="app">
-    <div class="sidebar">
-      <div class="mode-bar" role="tablist" aria-label="Game mode">
-  <button id="dailyBtn" class="mode-btn" type="button">Daily</button>
-  <button id="infiniteBtn" class="mode-btn" type="button">Infinite</button>
-</div>
-
-
-      <h1>Guess the LOTM Character</h1>
-      <p class="subtitle">Guess the hidden character in 7 tries.</p>
-      <input
-        type="text"
-        id="searchInput"
-        class="search-box"
-        placeholder="Search character..."
-        oninput="filterList()"
-      />
-      <div id="list" class="list"></div>
-    </div>
-
-    <div class="main">
-      <div class="info-bar">
-        <div id="statusText" class="status">Select a character to start.</div>
-        <div id="attemptsText" class="attempts">Attempts: 0 / 7 </div>
-      </div>
-
-      <div class="legend">
-        <span>Green: correct</span>
-        <span>Yellow: close/partial</span>
-        <span>Gray: wrong</span>
-      </div>
-
-      <div id="grid" class="grid">
-        <!-- Header row -->
-        <div class="row">
-          <div class="cell">Name</div>
-          <div class="cell">Age</div>
-          <div class="cell">Gender</div>
-          <div class="cell">Pathway</div>
-          <div class="cell">Seq</div>
-          <div class="cell">Faction(s)</div>
-          <div class="cell">Chapter</div>
+    <div class="overlay hidden" id="endOverlay">
+        <div class="overlay-wordle">
+            <div class="ow-head">
+                <h2 class="ow-title" id="endTitle">You got it!</h2>
+                <button class="ow-x" onclick="document.getElementById('endOverlay').classList.add('hidden')">✕</button>
+            </div>
+            <p class="ow-desc" id="endDesc">Answer: Klein Moretti</p>
+            <div class="ow-stats">
+                <div class="ow-stat">
+                    <div class="ow-stat-num" id="owTries">0</div>
+                    <div class="ow-stat-label">TRIES</div>
+                </div>
+                <div class="ow-stat">
+                    <div class="ow-stat-num" id="owMax">7</div>
+                    <div class="ow-stat-label">MAX</div>
+                </div>
+                <div class="ow-stat">
+                    <div class="ow-stat-num" id="owMode">DAILY</div>
+                    <div class="ow-stat-label">MODE</div>
+                </div>
+            </div>
+            <div class="ow-share" id="owShare"></div>
+            <div class="ow-actions">
+                <button class="btn" id="closeOverlayBtn">Close</button>
+                <button class="btn ow-primary" id="playAgainBtn">Play again</button>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-
-<div id="endOverlay" class="overlay hidden" aria-modal="true" role="dialog">
-  <div class="overlay-card overlay-wordle">
-    <div class="ow-head">
-      <h2 id="endTitle" class="ow-title">Game Over</h2>
-      <button id="closeOverlayBtn" class="ow-x" type="button" aria-label="Close">✕</button>
     </div>
 
-    <p id="endDesc" class="ow-desc"></p>
-
-    <div class="ow-stats">
-      <div class="ow-stat">
-        <div class="ow-stat-num" id="owTries">0</div>
-        <div class="ow-stat-label">TRIES</div>
-      </div>
-      <div class="ow-stat">
-        <div class="ow-stat-num" id="owMax">0</div>
-        <div class="ow-stat-label">MAX</div>
-      </div>
-      <div class="ow-stat">
-        <div class="ow-stat-num" id="owMode">—</div>
-        <div class="ow-stat-label">MODE</div>
-      </div>
-    </div>
-
-    <div class="ow-share" id="owShare"></div>
-
-    <div class="ow-actions">
-      <button id="playAgainBtn" class="btn ow-primary" type="button">Play again</button>
-      
-    </div>
-  </div>
-</div>
-
-
-  <div id="feedbackOverlay" class="overlay hidden">
-    <div class="overlay-card">
-      <h2>Feedback & Bug Reports</h2>
-      <p>Found a bug? Have a suggestion? Want to report an error in character data?</p>
-      <p>I'd love to hear from you!</p>
-      <div style="margin: 16px 0; padding: 14px; background: #0f0c09; border: 1px solid var(--border2); border-radius: 12px;">
-        <p style="margin: 0 0 10px; font-weight: 600; color: var(--gold);">Contact me:</p>
-        <p style="margin: 6px 0;">📧 Email: <a href="mailto:lotmdle@proton.me" style="color: var(--gold); text-decoration: none;">lotmdle@proton.me</a></p>
-        <p style="margin: 6px 0;">💬 Discord: <strong style="color: var(--gold);">tempescik.</strong></p>
-      </div>
-      <div class="overlay-actions">
-        <button id="feedbackCloseBtn" class="btn">Close</button>
-      </div>
-    </div>
-  </div>
-
-
-  <script src="script.js?v=3"></script>
+    <script src="script.js?v4"></script>
 </body>
 </html>
-

@@ -1,56 +1,65 @@
 const characters = [
-  { name: "Adam", age: "Unk", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
-  { name: "Alger Wilson", age: 32, gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
-  { name: "Alista Tudor", age: "Unk", gender: "Male", pathway: "Black Emperor", sequence: 0, factions: ["Demoness Sect"], firstChapter: 9 },
-  { name: "Amon", age: "Unk", gender: "Male", pathway: "Error", sequence: 2, factions: ["King of Angels"], firstChapter: 60 },
-  { name: "Anderson Hood", age: 29, gender: "Male", pathway: "Red Priest", sequence: 4, factions: ["Treasure Hunter"], firstChapter: 649 },
-  { name: "Antigonus", age: "Unk", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Solomon Empire"], firstChapter: 1381 },
-  { name: "Audrey Hall", age: 17, gender: "Female", pathway: "Visionary", sequence: 3, factions: ["Tarot Club", "Psychology Alchemists"], firstChapter: 5 },
-  { name: "Azik Eggers", age: 1300, gender: "Male", pathway: "Death", sequence: 2, factions: ["Church of the Fool"], firstChapter: 9 },
-  { name: "Bernadette Gustav", age: 194, gender: "Female", pathway: "Hermit", sequence: 2, factions: ["Emerald City"], firstChapter: 321 },
-  { name: "Bethel Abraham", age: "Unk", gender: "Male", pathway: "Door", sequence: 1, factions: ["Abraham Family", "King of Angels"], firstChapter: 216 },
-  { name: "Cattleya", age: 26, gender: "Female", pathway: "Hermit", sequence: 3, factions: ["Tarot Club", "Moses Ascetic Order"], firstChapter: 294 },
-  { name: "Chained God", age: "Unk", gender: "Male", pathway: "Chained", sequence: 1, factions: ["Rose Redemption"], firstChapter: 180 },
-  { name: "Colin Iliad", age: 100, gender: "Male", pathway: "Twilight Giant", sequence: 3, factions: ["City of Silver"], firstChapter: 219 },
-  { name: "Daly Simone", age: 24, gender: "Female", pathway: "Death", sequence: 5, factions: ["Nighthawks", "Red Gloves"], firstChapter: 17 },
-  { name: "Danitz Dubois", age: 31, gender: "Male", pathway: "Red Priest", sequence: 6, factions: ["Treasure Hunter", "Church of the Fool"], firstChapter: 499 },
-  { name: "Derrick Berg", age: 14, gender: "Male", pathway: "Sun", sequence: 4, factions: ["Tarot Club", "City of Silver", "Church of the Fool"], firstChapter: 95 },
-  { name: "Dorian Gray Abraham", age: "Unk", gender: "Male", pathway: "Door", sequence: 7, factions: ["Abraham Family"], firstChapter: 404 },
-  { name: "Dunn Smith", age: 35, gender: "Male", pathway: "Darkness", sequence: 7, factions: ["Nighhawk"], firstChapter: 12 },
-  { name: "Emlyn White", age: 37, gender: "Male", pathway: "Moon", sequence: 4, factions: ["Tarot Club", "Sanguines"], firstChapter: 315 },
-  { name: "Eternal Blazing Sun", age: "Unk", gender: "Male", pathway: "Sun", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
-  { name: "Evernight Goddess", age: "Unk", gender: "Female", pathway: "Darkness", sequence: 0, factions: ["Rose Redemption", "Church of Evernight Goddess", "Transmigrator"], firstChapter: 3 },
-  { name: "Flegrea", age: "Unk", gender: "Male", pathway: "Darkness", sequence: 0, factions: ["None"], firstChapter: 32 },
-  { name: "Fors Wall", age: 23, gender: "Female", pathway: "Door", sequence: 4, factions: ["Tarot Club", "Church of the Fool", "Abraham Family"], firstChapter: 107 },
-  { name: "Frank Lee", age: 34, gender: "Male", pathway: "Druid", sequence: 5, factions: ["None"], firstChapter: 638 },
-  { name: "Frye", age: 30, gender: "Male", pathway: "Death", sequence: 7, factions: ["Nighhawk"], firstChapter: 45 },
-  { name: "God of Combat", age: "Unk", gender: "Male", pathway: "Twilight Giant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
-  { name: "God of Knowledge and Wisdom", age: "Unk", gender: "Male", pathway: "Paragon", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 3 },
-  { name: "Hidden Sage", age: "Unk", gender: "Male", pathway: "Hermit", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 164 },
-  { name: "Ince Zangwill", age: 40, gender: "Male", pathway: "Darkness", sequence: 4, factions: ["None"], firstChapter: 19 },
-  { name: "Katarina Pelle", age: 1300, gender: "Female", pathway: "Demoness", sequence: 3, factions: ["Demoness Sect"], firstChapter: 199 },
-  { name: "Klein Moretti", age: 22, gender: "Male", pathway: "Fool", sequence: 0, factions: ["Tarot Club", "Transmigrator", "Church of the Fool", "Nighhawk"], firstChapter: 1 },
-  { name: "Lenevus", age: "Unk", gender: "Male", pathway: "Error", sequence: 8, factions: ["Aurora Order"], firstChapter: 62 },
-  { name: "Leonard Mitchell", age: 25, gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Tarot Club", "Red Gloves", "Nighthawks"], firstChapter: 10 },
-  { name: "Lilith", age: "Unk", gender: "Female", pathway: "Mother", sequence: 0, factions: ["Sanguines"], firstChapter: 3 },
-  { name: "Lord of Storms", age: "Unk", gender: "Male", pathway: "Tyrant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
-  { name: "Lovia Tiffany", age: "Unk", gender: "Female", pathway: "Hanged Man", sequence: 4, factions: ["City of Silver"], firstChapter: 202 },
-  { name: "Maric", age: "Unk", gender: "Male", pathway: "Chained", sequence: 4, factions: ["Church of the Fool", "Rose School"], firstChapter: 233 },
-  { name: "Medici", age: 1300, gender: "Male", pathway: "Red Priest", sequence: 1, factions: ["King of Angels", "Rose Redemption"], firstChapter: 486 },
-  { name: "Old Neil", age: 61, gender: "Male", pathway: "Hermit", sequence: 9, factions: ["Nighthawks"], firstChapter: 25 },
-  { name: "Ouroboros ", age: 2500, gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["King of Angels", "Aurora Order", "Rose Redemption"], firstChapter: 466 },
-  { name: "Pallez Zoroast", age: "Unk", gender: "Male", pathway: "Error", sequence: 2, factions: ["Church of the Fool"], firstChapter: 609 },
-  { name: "Reinette Tinekerr", age: 1289, gender: "Female", pathway: "Chained", sequence: 2, factions: ["Church of the Fool", "Rose School"], firstChapter: 547 },
-  { name: "Roselle Gustav", age: 227, gender: "Male", pathway: "Black Emperor", sequence: 0, factions: ["Transmigrator", "Twilight Hermit Order"], firstChapter: 4 },
-  { name: "Sasir", age: "Unk", gender: "Male", pathway: "Hanged Man", sequence: 1, factions: ["King of Angels", "Rose Redemption"], firstChapter: 4 },
-  { name: "Sharron", age: 23, gender: "Female", pathway: "Chained", sequence: 4, factions: ["Church of the Fool", "Rose School"], firstChapter: 246 },
-  { name: "Suah", age: 922, gender: "Male", pathway: "Chained", sequence: 1, factions: ["Church of the Fool", "Rose School"], firstChapter: 729 },
-  { name: "Susie", age: "Unk", gender: "Female", pathway: "Visionary", sequence: 5, factions: ["None"], firstChapter: 36 },
-  { name: "Trissy", age: 18, gender: "Female", pathway: "Demoness", sequence: 4, factions: ["Demoness Sect"], firstChapter: 56 },
-  { name: "Will Auceptin", age: 1, gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["Church of the Fool"], firstChapter: 326 },
-  { name: "Xio Derecha", age: 21, gender: "Female", pathway: "Justiciar", sequence: 4, factions: ["Tarot Club"], firstChapter: 107 },
-  { name: "Zaratul", age: "Unk", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Secret Order"], firstChapter: 59 }
+    { name: "Adam", age: "3rd Epoch", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
+    { name: "Alger Wilson", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
+    { name: "Alista Tudor", age: "4th Epoch", gender: "Male", pathway: "Black Emperor", sequence: 0, factions: ["Demoness Sect"], firstChapter: 9 },
+    { name: "Alzuhod", age: "2nd Epoch", gender: "Male", pathway: "Visionary", sequence: 1, factions: ["None"], firstChapter: 238 },
+    { name: "Amon", age: "3rd Epoch", gender: "Male", pathway: "Error", sequence: 2, factions: ["King of Angels"], firstChapter: 60 },
+    { name: "Anderson Hood", age: "5th Epoch", gender: "Male", pathway: "Red Priest", sequence: 4, factions: ["Treasure Hunter"], firstChapter: 649 },
+    { name: "Antigonus", age: "2nd Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Solomon Empire"], firstChapter: 1381 },
+    { name: "Arianna", age: "5th Epoch", gender: "Female", pathway: "Darkness", sequence: 2, factions: ["None"], firstChapter: 950 },
+    { name: "Audrey Hall", age: "5th Epoch", gender: "Female", pathway: "Visionary", sequence: 3, factions: ["Tarot Club", "Psychology Alchemists"], firstChapter: 5 },
+    { name: "Azik Eggers", age: "4th Epoch", gender: "Male", pathway: "Death", sequence: 2, factions: ["Church of the Fool"], firstChapter: 9 },
+    { name: "Bernadette Gustav", age: "5th Epoch", gender: "Female", pathway: "Hermit", sequence: 2, factions: ["Emerald City"], firstChapter: 321 },
+    { name: "Bethel Abraham", age: "4th Epoch", gender: "Male", pathway: "Door", sequence: 1, factions: ["Abraham Family", "King of Angels"], firstChapter: 216 },
+    { name: "Cattleya", age: "5th Epoch", gender: "Female", pathway: "Hermit", sequence: 3, factions: ["Tarot Club", "Moses Ascetic Order"], firstChapter: 294 },
+    { name: "Chained God", age: "4th Epoch", gender: "Male", pathway: "Chained", sequence: 1, factions: ["Rose Redemption"], firstChapter: 180 },
+    { name: "Colin Iliad", age: "5th Epoch", gender: "Male", pathway: "Twilight Giant", sequence: 3, factions: ["City of Silver"], firstChapter: 219 },
+    { name: "Cohinem", age: "2nd Epoch", gender: "Female", pathway: "Tyrant", sequence: 2, factions: ["Elves"], firstChapter: 549 },
+    { name: "Daly Simone", age: "5th Epoch", gender: "Female", pathway: "Death", sequence: 5, factions: ["Nighthawks", "Red Gloves"], firstChapter: 17 },
+    { name: "Danitz Dubois", age: "5th Epoch", gender: "Male", pathway: "Red Priest", sequence: 6, factions: ["Treasure Hunter", "Church of the Fool"], firstChapter: 499 },
+    { name: "Derrick Berg", age: "5th Epoch", gender: "Male", pathway: "Sun", sequence: 4, factions: ["Tarot Club", "City of Silver", "Church of the Fool"], firstChapter: 95 },
+    { name: "Dorian Gray Abraham", age: "5th Epoch", gender: "Male", pathway: "Door", sequence: 7, factions: ["Abraham Family"], firstChapter: 404 },
+    { name: "Dunn Smith", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 7, factions: ["Nighthawks"], firstChapter: 12 },
+    { name: "Emlyn White", age: "5th Epoch", gender: "Male", pathway: "Moon", sequence: 4, factions: ["Tarot Club", "Sanguines"], firstChapter: 315 },
+    { name: "Eternal Blazing Sun", age: "3rd Epoch", gender: "Male", pathway: "Sun", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
+    { name: "Evernight Goddess", age: "2nd Epoch", gender: "Female", pathway: "Darkness", sequence: 0, factions: ["Rose Redemption", "Church of Evernight Goddess", "Transmigrator"], firstChapter: 3 },
+    { name: "Flegrea", age: "2nd Epoch", gender: "Male", pathway: "Darkness", sequence: 0, factions: ["None"], firstChapter: 32 },
+    { name: "Fors Wall", age: "5th Epoch", gender: "Female", pathway: "Door", sequence: 4, factions: ["Tarot Club", "Church of the Fool", "Abraham Family"], firstChapter: 107 },
+    { name: "Frank Lee", age: "5th Epoch", gender: "Male", pathway: "Druid", sequence: 5, factions: ["None"], firstChapter: 638 },
+    { name: "Frye", age: "5th Epoch", gender: "Male", pathway: "Death", sequence: 7, factions: ["Nighthawks"], firstChapter: 45 },
+    { name: "God of Combat", age: "2nd Epoch", gender: "Male", pathway: "Twilight Giant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
+    { name: "God of Knowledge and Wisdom", age: "2nd Epoch", gender: "Male", pathway: "Paragon", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 3 },
+    { name: "Hidden Sage", age: "5th Epoch", gender: "Male", pathway: "Hermit", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 164 },
+    { name: "Hermes", age: "2nd Epoch", gender: "Male", pathway: "Visionary", sequence: 2, factions: ["Psychology Alchemists", "Twilight Hermit Order"], firstChapter: 484 },
+    { name: "Ince Zangwill", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["None"], firstChapter: 19 },
+    { name: "Katarina Pelle", age: "4th Epoch", gender: "Female", pathway: "Demoness", sequence: 3, factions: ["Demoness Sect"], firstChapter: 199 },
+    { name: "Klein Moretti", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: 0, factions: ["Tarot Club", "Transmigrator", "Church of the Fool", "Nighthawks"], firstChapter: 1 },
+    { name: "Lenevus", age: "5th Epoch", gender: "Male", pathway: "Error", sequence: 8, factions: ["Aurora Order"], firstChapter: 62 },
+    { name: "Leonard Mitchell", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Tarot Club", "Red Gloves", "Nighthawks"], firstChapter: 10 },
+    { name: "Lilith", age: "2nd Epoch", gender: "Female", pathway: "Mother", sequence: 0, factions: ["Sanguines"], firstChapter: 3 },
+    { name: "Lord of Storms", age: "3rd Epoch", gender: "Male", pathway: "Tyrant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
+    { name: "Lovia Tiffany", age: "5th Epoch", gender: "Female", pathway: "Hanged Man", sequence: 4, factions: ["City of Silver"], firstChapter: 202 },
+    { name: "Maric", age: "5th Epoch", gender: "Male", pathway: "Chained", sequence: 4, factions: ["Church of the Fool", "Rose School"], firstChapter: 233 },
+    { name: "Medici", age: "3rd Epoch", gender: "Male", pathway: "Red Priest", sequence: 1, factions: ["King of Angels", "Rose Redemption"], firstChapter: 486 },
+    { name: "Mobet Zoroast", age: "4th Epoch", gender: "Male", pathway: "Error", sequence: 5, factions: ["Groselle's Travels", "Elves"], firstChapter: 697 },
+    { name: "Old Neil", age: "5th Epoch", gender: "Male", pathway: "Hermit", sequence: 9, factions: ["Nighthawks"], firstChapter: 25 },
+    { name: "Ouroboros", age: "3rd Epoch", gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["King of Angels", "Aurora Order", "Rose Redemption"], firstChapter: 466 },
+    { name: "Pallez Zoroast", age: "4th Epoch", gender: "Male", pathway: "Error", sequence: 2, factions: ["Church of the Fool"], firstChapter: 609 },
+    { name: "Reinette Tinekerr", age: "4th Epoch", gender: "Female", pathway: "Chained", sequence: 2, factions: ["Church of the Fool", "Rose School"], firstChapter: 547 },
+    { name: "Roselle Gustav", age: "5th Epoch", gender: "Male", pathway: "Black Emperor", sequence: 0, factions: ["Transmigrator", "Twilight Hermit Order"], firstChapter: 4 },
+    { name: "Sasir", age: "3rd Epoch", gender: "Male", pathway: "Hanged Man", sequence: 1, factions: ["King of Angels", "Rose Redemption"], firstChapter: 666 },
+    { name: "Siatas", age: "2nd Epoch", gender: "Female", pathway: "Tyrant", sequence: 5, factions: ["Groselle's Travels", "Elves"], firstChapter: 696 },
+    { name: "Snowman", age: "3rd Epoch", gender: "Male", pathway: "Sun", sequence: 5, factions: ["Groselle's Travels"], firstChapter: 697 },
+    { name: "Sharron", age: "5th Epoch", gender: "Female", pathway: "Chained", sequence: 4, factions: ["Church of the Fool", "Rose School"], firstChapter: 246 },
+    { name: "Soniathrym", age: "2nd Epoch", gender: "Male", pathway: "Tyrant", sequence: 0, factions: ["Elves"], firstChapter: 313 },
+    { name: "Suah", age: "4th Epoch", gender: "Male", pathway: "Chained", sequence: 1, factions: ["Church of the Fool", "Rose School"], firstChapter: 729 },
+    { name: "Susie", age: "5th Epoch", gender: "Female", pathway: "Visionary", sequence: 5, factions: ["None"], firstChapter: 36 },
+    { name: "Trissy", age: "5th Epoch", gender: "Female", pathway: "Demoness", sequence: 4, factions: ["Demoness Sect"], firstChapter: 56 },
+    { name: "Will Auceptin", age: "5th Epoch", gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["Church of the Fool"], firstChapter: 326 },
+    { name: "Xio Derecha", age: "5th Epoch", gender: "Female", pathway: "Justiciar", sequence: 4, factions: ["Tarot Club"], firstChapter: 107 },
+    { name: "Zaratul", age: "4th Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Secret Order"], firstChapter: 59 }
 ];
+
 
 const pathwayGroups = [
   ["Seer", "Marauder", "Apprentice"],
@@ -126,7 +135,9 @@ let gameOver = false;
 const usedNames = new Set();
 
 function renderList(items) {
+  if (!list) return;
   list.innerHTML = "";
+
   items.forEach(char => {
     const div = document.createElement("div");
     div.className = "list-item";
@@ -143,15 +154,46 @@ function renderList(items) {
     div.appendChild(seqSpan);
 
     const key = char.name;
+
     if (usedNames.has(key) || gameOver) {
       div.classList.add("used");
       div.onclick = null;
     } else {
       div.classList.remove("used");
-      div.onclick = () => makeGuess(char);
+      div.onclick = () => {
+        if (usedNames.has(char.name) || gameOver) return;
+        
+        makeGuess(char);
+        searchInput.value = "";
+        currentSuggestions = [];
+        closeList();
+      };
     }
+
     list.appendChild(div);
   });
+}
+
+function updateSuggestions() {
+  if (!list || !searchInput) return;
+
+  const q = searchInput.value.trim().toLowerCase();
+
+  if (!q) {
+    closeList();
+    return;
+  }
+
+  currentSuggestions = characters
+    .filter(c => c.name.toLowerCase().includes(q))
+    .slice(0, 30);
+
+  renderList(currentSuggestions);
+  if (currentSuggestions.length > 0) {
+    openList();
+  } else {
+    closeList();
+  }
 }
 
 function filterList() {
@@ -160,7 +202,7 @@ function filterList() {
   renderList(filtered);
 }
 
-renderList(characters);
+
 
 function normalize(str) {
   return String(str).toLowerCase().trim();
@@ -182,13 +224,18 @@ function pathwayResult(guessPathway, answerPathway) {
   return "wrong";
 }
 
+
 function ageResult(guessAge, answerAge) {
-  const g = parseInt(guessAge);
-  const a = parseInt(answerAge);
-  if (isNaN(g) || isNaN(a)) return { suffix: "", result: "wrong" };
-  if (g === a) return { suffix: "", result: "correct" };
-  return g < a ? { suffix: " ↑", result: "partial" } : { suffix: " ↓", result: "partial" };
+    const g = normalize(guessAge);
+    const a = normalize(answerAge);
+
+    if (g === a) {
+        return { suffix: "", result: "correct" };
+    }
+    
+    return { suffix: "", result: "wrong" };
 }
+
 
 function simpleEqualResult(g, a) {
   return normalize(g) === normalize(a) ? "correct" : "wrong";
@@ -277,7 +324,13 @@ function resetGame() {
   if (mode === "daily" && isDailyDone()) {
     statusText.textContent = "Daily completed. Come back tomorrow.";
     gameOver = true;
-    renderList(characters);
+
+    grid.innerHTML = ""; 
+
+    if (list) {
+        list.classList.add("hidden");
+        list.innerHTML = "";
+    }
     hideEndScreen();
     return;
   }
@@ -289,13 +342,21 @@ function resetGame() {
   attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
   statusText.textContent = "Select a character to start.";
 
-  while (grid.children.length > 1) grid.removeChild(grid.lastElementChild);
+  grid.innerHTML = ""; 
 
   answer = pickAnswer();
-
   hideEndScreen();
-  renderList(characters);
+
+  if (list) {
+      list.classList.add("hidden");
+      list.innerHTML = "";
+  }
+
+  if (searchInput) searchInput.value = "";
+  currentSuggestions = [];
 }
+
+
 
 function syncModeUI() {
   if (!dailyBtn || !infiniteBtn) return;
@@ -333,7 +394,10 @@ if (endOverlay) {
 if (mode === "daily" && isDailyDone()) {
   gameOver = true;
   statusText.textContent = "Daily completed. Come back tomorrow.";
-  renderList(characters);
+  if (list) {
+    list.classList.add("hidden");
+    list.innerHTML = "";
+  }
 }
 
 function makeGuess(guess) {
@@ -368,12 +432,12 @@ function makeGuess(guess) {
 
   attempts++;
   attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
-  renderList(characters);
+  
+
 
   if (simpleEqualResult(guess.name, answer.name) === "correct") {
     statusText.textContent = `You got it! The answer was ${answer.name}.`;
     gameOver = true;
-    renderList(characters);
     showEndScreen(true);
     return;
   }
@@ -381,13 +445,13 @@ function makeGuess(guess) {
   if (attempts === maxAttempts) {
     statusText.textContent = `Out of attempts. The answer was ${answer.name}.`;
     gameOver = true;
-    renderList(characters);
     showEndScreen(false);
     return;
   }
 
   statusText.textContent = "Keep guessing...";
 }
+
 
 const howBtn = document.getElementById("howBtn");
 const howOverlay = document.getElementById("howOverlay");
@@ -446,4 +510,126 @@ if (patchOverlay) {
   patchOverlay.onclick = (e) => {
     if (e.target === patchOverlay) patchOverlay.classList.add("hidden");
   };
+}
+if (list) list.classList.add("hidden");
+
+let currentSuggestions = [];
+
+function openList() {
+  if (!list) return;
+  if (gameOver) return;
+  list.classList.remove("hidden");
+}
+
+function closeList() {
+  if (!list) return;
+  list.classList.add("hidden");
+}
+
+function updateSuggestions() {
+  if (!list || !searchInput) return;
+
+  const q = searchInput.value.trim().toLowerCase();
+
+  if (!q) {
+    closeList();
+    return;
+  }
+
+  currentSuggestions = characters
+    .filter(c => c.name.toLowerCase().includes(q))
+    .slice(0, 30);
+
+  renderList(currentSuggestions);
+  openList();
+}
+
+document.addEventListener("pointerdown", (e) => {
+  if (!list || !searchInput) return;
+  const clickedInside = (e.target === searchInput) || list.contains(e.target);
+  if (!clickedInside) closeList();
+});
+
+searchInput.addEventListener("focus", updateSuggestions);
+searchInput.addEventListener("input", updateSuggestions);
+
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    e.preventDefault();
+    closeList();
+    searchInput.blur();
+    return;
+  }
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) return;
+
+    const exact = characters.find(c => c.name.toLowerCase() === q);
+    const pick = exact || currentSuggestions[0];
+    if (!pick) return;
+
+    makeGuess(pick);
+    searchInput.value = "";
+    currentSuggestions = [];
+    closeList();
+  }
+});
+
+
+
+
+
+const themeBtn = document.getElementById("themeBtn");
+const themeMenu = document.getElementById("themeMenu");
+const themeOptions = document.querySelectorAll(".theme-option");
+
+
+let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
+
+function setTheme(theme) {
+
+  document.body.classList.remove("theme-classic", "theme-lotm");
+  
+
+  document.body.classList.add(theme);
+  
+
+  currentTheme = theme;
+  localStorage.setItem("lotmdle_theme", theme);
+  
+
+  if (themeOptions) {
+      themeOptions.forEach(opt => {
+        if (opt.dataset.theme === theme) opt.classList.add("active");
+        else opt.classList.remove("active");
+      });
+  }
+}
+
+
+setTheme(currentTheme);
+
+if (themeBtn && themeMenu) {
+
+  themeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    themeMenu.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!themeMenu.contains(e.target) && e.target !== themeBtn) {
+      themeMenu.classList.add("hidden");
+    }
+  });
+
+
+  themeOptions.forEach(opt => {
+    opt.addEventListener("click", () => {
+      const selected = opt.dataset.theme;
+      setTheme(selected);
+      themeMenu.classList.add("hidden");
+    });
+  });
 }
