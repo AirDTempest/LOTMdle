@@ -1,3 +1,5 @@
+import { submitScore, loadLeaderboard } from './leaderboard.js';
+
 const characters = [
     { name: "Adam", age: "3rd Epoch", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
     { name: "Alger Wilson", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
@@ -526,23 +528,6 @@ function closeList() {
   list.classList.add("hidden");
 }
 
-function updateSuggestions() {
-  if (!list || !searchInput) return;
-
-  const q = searchInput.value.trim().toLowerCase();
-
-  if (!q) {
-    closeList();
-    return;
-  }
-
-  currentSuggestions = characters
-    .filter(c => c.name.toLowerCase().includes(q))
-    .slice(0, 30);
-
-  renderList(currentSuggestions);
-  openList();
-}
 
 document.addEventListener("pointerdown", (e) => {
   if (!list || !searchInput) return;
@@ -633,3 +618,104 @@ if (themeBtn && themeMenu) {
     });
   });
 }
+
+
+
+const lbBtn = document.getElementById("leaderboardBtn");
+const lbOverlay = document.getElementById("leaderboardOverlay");
+const lbCloseBtn = document.getElementById("closeLeaderboard");
+const lbDailyBtn = document.getElementById("lbDailyBtn");
+const lbInfBtn = document.getElementById("lbInfBtn");
+let currentLbMode = "daily";
+
+if(lbBtn) {
+    lbBtn.addEventListener("click", () => {
+        if(lbOverlay) lbOverlay.classList.remove("hidden");
+   
+        currentLbMode = mode === "daily" ? "daily" : "infinite";
+        
+    
+        if(currentLbMode === "daily") {
+            lbDailyBtn.classList.add("is-active");
+            lbInfBtn.classList.remove("is-active");
+        } else {
+            lbInfBtn.classList.add("is-active");
+            lbDailyBtn.classList.remove("is-active");
+        }
+        
+        loadLeaderboard(currentLbMode);
+    });
+}
+
+if(lbCloseBtn && lbOverlay) {
+    lbCloseBtn.addEventListener("click", () => {
+        lbOverlay.classList.add("hidden");
+    });
+    
+
+    lbOverlay.addEventListener("click", (e) => {
+        if(e.target === lbOverlay) lbOverlay.classList.add("hidden");
+    });
+}
+
+if(lbDailyBtn) {
+    lbDailyBtn.addEventListener("click", () => {
+        currentLbMode = "daily";
+        lbDailyBtn.classList.add("is-active");
+        lbInfBtn.classList.remove("is-active");
+        loadLeaderboard("daily");
+    });
+}
+
+if(lbInfBtn) {
+    lbInfBtn.addEventListener("click", () => {
+        currentLbMode = "infinite";
+        lbInfBtn.classList.add("is-active");
+        lbDailyBtn.classList.remove("is-active");
+        loadLeaderboard("infinite");
+    });
+}
+
+
+function updateStreak(won) {
+    const streakKey = mode === "daily" ? "lotmdle_daily_streak" : "lotmdle_inf_streak";
+    let current = parseInt(localStorage.getItem(streakKey)) || 0;
+
+    if (won) {
+        current++;
+        localStorage.setItem(streakKey, current);
+        console.log(`Streak updated: ${current}`);
+        
+       
+        let playerName = localStorage.getItem("lotmdle_player_name");
+        
+        if (!playerName) {
+           
+            setTimeout(() => {
+                playerName = prompt("Congratulations! You set the record. Whats your Nickname?");
+                if (playerName) {
+          
+                    if(playerName.length > 15) playerName = playerName.substring(0, 15);
+                    localStorage.setItem("lotmdle_player_name", playerName);
+                    submitScore(playerName, current, mode);
+                }
+            }, 500);
+        } else {
+            submitScore(playerName, current, mode);
+        }
+    } else {
+
+        localStorage.setItem(streakKey, 0);
+        console.log("Streak reset to 0");
+    }
+}
+
+
+const originalShowEndScreen = showEndScreen;
+showEndScreen = function(won) {
+
+    originalShowEndScreen(won);
+    
+
+    updateStreak(won);
+};

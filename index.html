@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LOTMDLE</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon">
 </head>
 <body>
 
@@ -12,11 +13,34 @@
     <button class="how-btn" id="feedbackBtn">📧</button>
     <button class="how-btn" id="patchBtn">📋</button>
     <button class="how-btn" id="themeBtn">🎨</button>
+    <button class="how-btn" id="leaderboardBtn" title="Ranking">🏆</button>
 
 <div class="theme-menu hidden" id="themeMenu">
     <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
     <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
 </div>
+
+
+<div id="leaderboardOverlay" class="overlay hidden">
+    <div class="overlay-card" style="max-width: 600px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Hall of Fame</h2>
+            <button class="ow-x" id="closeLeaderboard">×</button>
+        </div>
+
+   
+        <div class="mode-selector" style="margin-bottom:20px;">
+            <button id="lbDailyBtn" class="mode-btn is-active">Daily</button>
+            <button id="lbInfBtn" class="mode-btn">Infinite</button>
+        </div>
+
+ 
+        <div id="leaderboard-list" style="max-height:400px; overflow-y:auto; min-height:200px;">
+            <div style="text-align:center; padding:20px;">Select game mode...</div>
+        </div>
+    </div>
+</div>
+
 
 
     <div class="game-container">
@@ -105,7 +129,7 @@
 <div class="patch-entry">
         <div class="patch-title-row">
           <h3>v1.2 - Characters Added</h3>
-          <span class="patch-date">14.02.2026</span>
+          <span class="patch-date">13.02.2026</span>
         </div>
         <ul class="patch-list">
             <li>New UI and Better phone access</li>
@@ -113,6 +137,7 @@
 </li>
 <li>changed Sasir Chapter</li>
 <li>changed age to epoch</li>
+<li>Added leaderboard</li>
 
          
           
@@ -192,6 +217,6 @@
         </div>
     </div>
 
-    <script src="script.js?v4"></script>
+    <script type="module" src="script.js?v5"></script>
 </body>
 </html>
