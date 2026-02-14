@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOTMDLE - Quote Mode</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+        <div class="overlay hidden" id="feedbackOverlay">
+        <div class="overlay-card">
+            <h2>Feedback</h2>
+            <p>Found a bug? Have a suggestion? Want to report an error in character data?</p>
+            <p>I'd love to hear from you!</p>
+            <p><strong>Contact me:</strong></p>
+            <p>📧 Email: lotmdle@proton.me<br>💬 Discord: tempescik.</p>
+            <div class="overlay-actions">
+                <button class="btn" id="feedbackCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    
+ <div id="patchOverlay" class="overlay hidden">
+  <div class="overlay-card patch-card">
+    <div class="patch-header">
+      <h2>Patch Notes</h2>
+    </div>
+
+    <div class="patch-content">
+            
+<div class="patch-entry">
+        <div class="patch-title-row">
+          <h3>v1.2</h3>
+          <span class="patch-date">13.02.2026</span>
+        </div>
+        <ul class="patch-list">
+            <li>New UI and Better phone access</li>
+          <li>Added: Hermes, Soniathrym, Cohinem, Snowman, Siatas, Mobet Zoroast, Alzuhod, Arianna
+</li>
+<li>changed Sasir Chapter</li>
+<li>changed age to epoch</li>
+<li>Added leaderboard</li>
+<li>Added Menu and Quote mode</li>
+
+         
+          
+        </ul>
+      </div>
+
+    
+<div class="patch-entry">
+        <div class="patch-title-row">
+          <h3>v1.1 - Beta fix</h3>
+          <span class="patch-date">13.02.2026</span>
+        </div>
+        <ul class="patch-list">
+          <li>Spelling mistakes corrected</li>
+          <li>Suah changed to Male</li>
+          <li>Flegrea changed to Male</li>
+          <li>Game now works on phone!</li>
+          
+        </ul>
+      </div>
+
+      <div class="patch-entry">
+        <div class="patch-title-row">
+          <h3>v1.0 - Beta Release</h3>
+          <span class="patch-date">13.02.2026</span>
+        </div>
+        <ul class="patch-list">
+          <li>🎉 Initial Beta Release!</li>
+          <li>Added 50+ characters from Book 1</li>
+          <li>Daily & Infinite Modes</li>
+          <li>Attributes: Pathway, Sequence, Gender, Age, Faction, Chapter</li>
+          <li>Feedback system implementation</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="overlay-actions">
+      <button id="patchCloseBtn" class="btn">Close</button>
+    </div>
+  </div>
+
+  
+</div>
+
+    <a href="index.html" class="back-btn" title="Back to Classic Mode">⬅</a>
+
+    <button class="how-btn" id="howBtn">?</button>
+
+    <button class="how-btn" id="themeBtn">🎨</button>
+    <button class="how-btn" id="feedbackBtn">📧</button>
+    <button class="how-btn" id="patchBtn">📋</button>
+
+    <div class="theme-menu hidden" id="themeMenu">
+        <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
+        <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
+    </div>
+    
+    
+
+  
+
+    <div class="game-container">
+        <div class="game-panel">
+            <h1 class="game-title">LOTMDLE</h1>
+            <p class="game-subtitle">GUESS THE SPEAKER</p>
+
+            <div class="mode-selector">
+                <button class="mode-btn is-active" id="dailyBtn">DAILY</button>
+                <button class="mode-btn" id="infiniteBtn">INFINITE</button>
+            </div>
+
+            <div id="quoteContainer">
+                <p id="quoteText">Loading quote...</p>
+            </div>
+
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Who said this?"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="character-list hidden" id="list"></div>
+            </div>
+
+            <div class="guesses-grid" id="grid"></div>
+
+            <div class="game-status">
+                <span id="statusText">Read the quote and guess the character!</span>
+                <span id="attemptsText">Attempts: 0 / 7</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay hidden" id="howOverlay">
+        <div class="overlay-card">
+            <h2>How to Play - Quote Mode</h2>
+            <p>Read the quote displayed on the screen.</p>
+            <p>Guess which character said it!</p>
+            <p>If you guess wrong, the character you guessed will appear in red.</p>
+            <p>You have 7 tries to find the speaker.</p>
+            <div class="overlay-actions">
+                <button class="btn" id="howCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay hidden" id="endOverlay">
+        <div class="overlay-wordle">
+            <div class="ow-head">
+                <h2 class="ow-title" id="endTitle">You got it!</h2>
+                <button class="ow-x" onclick="document.getElementById('endOverlay').classList.add('hidden')">✕</button>
+            </div>
+            <p class="ow-desc" id="endDesc">Answer: Klein Moretti</p>
+            <div class="ow-stats">
+                <div class="ow-stat">
+                    <div class="ow-stat-num" id="owTries">0</div>
+                    <div class="ow-stat-label">TRIES</div>
+                </div>
+                <div class="ow-stat">
+                    <div class="ow-stat-num" id="owMax">7</div>
+                    <div class="ow-stat-label">MAX</div>
+                </div>
+                <div class="ow-stat">
+                    <div class="ow-stat-num" id="owMode">DAILY</div>
+                    <div class="ow-stat-label">MODE</div>
+                </div>
+            </div>
+            <div class="ow-share" id="owShare"></div>
+            <div class="ow-actions">
+                <button class="btn" id="closeOverlayBtn">Close</button>
+                <button class="btn ow-primary" id="playAgainBtn">Play again</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script_quote.js"></script>
+</body>
+</html>

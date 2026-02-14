@@ -1,5 +1,28 @@
 import { submitScore, loadLeaderboard } from './leaderboard.js';
 
+const quotesData = [
+    { text: "The oldest and strongest emotion of mankind is fear, and the oldest and strongest fear is the fear of the unknown.", name: "Klein Moretti" },
+    { text: "We are guardians, but also a bunch of miserable wretches that are constantly fighting against threats and madness.", name: "Klein Moretti" },
+    { text: "A price is always exacted for what fate bestows, isn't it?", name: "Klein Moretti" },
+    { text: "Am I not him?", name: "Amon" },
+    { text: "You can call me... The Fool.", name: "Klein Moretti" },
+    { text: "The taste of a Demoness ain't bad.", name: "Roselle Gustav" },
+    { text: "Witches are all female...", name: "Roselle Gustav" },
+    { text: "There are always some things that are more important than others.", name: "Klein Moretti" },
+    { text: "Praise the Lady!", name: "Derrick Berg" },
+    { text: "Dogsh*t!", name: "Danitz Dubois" },
+    { text: "I am just a spectator.", name: "Audrey Hall" },
+    { text: "This is a reasonable development.", name: "Adam" },
+    { text: "Let us praise the Fool!", name: "Alger Wilson" },
+    { text: "Knowledge is power.", name: "Cattleya" },
+    { text: "Fate is unpredictable.", name: "Will Auceptin" },
+    { text: "A Monocle on the right eye...", name: "Amon" },
+    { text: "War! War!", name: "Medici" },
+    { text: "Good afternoon, Mr. Fool.", name: "Audrey Hall" },
+    { text: "Heh heh...", name: "Klein Moretti" },
+    { text: "Captain...", name: "Klein Moretti" }
+];
+
 const characters = [
     { name: "Adam", age: "3rd Epoch", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
     { name: "Alger Wilson", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
@@ -62,7 +85,6 @@ const characters = [
     { name: "Zaratul", age: "4th Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Secret Order"], firstChapter: 59 }
 ];
 
-
 const pathwayGroups = [
   ["Seer", "Marauder", "Apprentice"],
   ["Spectator", "Bard", "Sailor", "Reader", "Secret Supplicant"],
@@ -73,6 +95,10 @@ const pathwayGroups = [
   ["Criminal", "Prisoner"],
   ["Lawyer", "Arbiter"]
 ];
+
+let mode = localStorage.getItem("lotmdle_mode") || "daily";
+let gameType = localStorage.getItem("lotmdle_gametype") || "classic";
+let currentQuote = null;
 
 const grid = document.getElementById("grid");
 const list = document.getElementById("list");
@@ -88,13 +114,16 @@ const owCopyBtn = document.getElementById("owCopyBtn");
 const dailyBtn = document.getElementById("dailyBtn");
 const infiniteBtn = document.getElementById("infiniteBtn");
 
+const typeClassicBtn = document.getElementById("typeClassicBtn");
+const typeQuoteBtn = document.getElementById("typeQuoteBtn");
+const quoteContainer = document.getElementById("quoteContainer");
+const quoteText = document.getElementById("quoteText");
+
 const endOverlay = document.getElementById("endOverlay");
 const endTitle = document.getElementById("endTitle");
 const endDesc = document.getElementById("endDesc");
 const playAgainBtn = document.getElementById("playAgainBtn");
 const closeOverlayBtn = document.getElementById("closeOverlayBtn");
-
-let mode = localStorage.getItem("lotmdle_mode") || "daily";
 
 function todayKey() {
   const d = new Date();
@@ -105,7 +134,7 @@ function todayKey() {
 }
 
 function dailyDoneKey() {
-  return `lotmdle_daily_done_${todayKey()}`;
+  return `lotmdle_daily_done_${todayKey()}_${gameType}`;
 }
 
 function isDailyDone() {
@@ -123,6 +152,20 @@ function dailyIndex(key, size) {
 }
 
 function pickAnswer() {
+  if (gameType === "quote") {
+      if (!quotesData || quotesData.length === 0) return characters[0];
+      
+      let q;
+      if (mode === "daily") {
+          const idx = dailyIndex(todayKey(), quotesData.length);
+          q = quotesData[idx];
+      } else {
+          q = quotesData[Math.floor(Math.random() * quotesData.length)];
+      }
+      currentQuote = q;
+      return characters.find(c => c.name === q.name) || characters[0];
+  }
+
   if (mode === "daily") {
     const idx = dailyIndex(todayKey(), characters.length);
     return characters[idx];
@@ -135,6 +178,7 @@ let attempts = 0;
 const maxAttempts = 7;
 let gameOver = false;
 const usedNames = new Set();
+let currentSuggestions = [];
 
 function renderList(items) {
   if (!list) return;
@@ -198,14 +242,6 @@ function updateSuggestions() {
   }
 }
 
-function filterList() {
-  const value = searchInput.value.toLowerCase();
-  const filtered = characters.filter(char => char.name.toLowerCase().includes(value));
-  renderList(filtered);
-}
-
-
-
 function normalize(str) {
   return String(str).toLowerCase().trim();
 }
@@ -226,7 +262,6 @@ function pathwayResult(guessPathway, answerPathway) {
   return "wrong";
 }
 
-
 function ageResult(guessAge, answerAge) {
     const g = normalize(guessAge);
     const a = normalize(answerAge);
@@ -237,7 +272,6 @@ function ageResult(guessAge, answerAge) {
     
     return { suffix: "", result: "wrong" };
 }
-
 
 function simpleEqualResult(g, a) {
   return normalize(g) === normalize(a) ? "correct" : "wrong";
@@ -278,10 +312,44 @@ function makeCell(text, result) {
   return cell;
 }
 
+function updateStreak(won) {
+    const streakKey = mode === "daily" 
+        ? (gameType === "quote" ? "lotmdle_daily_streak_quote" : "lotmdle_daily_streak") 
+        : (gameType === "quote" ? "lotmdle_inf_streak_quote" : "lotmdle_inf_streak");
+        
+    let current = parseInt(localStorage.getItem(streakKey)) || 0;
+
+    if (won) {
+        current++;
+        localStorage.setItem(streakKey, current);
+        
+        let playerName = localStorage.getItem("lotmdle_player_name");
+        
+        if (!playerName) {
+            setTimeout(() => {
+                playerName = prompt("Gratulacje! Podaj swój nick do rankingu:");
+                if (playerName) {
+                    if(playerName.length > 15) playerName = playerName.substring(0, 15);
+                    localStorage.setItem("lotmdle_player_name", playerName);
+                    const finalMode = gameType === "quote" ? (mode === "daily" ? "daily_quote" : "inf_quote") : mode;
+                    submitScore(playerName, current, finalMode);
+                }
+            }, 500);
+        } else {
+            const finalMode = gameType === "quote" ? (mode === "daily" ? "daily_quote" : "inf_quote") : mode;
+            submitScore(playerName, current, finalMode);
+        }
+    } else {
+        localStorage.setItem(streakKey, 0);
+    }
+}
+
 function showEndScreen(won) {
   endTitle.textContent = won ? "You got it!" : "Not quite!";
   endDesc.textContent = `Answer: ${answer.name} • Pathway: ${answer.pathway} • Seq: ${answer.sequence} • First chapter: ${answer.firstChapter}`;
   endOverlay.classList.remove("hidden");
+
+  updateStreak(won);
 
   if (mode === "daily") {
     setDailyDone();
@@ -297,7 +365,10 @@ function showEndScreen(won) {
   const modeEl = document.getElementById("owMode");
   if (triesEl) triesEl.textContent = String(attempts);
   if (maxEl) maxEl.textContent = String(maxAttempts);
-  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "∞";
+  
+  let modeLabel = mode === "daily" ? "DAILY" : "∞";
+  if(gameType === "quote") modeLabel += " QUOTE";
+  if (modeEl) modeEl.textContent = modeLabel;
 
   const shareEl = document.getElementById("owShare");
   if (shareEl) {
@@ -326,13 +397,17 @@ function resetGame() {
   if (mode === "daily" && isDailyDone()) {
     statusText.textContent = "Daily completed. Come back tomorrow.";
     gameOver = true;
-
     grid.innerHTML = ""; 
-
     if (list) {
         list.classList.add("hidden");
         list.innerHTML = "";
     }
+    
+    if (gameType === "quote" && currentQuote) {
+        if(quoteText) quoteText.textContent = `"${currentQuote.text}"`;
+        if(quoteContainer) quoteContainer.classList.remove("hidden");
+    }
+
     hideEndScreen();
     return;
   }
@@ -340,36 +415,40 @@ function resetGame() {
   attempts = 0;
   usedNames.clear();
   gameOver = false;
-
   attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
   statusText.textContent = "Select a character to start.";
-
   grid.innerHTML = ""; 
-
+  
   answer = pickAnswer();
+  
+  if (gameType === "quote" && currentQuote) {
+      if(quoteText) quoteText.textContent = `"${currentQuote.text}"`;
+      if(quoteContainer) quoteContainer.classList.remove("hidden");
+      const headers = document.querySelector(".grid-headers");
+      if(headers) headers.classList.add("hidden");
+  } else {
+      if(quoteContainer) quoteContainer.classList.add("hidden");
+      const headers = document.querySelector(".grid-headers");
+      if(headers) headers.classList.remove("hidden");
+  }
+
   hideEndScreen();
 
   if (list) {
       list.classList.add("hidden");
       list.innerHTML = "";
   }
-
   if (searchInput) searchInput.value = "";
   currentSuggestions = [];
 }
 
-
-
 function syncModeUI() {
   if (!dailyBtn || !infiniteBtn) return;
-
   const isDaily = mode === "daily";
   dailyBtn.classList.toggle("is-active", isDaily);
   infiniteBtn.classList.toggle("is-active", !isDaily);
-
   dailyBtn.disabled = false;
   infiniteBtn.disabled = false;
-
   dailyBtn.setAttribute("aria-pressed", String(isDaily));
   infiniteBtn.setAttribute("aria-pressed", String(!isDaily));
 }
@@ -381,9 +460,24 @@ function setMode(newMode) {
   syncModeUI();
 }
 
+function setGameType(type) {
+    gameType = type;
+    localStorage.setItem("lotmdle_gametype", type);
+    
+    if(typeClassicBtn) typeClassicBtn.classList.toggle("is-active", type === "classic");
+    if(typeQuoteBtn) typeQuoteBtn.classList.toggle("is-active", type === "quote");
+    
+    resetGame();
+}
+
 if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
 if (infiniteBtn) infiniteBtn.onclick = () => setMode("infinite");
+
+if(typeClassicBtn) typeClassicBtn.onclick = () => setGameType("classic");
+if(typeQuoteBtn) typeQuoteBtn.onclick = () => setGameType("quote");
+
 syncModeUI();
+setGameType(gameType); 
 
 if (playAgainBtn) playAgainBtn.onclick = resetGame;
 if (closeOverlayBtn) closeOverlayBtn.onclick = hideEndScreen;
@@ -434,8 +528,6 @@ function makeGuess(guess) {
 
   attempts++;
   attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
-  
-
 
   if (simpleEqualResult(guess.name, answer.name) === "correct") {
     statusText.textContent = `You got it! The answer was ${answer.name}.`;
@@ -454,68 +546,81 @@ function makeGuess(guess) {
   statusText.textContent = "Keep guessing...";
 }
 
-
 const howBtn = document.getElementById("howBtn");
 const howOverlay = document.getElementById("howOverlay");
 const howCloseBtn = document.getElementById("howCloseBtn");
-
-function showHow() {
-  if (howOverlay) howOverlay.classList.remove("hidden");
-}
-
-function hideHow() {
-  if (howOverlay) howOverlay.classList.add("hidden");
-}
-
-if (howBtn) howBtn.onclick = showHow;
-if (howCloseBtn) howCloseBtn.onclick = hideHow;
-
-if (howOverlay) {
-  howOverlay.onclick = (e) => {
-    if (e.target === howOverlay) hideHow();
-  };
+if (howBtn && howOverlay) {
+    howBtn.onclick = () => howOverlay.classList.remove("hidden");
+    howCloseBtn.onclick = () => howOverlay.classList.add("hidden");
+    howOverlay.onclick = (e) => { if (e.target === howOverlay) howOverlay.classList.add("hidden"); };
 }
 
 const feedbackBtn = document.getElementById("feedbackBtn");
 const feedbackOverlay = document.getElementById("feedbackOverlay");
 const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");
-
-function showFeedback() {
-  if (feedbackOverlay) feedbackOverlay.classList.remove("hidden");
-}
-
-function hideFeedback() {
-  if (feedbackOverlay) feedbackOverlay.classList.add("hidden");
-}
-
-if (feedbackBtn) feedbackBtn.onclick = showFeedback;
-if (feedbackCloseBtn) feedbackCloseBtn.onclick = hideFeedback;
-if (feedbackOverlay) {
-  feedbackOverlay.onclick = (e) => {
-    if (e.target === feedbackOverlay) hideFeedback();
-  };
+if (feedbackBtn && feedbackOverlay) {
+    feedbackBtn.onclick = () => feedbackOverlay.classList.remove("hidden");
+    feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
+    feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
 }
 
 const patchBtn = document.getElementById("patchBtn");
 const patchOverlay = document.getElementById("patchOverlay");
 const patchCloseBtn = document.getElementById("patchCloseBtn");
-
-if (patchBtn) {
-  patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
+if (patchBtn && patchOverlay) {
+    patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
+    patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
+    patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
 }
 
-if (patchCloseBtn) {
-  patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
+const lbBtn = document.getElementById("leaderboardBtn");
+const lbOverlay = document.getElementById("leaderboardOverlay");
+const lbCloseBtn = document.getElementById("closeLeaderboard");
+const lbDailyBtn = document.getElementById("lbDailyBtn");
+const lbInfBtn = document.getElementById("lbInfBtn");
+let currentLbMode = "daily";
+
+if(lbBtn) {
+    lbBtn.addEventListener("click", () => {
+        if(lbOverlay) lbOverlay.classList.remove("hidden");
+        currentLbMode = mode === "daily" ? "daily" : "infinite";
+        if(currentLbMode === "daily") {
+            lbDailyBtn.classList.add("is-active");
+            lbInfBtn.classList.remove("is-active");
+        } else {
+            lbInfBtn.classList.add("is-active");
+            lbDailyBtn.classList.remove("is-active");
+        }
+        loadLeaderboard(currentLbMode);
+    });
 }
 
-if (patchOverlay) {
-  patchOverlay.onclick = (e) => {
-    if (e.target === patchOverlay) patchOverlay.classList.add("hidden");
-  };
+if(lbCloseBtn && lbOverlay) {
+    lbCloseBtn.addEventListener("click", () => {
+        lbOverlay.classList.add("hidden");
+    });
+    lbOverlay.addEventListener("click", (e) => {
+        if(e.target === lbOverlay) lbOverlay.classList.add("hidden");
+    });
 }
-if (list) list.classList.add("hidden");
 
-let currentSuggestions = [];
+if(lbDailyBtn) {
+    lbDailyBtn.addEventListener("click", () => {
+        currentLbMode = "daily";
+        lbDailyBtn.classList.add("is-active");
+        lbInfBtn.classList.remove("is-active");
+        loadLeaderboard("daily");
+    });
+}
+
+if(lbInfBtn) {
+    lbInfBtn.addEventListener("click", () => {
+        currentLbMode = "infinite";
+        lbInfBtn.classList.add("is-active");
+        lbDailyBtn.classList.remove("is-active");
+        loadLeaderboard("infinite");
+    });
+}
 
 function openList() {
   if (!list) return;
@@ -527,7 +632,6 @@ function closeList() {
   if (!list) return;
   list.classList.add("hidden");
 }
-
 
 document.addEventListener("pointerdown", (e) => {
   if (!list || !searchInput) return;
@@ -562,29 +666,17 @@ searchInput.addEventListener("keydown", (e) => {
   }
 });
 
-
-
-
-
 const themeBtn = document.getElementById("themeBtn");
 const themeMenu = document.getElementById("themeMenu");
 const themeOptions = document.querySelectorAll(".theme-option");
-
-
 let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
 
 function setTheme(theme) {
-
   document.body.classList.remove("theme-classic", "theme-lotm");
-  
-
   document.body.classList.add(theme);
-  
-
   currentTheme = theme;
   localStorage.setItem("lotmdle_theme", theme);
   
-
   if (themeOptions) {
       themeOptions.forEach(opt => {
         if (opt.dataset.theme === theme) opt.classList.add("active");
@@ -593,11 +685,9 @@ function setTheme(theme) {
   }
 }
 
-
 setTheme(currentTheme);
 
 if (themeBtn && themeMenu) {
-
   themeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     themeMenu.classList.toggle("hidden");
@@ -609,7 +699,6 @@ if (themeBtn && themeMenu) {
     }
   });
 
-
   themeOptions.forEach(opt => {
     opt.addEventListener("click", () => {
       const selected = opt.dataset.theme;
@@ -618,104 +707,3 @@ if (themeBtn && themeMenu) {
     });
   });
 }
-
-
-
-const lbBtn = document.getElementById("leaderboardBtn");
-const lbOverlay = document.getElementById("leaderboardOverlay");
-const lbCloseBtn = document.getElementById("closeLeaderboard");
-const lbDailyBtn = document.getElementById("lbDailyBtn");
-const lbInfBtn = document.getElementById("lbInfBtn");
-let currentLbMode = "daily";
-
-if(lbBtn) {
-    lbBtn.addEventListener("click", () => {
-        if(lbOverlay) lbOverlay.classList.remove("hidden");
-   
-        currentLbMode = mode === "daily" ? "daily" : "infinite";
-        
-    
-        if(currentLbMode === "daily") {
-            lbDailyBtn.classList.add("is-active");
-            lbInfBtn.classList.remove("is-active");
-        } else {
-            lbInfBtn.classList.add("is-active");
-            lbDailyBtn.classList.remove("is-active");
-        }
-        
-        loadLeaderboard(currentLbMode);
-    });
-}
-
-if(lbCloseBtn && lbOverlay) {
-    lbCloseBtn.addEventListener("click", () => {
-        lbOverlay.classList.add("hidden");
-    });
-    
-
-    lbOverlay.addEventListener("click", (e) => {
-        if(e.target === lbOverlay) lbOverlay.classList.add("hidden");
-    });
-}
-
-if(lbDailyBtn) {
-    lbDailyBtn.addEventListener("click", () => {
-        currentLbMode = "daily";
-        lbDailyBtn.classList.add("is-active");
-        lbInfBtn.classList.remove("is-active");
-        loadLeaderboard("daily");
-    });
-}
-
-if(lbInfBtn) {
-    lbInfBtn.addEventListener("click", () => {
-        currentLbMode = "infinite";
-        lbInfBtn.classList.add("is-active");
-        lbDailyBtn.classList.remove("is-active");
-        loadLeaderboard("infinite");
-    });
-}
-
-
-function updateStreak(won) {
-    const streakKey = mode === "daily" ? "lotmdle_daily_streak" : "lotmdle_inf_streak";
-    let current = parseInt(localStorage.getItem(streakKey)) || 0;
-
-    if (won) {
-        current++;
-        localStorage.setItem(streakKey, current);
-        console.log(`Streak updated: ${current}`);
-        
-       
-        let playerName = localStorage.getItem("lotmdle_player_name");
-        
-        if (!playerName) {
-           
-            setTimeout(() => {
-                playerName = prompt("Congratulations! You set the record. Whats your Nickname?");
-                if (playerName) {
-          
-                    if(playerName.length > 15) playerName = playerName.substring(0, 15);
-                    localStorage.setItem("lotmdle_player_name", playerName);
-                    submitScore(playerName, current, mode);
-                }
-            }, 500);
-        } else {
-            submitScore(playerName, current, mode);
-        }
-    } else {
-
-        localStorage.setItem(streakKey, 0);
-        console.log("Streak reset to 0");
-    }
-}
-
-
-const originalShowEndScreen = showEndScreen;
-showEndScreen = function(won) {
-
-    originalShowEndScreen(won);
-    
-
-    updateStreak(won);
-};
