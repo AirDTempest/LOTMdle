@@ -825,3 +825,49 @@ body {
         font-size: 42px !important;
     }
 }
+
+
+
+
+.emotes-box{
+  margin: 10px auto 25px;
+  padding: 26px 24px;
+  max-width: 700px;
+
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+
+  box-shadow: 0 0 30px rgba(217, 179, 95, 0.10);
+  backdrop-filter: blur(6px);
+
+  text-align: center;
+}
+
+.emotes-title{
+  font-family: var(--font-head);
+  letter-spacing: 3px;
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--gold);
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.emotes{
+  font-size: 34px;
+  line-height: 1.4;
+  letter-spacing: 6px; 
+  user-select: none;
+}
+
+#emotesText{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+}
+
+
+@media (max-width: 768px){
+  .emotes-box{ padding: 18px 14px; }
+  .emotes{ font-size: 26px; letter-spacing: 4px; }
+}

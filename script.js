@@ -1,28 +1,5 @@
 import { submitScore, loadLeaderboard } from './leaderboard.js';
 
-const quotesData = [
-    { text: "The oldest and strongest emotion of mankind is fear, and the oldest and strongest fear is the fear of the unknown.", name: "Klein Moretti" },
-    { text: "We are guardians, but also a bunch of miserable wretches that are constantly fighting against threats and madness.", name: "Klein Moretti" },
-    { text: "A price is always exacted for what fate bestows, isn't it?", name: "Klein Moretti" },
-    { text: "Am I not him?", name: "Amon" },
-    { text: "You can call me... The Fool.", name: "Klein Moretti" },
-    { text: "The taste of a Demoness ain't bad.", name: "Roselle Gustav" },
-    { text: "Witches are all female...", name: "Roselle Gustav" },
-    { text: "There are always some things that are more important than others.", name: "Klein Moretti" },
-    { text: "Praise the Lady!", name: "Derrick Berg" },
-    { text: "Dogsh*t!", name: "Danitz Dubois" },
-    { text: "I am just a spectator.", name: "Audrey Hall" },
-    { text: "This is a reasonable development.", name: "Adam" },
-    { text: "Let us praise the Fool!", name: "Alger Wilson" },
-    { text: "Knowledge is power.", name: "Cattleya" },
-    { text: "Fate is unpredictable.", name: "Will Auceptin" },
-    { text: "A Monocle on the right eye...", name: "Amon" },
-    { text: "War! War!", name: "Medici" },
-    { text: "Good afternoon, Mr. Fool.", name: "Audrey Hall" },
-    { text: "Heh heh...", name: "Klein Moretti" },
-    { text: "Captain...", name: "Klein Moretti" }
-];
-
 const characters = [
     { name: "Adam", age: "3rd Epoch", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
     { name: "Alger Wilson", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
@@ -85,46 +62,18 @@ const characters = [
     { name: "Zaratul", age: "4th Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Secret Order"], firstChapter: 59 }
 ];
 
+
 const pathwayGroups = [
   ["Seer", "Marauder", "Apprentice"],
-  ["Spectator", "Bard", "Sailor", "Reader", "Secret Supplicant"],
-  ["Sleepless", "Corpse Collector", "Warrior"],
-  ["Assassin", "Hunter"],
-  ["Monster"],
+  ["Spectator", "Bard", "Sailor"],
+  ["Reader", "Secret Supplicant", "Sleepless", "Corpse Collector", "Warrior"],
+  ["Assassin", "Hunter", "Monster"],
   ["Planter", "Apothecary"],
   ["Criminal", "Prisoner"],
-  ["Lawyer", "Arbiter"]
+  ["Lawyer", "Arbiter"],
 ];
 
-let mode = localStorage.getItem("lotmdle_mode") || "daily";
-let gameType = localStorage.getItem("lotmdle_gametype") || "classic";
-let currentQuote = null;
-
-const grid = document.getElementById("grid");
-const list = document.getElementById("list");
-const searchInput = document.getElementById("searchInput");
-const statusText = document.getElementById("statusText");
-const attemptsText = document.getElementById("attemptsText");
-const owTries = document.getElementById("owTries");
-const owMax = document.getElementById("owMax");
-const owMode = document.getElementById("owMode");
-const owShare = document.getElementById("owShare");
-const owCopyBtn = document.getElementById("owCopyBtn");
-
-const dailyBtn = document.getElementById("dailyBtn");
-const infiniteBtn = document.getElementById("infiniteBtn");
-
-const typeClassicBtn = document.getElementById("typeClassicBtn");
-const typeQuoteBtn = document.getElementById("typeQuoteBtn");
-const quoteContainer = document.getElementById("quoteContainer");
-const quoteText = document.getElementById("quoteText");
-
-const endOverlay = document.getElementById("endOverlay");
-const endTitle = document.getElementById("endTitle");
-const endDesc = document.getElementById("endDesc");
-const playAgainBtn = document.getElementById("playAgainBtn");
-const closeOverlayBtn = document.getElementById("closeOverlayBtn");
-
+//DAILY
 function todayKey() {
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -132,59 +81,219 @@ function todayKey() {
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
-
 function dailyDoneKey() {
-  return `lotmdle_daily_done_${todayKey()}_${gameType}`;
+  return `lotmdleclassicdailydone_${todayKey()}`;
 }
-
 function isDailyDone() {
   return localStorage.getItem(dailyDoneKey()) === "1";
 }
-
 function setDailyDone() {
   localStorage.setItem(dailyDoneKey(), "1");
 }
-
 function dailyIndex(key, size) {
   let h = 0;
-  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
-  return h % size;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) | 0;
+  return Math.abs(h) % size;
 }
 
-function pickAnswer() {
-  if (gameType === "quote") {
-      if (!quotesData || quotesData.length === 0) return characters[0];
-      
-      let q;
-      if (mode === "daily") {
-          const idx = dailyIndex(todayKey(), quotesData.length);
-          q = quotesData[idx];
-      } else {
-          q = quotesData[Math.floor(Math.random() * quotesData.length)];
-      }
-      currentQuote = q;
-      return characters.find(c => c.name === q.name) || characters[0];
-  }
+//DAILYSAVE
+function dailySaveKey() {
+  return `lotmdleclassic_dailysave_v1_${todayKey()}`;
+}
+function saveDailyState() {
+  if (mode !== "daily") return;
+  if (!answer) return;
+  if (isDailyDone()) return;
 
-  if (mode === "daily") {
-    const idx = dailyIndex(todayKey(), characters.length);
-    return characters[idx];
+  const rows = Array.from(grid?.children || []);
+  const guesses = rows.map((row) => {
+    const cells = Array.from(row.querySelectorAll(".cell"));
+    return cells.map((cell) => ({
+      text: cell?.textContent ?? "",
+      cls: cell?.className ?? "cell",
+    }));
+  });
+
+  const payload = {
+    answerName: answer.name,
+    attempts,
+    gameOver,
+    usedNames: Array.from(usedNames),
+    guesses,
+  };
+
+  localStorage.setItem(dailySaveKey(), JSON.stringify(payload));
+}
+function clearDailyState() {
+  localStorage.removeItem(dailySaveKey());
+}
+function loadDailyState() {
+  const raw = localStorage.getItem(dailySaveKey());
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
   }
-  return characters[Math.floor(Math.random() * characters.length)];
 }
 
-let answer = pickAnswer();
+
+//INFSAVE
+function infSaveKey() {
+  return "lotmdleclassic_infsave_v1";
+}
+function saveInfiniteState() {
+  if (mode !== "infinite") return;
+  if (!answer) return;
+
+  const rows = Array.from(grid?.children || []);
+  const guesses = rows.map((row) => {
+    const cells = Array.from(row.querySelectorAll(".cell"));
+    return cells.map((cell) => ({
+      text: cell?.textContent ?? "",
+      cls: cell?.className ?? "cell",
+    }));
+  });
+
+  const payload = {
+    answerName: answer.name,
+    attempts,
+    gameOver,
+    usedNames: Array.from(usedNames),
+    guesses,
+  };
+
+  localStorage.setItem(infSaveKey(), JSON.stringify(payload));
+}
+function clearInfiniteState() {
+  localStorage.removeItem(infSaveKey());
+}
+function loadInfiniteState() {
+  const raw = localStorage.getItem(infSaveKey());
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+//ELEMENTS
+let mode = localStorage.getItem("lotmdleclassicmode") || "daily";
+
+const grid = document.getElementById("grid");
+const list = document.getElementById("list");
+const searchInput = document.getElementById("searchInput");
+const statusText = document.getElementById("statusText");
+const attemptsText = document.getElementById("attemptsText");
+
+const dailyBtn = document.getElementById("dailyBtn");
+const infiniteBtn = document.getElementById("infiniteBtn");
+
+const endOverlay = document.getElementById("endOverlay");
+const endTitle = document.getElementById("endTitle");
+const endDesc = document.getElementById("endDesc");
+const playAgainBtn = document.getElementById("playAgainBtn");
+const closeOverlayBtn = document.getElementById("closeOverlayBtn");
+
+const lbBtn = document.getElementById("leaderboardBtn");
+const lbOverlay = document.getElementById("leaderboardOverlay");
+const lbCloseBtn = document.getElementById("closeLeaderboard");
+const lbDailyBtn = document.getElementById("lbDailyBtn");
+const lbInfBtn = document.getElementById("lbInfBtn");
+let currentLbMode = "daily";
+
+//STATE
+let answer = null;
 let attempts = 0;
 const maxAttempts = 7;
 let gameOver = false;
-const usedNames = new Set();
+let usedNames = new Set();
 let currentSuggestions = [];
 
+//RESULTS
+function normalize(str) {
+  return String(str ?? "").toLowerCase().trim();
+}
+function normPathway(p) {
+  return normalize(p);
+}
+function pathwayResult(guessPathway, answerPathway) {
+  const g = normPathway(guessPathway);
+  const a = normPathway(answerPathway);
+  if (!g || !a) return "wrong";
+  if (g === a) return "correct";
+  for (const group of pathwayGroups) {
+    const set = new Set(group.map(normPathway));
+    if (set.has(g) && set.has(a)) return "partial";
+  }
+  return "wrong";
+}
+function ageResult(guessAge, answerAge) {
+  const g = normalize(guessAge);
+  const a = normalize(answerAge);
+  return { suffix: "", result: g === a ? "correct" : "wrong" };
+}
+function simpleEqualResult(g, a) {
+  return normalize(g) === normalize(a) ? "correct" : "wrong";
+}
+function seqResult(guessSeq, answerSeq) {
+  const g = Number(guessSeq);
+  const a = Number(answerSeq);
+  if (g === a) return "correct";
+  if (Math.abs(g - a) === 1) return "partial";
+  return "wrong";
+}
+function factionsResult(guessFactions, answerFactions) {
+  const gSet = new Set((guessFactions || []).map(normalize));
+  const aSet = new Set((answerFactions || []).map(normalize));
+  const intersection = Array.from(gSet).filter((x) => aSet.has(x));
+  if (intersection.length === 0) return "wrong";
+  if (gSet.size === aSet.size && intersection.length === gSet.size) return "correct";
+  return "partial";
+}
+function chapterResult(guessChapter, answerChapter) {
+  const g = parseInt(guessChapter, 10);
+  const a = parseInt(answerChapter, 10);
+  if (Number.isNaN(g) || Number.isNaN(a)) return { suffix: "", result: "wrong" };
+  if (g === a) return { suffix: "", result: "correct" };
+  return { suffix: g < a ? " ↑" : " ↓", result: "partial" };
+}
+function makeCell(text, result) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  if (result === "correct") cell.classList.add("correct");
+  else if (result === "partial") cell.classList.add("partial");
+  else cell.classList.add("wrong");
+  cell.textContent = text;
+  return cell;
+}
+
+//PICK
+function pickDailyAnswer() {
+  if (!characters.length) return null;
+  const idx = dailyIndex(todayKey(), characters.length);
+  return characters[idx];
+}
+function pickInfiniteAnswer() {
+  if (!characters.length) return null;
+  return characters[Math.floor(Math.random() * characters.length)];
+}
+
+//LIST
+function openList() {
+  if (!list) return;
+  if (gameOver) return;
+  list.classList.remove("hidden");
+}
+function closeList() {
+  if (!list) return;
+  list.classList.add("hidden");
+}
 function renderList(items) {
   if (!list) return;
   list.innerHTML = "";
-
-  items.forEach(char => {
+  items.forEach((char) => {
     const div = document.createElement("div");
     div.className = "list-item";
 
@@ -199,18 +308,15 @@ function renderList(items) {
     div.appendChild(nameSpan);
     div.appendChild(seqSpan);
 
-    const key = char.name;
-
-    if (usedNames.has(key) || gameOver) {
+    const disabled = usedNames.has(char.name) || gameOver;
+    if (disabled) {
       div.classList.add("used");
       div.onclick = null;
     } else {
-      div.classList.remove("used");
       div.onclick = () => {
         if (usedNames.has(char.name) || gameOver) return;
-        
         makeGuess(char);
-        searchInput.value = "";
+        if (searchInput) searchInput.value = "";
         currentSuggestions = [];
         closeList();
       };
@@ -219,158 +325,84 @@ function renderList(items) {
     list.appendChild(div);
   });
 }
-
 function updateSuggestions() {
   if (!list || !searchInput) return;
-
   const q = searchInput.value.trim().toLowerCase();
-
   if (!q) {
     closeList();
     return;
   }
-
   currentSuggestions = characters
-    .filter(c => c.name.toLowerCase().includes(q))
+    .filter((c) => c.name.toLowerCase().includes(q))
     .slice(0, 30);
-
   renderList(currentSuggestions);
-  if (currentSuggestions.length > 0) {
-    openList();
-  } else {
-    closeList();
-  }
+  if (currentSuggestions.length) openList();
+  else closeList();
 }
 
-function normalize(str) {
-  return String(str).toLowerCase().trim();
+//END
+function hideEndScreen() {
+  if (endOverlay) endOverlay.classList.add("hidden");
 }
-
-function normPathway(p) {
-  return String(p || "").trim().toLowerCase();
-}
-
-function pathwayResult(guessPathway, answerPathway) {
-  const g = normPathway(guessPathway);
-  const a = normPathway(answerPathway);
-  if (!g || !a) return "wrong";
-  if (g === a) return "correct";
-  for (const group of pathwayGroups) {
-    const set = new Set(group.map(normPathway));
-    if (set.has(g) && set.has(a)) return "partial";
-  }
-  return "wrong";
-}
-
-function ageResult(guessAge, answerAge) {
-    const g = normalize(guessAge);
-    const a = normalize(answerAge);
-
-    if (g === a) {
-        return { suffix: "", result: "correct" };
-    }
-    
-    return { suffix: "", result: "wrong" };
-}
-
-function simpleEqualResult(g, a) {
-  return normalize(g) === normalize(a) ? "correct" : "wrong";
-}
-
-function seqResult(guessSeq, answerSeq) {
-  const g = Number(guessSeq);
-  const a = Number(answerSeq);
-  if (g === a) return "correct";
-  if (Math.abs(g - a) === 1) return "partial";
-  return "wrong";
-}
-
-function factionsResult(guessFactions, answerFactions) {
-  const gSet = new Set(guessFactions.map(f => normalize(f)));
-  const aSet = new Set(answerFactions.map(f => normalize(f)));
-  const intersection = [...gSet].filter(x => aSet.has(x));
-  if (intersection.length === 0) return "wrong";
-  if (gSet.size === aSet.size && intersection.length === gSet.size) return "correct";
-  return "partial";
-}
-
-function chapterResult(guessChapter, answerChapter) {
-  const g = parseInt(guessChapter);
-  const a = parseInt(answerChapter);
-  if (isNaN(g) || isNaN(a)) return { suffix: "", result: "wrong" };
-  if (g === a) return { suffix: "", result: "correct" };
-  return g < a ? { suffix: " ↑", result: "partial" } : { suffix: " ↓", result: "partial" };
-}
-
-function makeCell(text, result) {
-  const cell = document.createElement("div");
-  cell.className = "cell";
-  if (result === "correct") cell.classList.add("correct");
-  else if (result === "partial") cell.classList.add("partial");
-  else cell.classList.add("wrong");
-  cell.textContent = text;
-  return cell;
-}
-
 function updateStreak(won) {
-    const streakKey = mode === "daily" 
-        ? (gameType === "quote" ? "lotmdle_daily_streak_quote" : "lotmdle_daily_streak") 
-        : (gameType === "quote" ? "lotmdle_inf_streak_quote" : "lotmdle_inf_streak");
-        
-    let current = parseInt(localStorage.getItem(streakKey)) || 0;
+  const streakKey = mode === "daily" ? "lotmdleclassic_dailystreak" : "lotmdleclassic_infstreak";
+  let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
 
-    if (won) {
-        current++;
-        localStorage.setItem(streakKey, current);
-        
-        let playerName = localStorage.getItem("lotmdle_player_name");
-        
-        if (!playerName) {
-            setTimeout(() => {
-                playerName = prompt("Congratulatuons! Write your nickname for the leaderboard:");
-                if (playerName) {
-                    if(playerName.length > 15) playerName = playerName.substring(0, 15);
-                    localStorage.setItem("lotmdle_player_name", playerName);
-                    const finalMode = gameType === "quote" ? (mode === "daily" ? "daily_quote" : "inf_quote") : mode;
-                    submitScore(playerName, current, finalMode);
-                }
-            }, 500);
-        } else {
-            const finalMode = gameType === "quote" ? (mode === "daily" ? "daily_quote" : "inf_quote") : mode;
-            submitScore(playerName, current, finalMode);
+  if (won) {
+    current++;
+    localStorage.setItem(streakKey, String(current));
+
+    let playerName = localStorage.getItem("lotmdleplayername");
+    if (!playerName) {
+      setTimeout(() => {
+        playerName = (prompt("Gratulacje! Podaj swój nick do rankingu") || "").trim();
+        if (playerName) {
+          if (playerName.length > 15) playerName = playerName.substring(0, 15);
+          localStorage.setItem("lotmdleplayername", playerName);
+          submitScore(playerName, current, mode === "daily" ? "daily" : "infinite");
         }
+      }, 400);
     } else {
-        localStorage.setItem(streakKey, 0);
+      submitScore(playerName, current, mode === "daily" ? "daily" : "infinite");
     }
+  } else {
+    localStorage.setItem(streakKey, "0");
+  }
 }
-
 function showEndScreen(won) {
-  endTitle.textContent = won ? "You got it!" : "Not quite!";
-  endDesc.textContent = `Answer: ${answer.name} • Pathway: ${answer.pathway} • Seq: ${answer.sequence} • First chapter: ${answer.firstChapter}`;
-  endOverlay.classList.remove("hidden");
+  if (endTitle) endTitle.textContent = won ? "You got it!" : "Not quite!";
+  if (endDesc && answer) {
+    endDesc.textContent = `Answer: ${answer.name} | Pathway: ${answer.pathway} | Seq: ${answer.sequence} | First chapter: ${answer.firstChapter}`;
+  }
+  if (endOverlay) endOverlay.classList.remove("hidden");
 
   updateStreak(won);
 
   if (mode === "daily") {
     setDailyDone();
-    playAgainBtn.disabled = true;
-    playAgainBtn.textContent = "Come back tomorrow";
+    clearDailyState();
+
+    if (playAgainBtn) {
+      playAgainBtn.disabled = true;
+      playAgainBtn.textContent = "Come back tomorrow";
+    }
   } else {
-    playAgainBtn.disabled = false;
-    playAgainBtn.textContent = "Play again";
+    clearInfiniteState();
+    if (playAgainBtn) {
+      playAgainBtn.disabled = false;
+      playAgainBtn.textContent = "Play again";
+    }
   }
 
+  const shareEl = document.getElementById("owShare");
   const triesEl = document.getElementById("owTries");
   const maxEl = document.getElementById("owMax");
   const modeEl = document.getElementById("owMode");
+
   if (triesEl) triesEl.textContent = String(attempts);
   if (maxEl) maxEl.textContent = String(maxAttempts);
-  
-  let modeLabel = mode === "daily" ? "DAILY" : "∞";
-  if(gameType === "quote") modeLabel += " QUOTE";
-  if (modeEl) modeEl.textContent = modeLabel;
+  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "INFINITE";
 
-  const shareEl = document.getElementById("owShare");
   if (shareEl) {
     shareEl.innerHTML = "";
     const total = Math.min(maxAttempts, 7);
@@ -387,124 +419,145 @@ function showEndScreen(won) {
       shareEl.appendChild(t);
     }
   }
+  
 }
 
-function hideEndScreen() {
-  endOverlay.classList.add("hidden");
+//FLOW
+function syncModeUI() {
+  const isDaily = mode === "daily";
+  if (dailyBtn) dailyBtn.classList.toggle("is-active", isDaily);
+  if (infiniteBtn) infiniteBtn.classList.toggle("is-active", !isDaily);
+  if (dailyBtn) dailyBtn.setAttribute("aria-pressed", String(isDaily));
+  if (infiniteBtn) infiniteBtn.setAttribute("aria-pressed", String(!isDaily));
 }
-
-function resetGame() {
-  if (mode === "daily" && isDailyDone()) {
-    statusText.textContent = "Daily completed. Come back tomorrow.";
-    gameOver = true;
-    grid.innerHTML = ""; 
-    if (list) {
-        list.classList.add("hidden");
-        list.innerHTML = "";
-    }
-    
-    if (gameType === "quote" && currentQuote) {
-        if(quoteText) quoteText.textContent = `"${currentQuote.text}"`;
-        if(quoteContainer) quoteContainer.classList.remove("hidden");
-    }
-
-    hideEndScreen();
-    return;
-  }
-
-  attempts = 0;
-  usedNames.clear();
-  gameOver = false;
-  attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
-  statusText.textContent = "Select a character to start.";
-  grid.innerHTML = ""; 
-  
-  answer = pickAnswer();
-  
-  if (gameType === "quote" && currentQuote) {
-      if(quoteText) quoteText.textContent = `"${currentQuote.text}"`;
-      if(quoteContainer) quoteContainer.classList.remove("hidden");
-      const headers = document.querySelector(".grid-headers");
-      if(headers) headers.classList.add("hidden");
-  } else {
-      if(quoteContainer) quoteContainer.classList.add("hidden");
-      const headers = document.querySelector(".grid-headers");
-      if(headers) headers.classList.remove("hidden");
-  }
-
+function resetDaily() {
   hideEndScreen();
 
-  if (list) {
-      list.classList.add("hidden");
-      list.innerHTML = "";
-  }
-  if (searchInput) searchInput.value = "";
+  answer = pickDailyAnswer();
+  attempts = 0;
+  gameOver = false;
+  usedNames = new Set();
   currentSuggestions = [];
-}
 
-function syncModeUI() {
-  if (!dailyBtn || !infiniteBtn) return;
-  const isDaily = mode === "daily";
-  dailyBtn.classList.toggle("is-active", isDaily);
-  infiniteBtn.classList.toggle("is-active", !isDaily);
-  dailyBtn.disabled = false;
-  infiniteBtn.disabled = false;
-  dailyBtn.setAttribute("aria-pressed", String(isDaily));
-  infiniteBtn.setAttribute("aria-pressed", String(!isDaily));
-}
+  if (grid) grid.innerHTML = "";
+  if (searchInput) searchInput.value = "";
+  closeList();
 
-function setMode(newMode) {
-  mode = newMode;
-  localStorage.setItem("lotmdle_mode", mode);
-  resetGame();
-  syncModeUI();
-}
+  if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
 
-function setGameType(type) {
-    gameType = type;
-    localStorage.setItem("lotmdle_gametype", type);
-    
-    if(typeClassicBtn) typeClassicBtn.classList.toggle("is-active", type === "classic");
-    if(typeQuoteBtn) typeQuoteBtn.classList.toggle("is-active", type === "quote");
-    
-    resetGame();
-}
-
-if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
-if (infiniteBtn) infiniteBtn.onclick = () => setMode("infinite");
-
-if(typeClassicBtn) typeClassicBtn.onclick = () => setGameType("classic");
-if(typeQuoteBtn) typeQuoteBtn.onclick = () => setGameType("quote");
-
-syncModeUI();
-setGameType(gameType); 
-
-if (playAgainBtn) playAgainBtn.onclick = resetGame;
-if (closeOverlayBtn) closeOverlayBtn.onclick = hideEndScreen;
-if (endOverlay) {
-  endOverlay.onclick = (e) => {
-    if (e.target === endOverlay) hideEndScreen();
-  };
-}
-
-if (mode === "daily" && isDailyDone()) {
-  gameOver = true;
-  statusText.textContent = "Daily completed. Come back tomorrow.";
-  if (list) {
-    list.classList.add("hidden");
-    list.innerHTML = "";
-  }
-}
-
-function makeGuess(guess) {
-  if (gameOver || attempts >= maxAttempts) return;
-
-  const key = guess.name;
-  if (usedNames.has(key)) {
-    statusText.textContent = "Already guessed.";
+  if (isDailyDone()) {
+    clearDailyState();
+    gameOver = true;
+    if (statusText) statusText.textContent = "Daily completed. Come back tomorrow.";
     return;
   }
-  usedNames.add(key);
+
+  const s = loadDailyState();
+  if (s && s.answerName === answer.name) {
+    attempts = typeof s.attempts === "number" ? s.attempts : 0;
+    gameOver = !!s.gameOver;
+    usedNames = new Set(Array.isArray(s.usedNames) ? s.usedNames : []);
+    currentSuggestions = [];
+
+    if (grid) {
+      grid.innerHTML = "";
+      const guesses = Array.isArray(s.guesses) ? s.guesses : [];
+      guesses.forEach((rowCells) => {
+        const row = document.createElement("div");
+        row.className = "row";
+        (Array.isArray(rowCells) ? rowCells : []).forEach((c) => {
+          const cell = document.createElement("div");
+          cell.className = c.cls || "cell wrong";
+          cell.textContent = c.text || "";
+          row.appendChild(cell);
+        });
+        grid.appendChild(row);
+      });
+    }
+
+    if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
+    if (statusText) statusText.textContent = gameOver ? "Game finished." : "Select a character to continue.";
+    if (searchInput) searchInput.value = "";
+    closeList();
+    return;
+  }
+
+  if (statusText) statusText.textContent = "Select a character to start.";
+  saveDailyState();
+}
+
+function startInfinite(forceNew = false) {
+  hideEndScreen();
+
+  if (!forceNew) {
+    const s = loadInfiniteState();
+    if (s && s.answerName) {
+      const restoredAnswer = characters.find((c) => c.name === s.answerName);
+      if (restoredAnswer) {
+        answer = restoredAnswer;
+        attempts = typeof s.attempts === "number" ? s.attempts : 0;
+        gameOver = !!s.gameOver;
+        usedNames = new Set(Array.isArray(s.usedNames) ? s.usedNames : []);
+        currentSuggestions = [];
+
+        if (grid) {
+          grid.innerHTML = "";
+          const guesses = Array.isArray(s.guesses) ? s.guesses : [];
+          guesses.forEach((rowCells) => {
+            const row = document.createElement("div");
+            row.className = "row";
+            (Array.isArray(rowCells) ? rowCells : []).forEach((c) => {
+              const cell = document.createElement("div");
+              cell.className = c.cls || "cell wrong";
+              cell.textContent = c.text || "";
+              row.appendChild(cell);
+            });
+            grid.appendChild(row);
+          });
+        }
+
+        if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
+        if (statusText) statusText.textContent = gameOver ? "Game finished." : "Keep guessing...";
+        if (searchInput) searchInput.value = "";
+        closeList();
+        return;
+      }
+    }
+  }
+
+  answer = pickInfiniteAnswer();
+  attempts = 0;
+  gameOver = false;
+  usedNames = new Set();
+  currentSuggestions = [];
+
+  if (grid) grid.innerHTML = "";
+  if (searchInput) searchInput.value = "";
+  closeList();
+
+  if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
+  if (statusText) statusText.textContent = "Select a character to start.";
+
+  saveInfiniteState();
+}
+function setMode(newMode) {
+  if (mode === newMode) return;
+  mode = newMode;
+  localStorage.setItem("lotmdleclassicmode", mode);
+  syncModeUI();
+  if (mode === "infinite") startInfinite(false);
+  else resetDaily();
+}
+
+//GUESS
+function makeGuess(guess) {
+  if (gameOver || attempts >= maxAttempts || !answer) return;
+
+  if (usedNames.has(guess.name)) {
+    if (statusText) statusText.textContent = "Already guessed.";
+    return;
+  }
+  usedNames.add(guess.name);
 
   const row = document.createElement("div");
   row.className = "row";
@@ -516,173 +569,159 @@ function makeGuess(guess) {
 
   row.appendChild(makeCell(guess.gender, simpleEqualResult(guess.gender, answer.gender)));
   row.appendChild(makeCell(guess.pathway, pathwayResult(guess.pathway, answer.pathway)));
-  row.appendChild(makeCell(guess.sequence, seqResult(guess.sequence, answer.sequence)));
+  row.appendChild(makeCell(String(guess.sequence), seqResult(guess.sequence, answer.sequence)));
 
-  const guessFactionsText = guess.factions.join(", ");
+  const guessFactionsText = (guess.factions || []).join(", ");
   row.appendChild(makeCell(guessFactionsText, factionsResult(guess.factions, answer.factions)));
 
   const chapterInfo = chapterResult(guess.firstChapter, answer.firstChapter);
   row.appendChild(makeCell(`${guess.firstChapter}${chapterInfo.suffix}`, chapterInfo.result));
 
-  grid.appendChild(row);
+  if (grid) grid.appendChild(row);
 
   attempts++;
-  attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
+  if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
 
-  if (simpleEqualResult(guess.name, answer.name) === "correct") {
-    statusText.textContent = `You got it! The answer was ${answer.name}.`;
+  const won = simpleEqualResult(guess.name, answer.name) === "correct";
+  if (won) {
+    if (statusText) statusText.textContent = `You got it! The answer was ${answer.name}.`;
     gameOver = true;
+    if (mode === "infinite") saveInfiniteState();
+    if (mode === "daily") saveDailyState();
+
     showEndScreen(true);
     return;
   }
 
-  if (attempts === maxAttempts) {
-    statusText.textContent = `Out of attempts. The answer was ${answer.name}.`;
+  if (attempts >= maxAttempts) {
+    if (statusText) statusText.textContent = `Out of attempts. The answer was ${answer.name}.`;
     gameOver = true;
+    if (mode === "infinite") saveInfiniteState();
+    if (mode === "daily") saveDailyState();
+
     showEndScreen(false);
     return;
   }
 
-  statusText.textContent = "Keep guessing...";
+  if (statusText) statusText.textContent = "Keep guessing...";
+  if (mode === "infinite") saveInfiniteState();
+  if (mode === "daily") saveDailyState();
+
 }
 
-const howBtn = document.getElementById("howBtn");
-const howOverlay = document.getElementById("howOverlay");
-const howCloseBtn = document.getElementById("howCloseBtn");
-if (howBtn && howOverlay) {
-    howBtn.onclick = () => howOverlay.classList.remove("hidden");
-    howCloseBtn.onclick = () => howOverlay.classList.add("hidden");
-    howOverlay.onclick = (e) => { if (e.target === howOverlay) howOverlay.classList.add("hidden"); };
+//EVENTS
+if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
+if (infiniteBtn) infiniteBtn.onclick = () => setMode("infinite");
+
+if (playAgainBtn) {
+  playAgainBtn.onclick = () => {
+    if (mode === "infinite") startInfinite(true);
+    else resetDaily();
+  };
 }
-
-const feedbackBtn = document.getElementById("feedbackBtn");
-const feedbackOverlay = document.getElementById("feedbackOverlay");
-const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");
-if (feedbackBtn && feedbackOverlay) {
-    feedbackBtn.onclick = () => feedbackOverlay.classList.remove("hidden");
-    feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
-    feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
-}
-
-const patchBtn = document.getElementById("patchBtn");
-const patchOverlay = document.getElementById("patchOverlay");
-const patchCloseBtn = document.getElementById("patchCloseBtn");
-if (patchBtn && patchOverlay) {
-    patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
-    patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
-    patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
-}
-
-const lbBtn = document.getElementById("leaderboardBtn");
-const lbOverlay = document.getElementById("leaderboardOverlay");
-const lbCloseBtn = document.getElementById("closeLeaderboard");
-const lbDailyBtn = document.getElementById("lbDailyBtn");
-const lbInfBtn = document.getElementById("lbInfBtn");
-let currentLbMode = "daily";
-
-if(lbBtn) {
-    lbBtn.addEventListener("click", () => {
-        if(lbOverlay) lbOverlay.classList.remove("hidden");
-        currentLbMode = mode === "daily" ? "daily" : "infinite";
-        if(currentLbMode === "daily") {
-            lbDailyBtn.classList.add("is-active");
-            lbInfBtn.classList.remove("is-active");
-        } else {
-            lbInfBtn.classList.add("is-active");
-            lbDailyBtn.classList.remove("is-active");
-        }
-        loadLeaderboard(currentLbMode);
-    });
-}
-
-if(lbCloseBtn && lbOverlay) {
-    lbCloseBtn.addEventListener("click", () => {
-        lbOverlay.classList.add("hidden");
-    });
-    lbOverlay.addEventListener("click", (e) => {
-        if(e.target === lbOverlay) lbOverlay.classList.add("hidden");
-    });
-}
-
-if(lbDailyBtn) {
-    lbDailyBtn.addEventListener("click", () => {
-        currentLbMode = "daily";
-        lbDailyBtn.classList.add("is-active");
-        lbInfBtn.classList.remove("is-active");
-        loadLeaderboard("daily");
-    });
-}
-
-if(lbInfBtn) {
-    lbInfBtn.addEventListener("click", () => {
-        currentLbMode = "infinite";
-        lbInfBtn.classList.add("is-active");
-        lbDailyBtn.classList.remove("is-active");
-        loadLeaderboard("infinite");
-    });
-}
-
-function openList() {
-  if (!list) return;
-  if (gameOver) return;
-  list.classList.remove("hidden");
-}
-
-function closeList() {
-  if (!list) return;
-  list.classList.add("hidden");
+if (closeOverlayBtn) closeOverlayBtn.onclick = hideEndScreen;
+if (endOverlay) {
+  endOverlay.onclick = (e) => {
+    if (e.target === endOverlay) hideEndScreen();
+  };
 }
 
 document.addEventListener("pointerdown", (e) => {
   if (!list || !searchInput) return;
-  const clickedInside = (e.target === searchInput) || list.contains(e.target);
+  const clickedInside = e.target === searchInput || list.contains(e.target);
   if (!clickedInside) closeList();
 });
 
-searchInput.addEventListener("focus", updateSuggestions);
-searchInput.addEventListener("input", updateSuggestions);
+if (searchInput) {
+  searchInput.addEventListener("focus", updateSuggestions);
+  searchInput.addEventListener("input", updateSuggestions);
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeList();
+      searchInput.blur();
+      return;
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) return;
+      const exact = characters.find((c) => c.name.toLowerCase() === q);
+      const pick = exact || currentSuggestions[0];
+      if (!pick) return;
+      makeGuess(pick);
+      searchInput.value = "";
+      currentSuggestions = [];
+      closeList();
+    }
+  });
+}
 
-searchInput.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    e.preventDefault();
-    closeList();
-    searchInput.blur();
-    return;
-  }
+//OVERLAYS
+const howBtn = document.getElementById("howBtn");
+const howOverlay = document.getElementById("howOverlay");
+const howCloseBtn = document.getElementById("howCloseBtn");
+if (howBtn && howOverlay) howBtn.onclick = () => howOverlay.classList.remove("hidden");
+if (howCloseBtn && howOverlay) howCloseBtn.onclick = () => howOverlay.classList.add("hidden");
+if (howOverlay) howOverlay.onclick = (e) => { if (e.target === howOverlay) howOverlay.classList.add("hidden"); };
 
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const q = searchInput.value.trim().toLowerCase();
-    if (!q) return;
+const feedbackBtn = document.getElementById("feedbackBtn");
+const feedbackOverlay = document.getElementById("feedbackOverlay");
+const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");
+if (feedbackBtn && feedbackOverlay) feedbackBtn.onclick = () => feedbackOverlay.classList.remove("hidden");
+if (feedbackCloseBtn && feedbackOverlay) feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
+if (feedbackOverlay) feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
 
-    const exact = characters.find(c => c.name.toLowerCase() === q);
-    const pick = exact || currentSuggestions[0];
-    if (!pick) return;
+const patchBtn = document.getElementById("patchBtn");
+const patchOverlay = document.getElementById("patchOverlay");
+const patchCloseBtn = document.getElementById("patchCloseBtn");
+if (patchBtn && patchOverlay) patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
+if (patchCloseBtn && patchOverlay) patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
+if (patchOverlay) patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
 
-    makeGuess(pick);
-    searchInput.value = "";
-    currentSuggestions = [];
-    closeList();
-  }
+//LEADERBOARD
+if (lbBtn && lbOverlay) {
+  lbBtn.addEventListener("click", () => {
+    lbOverlay.classList.remove("hidden");
+    currentLbMode = mode === "daily" ? "daily" : "infinite";
+    if (lbDailyBtn && lbInfBtn) {
+      lbDailyBtn.classList.toggle("is-active", currentLbMode === "daily");
+      lbInfBtn.classList.toggle("is-active", currentLbMode === "infinite");
+    }
+    loadLeaderboard(currentLbMode);
+  });
+}
+if (lbCloseBtn && lbOverlay) lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
+if (lbOverlay) lbOverlay.addEventListener("click", (e) => { if (e.target === lbOverlay) lbOverlay.classList.add("hidden"); });
+
+if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => {
+  currentLbMode = "daily";
+  lbDailyBtn.classList.add("is-active");
+  if (lbInfBtn) lbInfBtn.classList.remove("is-active");
+  loadLeaderboard("daily");
+});
+if (lbInfBtn) lbInfBtn.addEventListener("click", () => {
+  currentLbMode = "infinite";
+  lbInfBtn.classList.add("is-active");
+  if (lbDailyBtn) lbDailyBtn.classList.remove("is-active");
+  loadLeaderboard("infinite");
 });
 
+//THEME
 const themeBtn = document.getElementById("themeBtn");
 const themeMenu = document.getElementById("themeMenu");
 const themeOptions = document.querySelectorAll(".theme-option");
-let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
+let currentTheme = localStorage.getItem("lotmdletheme") || "theme-lotm";
 
 function setTheme(theme) {
   document.body.classList.remove("theme-classic", "theme-lotm");
   document.body.classList.add(theme);
   currentTheme = theme;
-  localStorage.setItem("lotmdle_theme", theme);
-  
-  if (themeOptions) {
-      themeOptions.forEach(opt => {
-        if (opt.dataset.theme === theme) opt.classList.add("active");
-        else opt.classList.remove("active");
-      });
-  }
+  localStorage.setItem("lotmdletheme", theme);
+  themeOptions.forEach((opt) => {
+    if (opt.dataset.theme === theme) opt.classList.add("active");
+    else opt.classList.remove("active");
+  });
 }
 
 setTheme(currentTheme);
@@ -692,18 +731,18 @@ if (themeBtn && themeMenu) {
     e.stopPropagation();
     themeMenu.classList.toggle("hidden");
   });
-
   document.addEventListener("click", (e) => {
-    if (!themeMenu.contains(e.target) && e.target !== themeBtn) {
-      themeMenu.classList.add("hidden");
-    }
+    if (!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden");
   });
-
-  themeOptions.forEach(opt => {
+  themeOptions.forEach((opt) => {
     opt.addEventListener("click", () => {
-      const selected = opt.dataset.theme;
-      setTheme(selected);
+      setTheme(opt.dataset.theme);
       themeMenu.classList.add("hidden");
     });
   });
 }
+
+//INIT
+syncModeUI();
+if (mode === "infinite") startInfinite(false);
+else resetDaily();
