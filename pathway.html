@@ -8,6 +8,29 @@
 </head>
 
 <body>
+<div id="leaderboardOverlay" class="overlay hidden">
+    <div class="overlay-card" style="max-width: 600px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Hall of Fame</h2>
+            <button class="ow-x" id="closeLeaderboard">×</button>
+        </div>
+
+   
+
+
+
+        <div class="mode-selector" style="margin-bottom:20px;">
+            <button id="lbDailyBtn" class="mode-btn is-active">Daily</button>
+            <button id="lbInfBtn" class="mode-btn">Infinite</button>
+        </div>
+
+ 
+        <div id="leaderboard-list" style="max-height:400px; overflow-y:auto; min-height:200px;">
+            <div style="text-align:center; padding:20px;">Select game mode...</div>
+        </div>
+    </div>
+</div>
+
     <div class="overlay hidden" id="howOverlay">
   <div class="overlay-card">
     <h2>How to Play - Pathway Emotes</h2>
@@ -104,13 +127,15 @@
 </div>
   <a class="back-btn" href="index.html">←</a>
     <button class="how-btn" id="howBtn">?</button>
-
+    <button class="how-btn" id="leaderboardBtn" title="Ranking">🏆</button>
     <button class="how-btn" id="themeBtn">🎨</button>
     <button class="how-btn" id="feedbackBtn">📧</button>
     <button class="how-btn" id="patchBtn">📋</button>
 <div class="theme-menu hidden" id="themeMenu">
   <div class="theme-option" data-theme="theme-lotm">LOTM Theme Gold</div>
   <div class="theme-option" data-theme="theme-classic">Classic Theme Black</div>
+  <div class="theme-option" data-theme="theme-evernight">Evernight</div>
+<div class="theme-option" data-theme="theme-sun">Eternal Sun</div>
 </div>
   <div class="game-container">
     <div class="game-panel">
@@ -183,6 +208,7 @@
   </div>
 
   <script type="module" src="script_pathway.js"></script>
+  
 
   <script>
 

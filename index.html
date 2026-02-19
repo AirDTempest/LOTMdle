@@ -96,6 +96,8 @@
     <div class="theme-menu hidden" id="themeMenu">
         <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
         <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
+        <div class="theme-option" data-theme="theme-evernight">Evernight</div>
+<div class="theme-option" data-theme="theme-sun">Eternal Sun</div>
     </div>
 
     <div class="menu-container">
@@ -146,23 +148,33 @@
         let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
         document.body.classList.add(currentTheme);
 
-        function setTheme(theme) {
-            document.body.classList.remove("theme-classic", "theme-lotm");
-            document.body.classList.add(theme);
-            localStorage.setItem("lotmdle_theme", theme);
-        }
+      function setTheme(theme) {
+  document.body.classList.forEach((cls) => {
+    if (cls.startsWith("theme-")) document.body.classList.remove(cls);
+  });
+
+  document.body.classList.add(theme);
+  currentTheme = theme;
+  localStorage.setItem("lotmdletheme", theme);
+
+  themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
+}
+
 
         if(themeBtn) themeBtn.onclick = (e) => { e.stopPropagation(); themeMenu.classList.toggle("hidden"); };
         document.onclick = (e) => { if(!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden"); };
         themeOptions.forEach(opt => opt.onclick = () => { setTheme(opt.dataset.theme); themeMenu.classList.add("hidden"); });
+        
+        
         const patchBtn = document.getElementById("patchBtn");
-const patchOverlay = document.getElementById("patchOverlay");
+        const patchOverlay = document.getElementById("patchOverlay");
 const patchCloseBtn = document.getElementById("patchCloseBtn");
 if (patchBtn && patchOverlay) {
     patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
     patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
     patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
-}
+
+  }
 const feedbackBtn = document.getElementById("feedbackBtn");
 const feedbackOverlay = document.getElementById("feedbackOverlay");
 const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");

@@ -1,6 +1,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { 
-  getFirestore, collection, addDoc, getDocs, query, orderBy, limit, where, updateDoc 
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  where,
+  updateDoc,
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -10,12 +18,11 @@ const firebaseConfig = {
   storageBucket: "lotmdle.firebasestorage.app",
   messagingSenderId: "540788390130",
   appId: "1:540788390130:web:c345c340123cbf8580786b",
-  measurementId: "G-L8TV140QGB"
+  measurementId: "G-L8TV140QGB",
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 
 function getModeConfig(mode) {
   if (mode === "daily") {
@@ -24,12 +31,21 @@ function getModeConfig(mode) {
   if (mode === "infinite") {
     return { collName: "LeaderboardInf", fieldName: "MaxWinstreakInf" };
   }
-  if (mode === "daily_quote") {
+  if (mode === "dailyquote") {
     return { collName: "LeaderboardQuotesDaily", fieldName: "MaxWinstreakQuotesDaily" };
   }
-  if (mode === "inf_quote") {
+  if (mode === "infquote") {
     return { collName: "LeaderboardQuotesInf", fieldName: "MaxWinstreakQuotesInf" };
   }
+
+  // Pathway emotes (oddzielne rankingi)
+  if (mode === "dailypathwayemotes") {
+    return { collName: "LeaderboardEmotesDaily", fieldName: "MaxWinstreakEmotesDaily" };
+  }
+  if (mode === "infpathwayemotes") {
+    return { collName: "LeaderboardEmotesInf", fieldName: "MaxWinstreakEmotesInf" };
+  }
+
   return { collName: "LeaderboardDaily", fieldName: "MaxWinstreakDaily" };
 }
 
@@ -51,7 +67,7 @@ export async function submitScore(playerName, currentStreak, mode) {
     await addDoc(collection(db, collName), {
       name: playerName,
       [fieldName]: currentStreak,
-      date: new Date()
+      date: new Date(),
     });
   }
 }
@@ -65,12 +81,7 @@ export async function loadLeaderboard(mode) {
   list.innerHTML = `<div class="lb-loading">Loading...</div>`;
 
   try {
-    const q = query(
-      collection(db, collName),
-      orderBy(fieldName, "desc"),
-      limit(50)
-    );
-
+    const q = query(collection(db, collName), orderBy(fieldName, "desc"), limit(50));
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
@@ -92,7 +103,6 @@ export async function loadLeaderboard(mode) {
         <div class="lb-name">${data.name || "Unknown"}</div>
         <div class="lb-score">${score}</div>
       `;
-
       list.appendChild(row);
       rank++;
     });

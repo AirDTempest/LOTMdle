@@ -5,16 +5,18 @@ export function initTheme() {
 
   let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
 
-  function setTheme(theme) {
-    document.body.classList.remove("theme-classic", "theme-lotm");
-    document.body.classList.add(theme);
-    currentTheme = theme;
-    localStorage.setItem("lotmdle_theme", theme);
+ function setTheme(theme) {
+  document.body.classList.forEach((cls) => {
+    if (cls.startsWith("theme-")) document.body.classList.remove(cls);
+  });
 
-    themeOptions.forEach(opt => {
-      opt.classList.toggle("active", opt.dataset.theme === theme);
-    });
-  }
+  document.body.classList.add(theme);
+  currentTheme = theme;
+  localStorage.setItem("lotmdletheme", theme);
+
+  themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
+}
+
 
   setTheme(currentTheme);
 

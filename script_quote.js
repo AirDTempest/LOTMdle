@@ -427,7 +427,7 @@ function updateStreak(won) {
     localStorage.setItem(streakKey, current);
 
     let playerName = localStorage.getItem("lotmdle_player_name");
-    const finalMode = mode === "daily" ? "daily_quote" : "inf_quote";
+  const finalMode = mode === "daily" ? "dailyquote" : "infquote";
 
     if (!playerName) {
       setTimeout(() => {
@@ -672,3 +672,43 @@ syncModeUI();
 if (mode === "infinite") startInfinite({ forceNew: false });
 else resetDaily();
 
+
+
+const lbBtn = document.getElementById("leaderboardBtn");
+const lbOverlay = document.getElementById("leaderboardOverlay");
+const lbCloseBtn = document.getElementById("closeLeaderboard");
+const lbDailyBtn = document.getElementById("lbDailyBtn");
+const lbInfBtn = document.getElementById("lbInfBtn");
+
+let currentLbMode = "dailyquote"; 
+
+function openLb() {
+  if (!lbOverlay) return;
+  lbOverlay.classList.remove("hidden");
+
+
+  currentLbMode = (mode === "daily") ? "dailyquote" : "infquote";
+  if (lbDailyBtn && lbInfBtn) {
+    lbDailyBtn.classList.toggle("is-active", currentLbMode === "dailyquote");
+    lbInfBtn.classList.toggle("is-active", currentLbMode === "infquote");
+  }
+  loadLeaderboard(currentLbMode);
+}
+
+if (lbBtn) lbBtn.addEventListener("click", openLb);
+if (lbCloseBtn) lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
+if (lbOverlay) lbOverlay.addEventListener("click", (e) => {
+  if (e.target === lbOverlay) lbOverlay.classList.add("hidden");
+});
+
+if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => {
+  lbDailyBtn.classList.add("is-active");
+  lbInfBtn.classList.remove("is-active");
+  loadLeaderboard("dailyquote");
+});
+
+if (lbInfBtn) lbInfBtn.addEventListener("click", () => {
+  lbInfBtn.classList.add("is-active");
+  lbDailyBtn.classList.remove("is-active");
+  loadLeaderboard("infquote");
+});

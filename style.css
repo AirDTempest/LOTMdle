@@ -33,6 +33,37 @@ body.theme-lotm {
     --font-head: 'Cinzel', serif;
     background-image: none;
 }
+body.theme-evernight {
+  --bg: #070812;
+  --panel: #0d0e1f;
+  --panel-transparent: rgba(13, 14, 31, 0.95);
+  --text: #e9e7ff;
+  --muted: #b7b3d9;
+  --gold: #a78bfa;
+  --gold-glow: rgba(167, 139, 250, 0.25);
+  --border: rgba(167, 139, 250, 0.22);
+  --good: #22c55e;
+  --mid: #fbbf24;
+  --bad: #2a231b;
+  --font-main: Inter, sans-serif;
+  --font-head: Cinzel, serif;
+}
+
+body.theme-sun {
+  --bg: #0b0a07;
+  --panel: #14110a;
+  --panel-transparent: rgba(20, 17, 10, 0.95);
+  --text: #fff2d6;
+  --muted: #e6d3a6;
+  --gold: #f4c542;
+  --gold-glow: rgba(244, 197, 66, 0.30);
+  --border: rgba(244, 197, 66, 0.25);
+  --good: #25b56f;
+  --mid: #e0b241;
+  --bad: #2a231b;
+  --font-main: Inter, sans-serif;
+  --font-head: Cinzel, serif;
+}
 
 * {
     box-sizing: border-box;
