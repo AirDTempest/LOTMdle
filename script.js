@@ -355,7 +355,7 @@ function updateStreak(won) {
     let playerName = localStorage.getItem("lotmdleplayername");
     if (!playerName) {
       setTimeout(() => {
-        playerName = (prompt("Gratulacje! Podaj swój nick do rankingu") || "").trim();
+        playerName = (prompt("Congratulations! Write your nickname for the leaderboard!") || "").trim();
         if (playerName) {
           if (playerName.length > 15) playerName = playerName.substring(0, 15);
           localStorage.setItem("lotmdleplayername", playerName);
@@ -746,3 +746,4 @@ if (themeBtn && themeMenu) {
 syncModeUI();
 if (mode === "infinite") startInfinite(false);
 else resetDaily();
+
