@@ -30,7 +30,7 @@ const characters = [
     { name: "Frank Lee", age: "5th Epoch", gender: "Male", pathway: "Druid", sequence: 5, factions: ["None"], firstChapter: 638 },
     { name: "Frye", age: "5th Epoch", gender: "Male", pathway: "Death", sequence: 7, factions: ["Nighthawks"], firstChapter: 45 },
     { name: "God of Combat", age: "2nd Epoch", gender: "Male", pathway: "Twilight Giant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
-    { name: "God of Knowledge and Wisdom", age: "2nd Epoch", gender: "Male", pathway: "Paragon", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 3 },
+    { name: "God of Knowledge and Wisdom", age: "2nd Epoch", gender: "Male", pathway: "White Tower", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
     { name: "Hidden Sage", age: "5th Epoch", gender: "Male", pathway: "Hermit", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 164 },
     { name: "Hermes", age: "2nd Epoch", gender: "Male", pathway: "Visionary", sequence: 2, factions: ["Psychology Alchemists", "Twilight Hermit Order"], firstChapter: 484 },
     { name: "Ince Zangwill", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["None"], firstChapter: 19 },
@@ -355,7 +355,7 @@ function updateStreak(won) {
     let playerName = localStorage.getItem("lotmdleplayername");
     if (!playerName) {
       setTimeout(() => {
-        playerName = (prompt("Congratulations! Write your nickname for the leaderboard!") || "").trim();
+        playerName = (prompt("Gratulacje! Podaj swój nick do rankingu") || "").trim();
         if (playerName) {
           if (playerName.length > 15) playerName = playerName.substring(0, 15);
           localStorage.setItem("lotmdleplayername", playerName);
@@ -746,4 +746,3 @@ if (themeBtn && themeMenu) {
 syncModeUI();
 if (mode === "infinite") startInfinite(false);
 else resetDaily();
-

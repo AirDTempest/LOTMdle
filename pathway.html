@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LOTMDLE - Pathway</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L8TV140QGB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L8TV140QGB');
+</script>
 </head>
 
 <body>
@@ -21,12 +30,12 @@
 
         <div class="mode-selector" style="margin-bottom:20px;">
             <button id="lbDailyBtn" class="mode-btn is-active">Daily</button>
-            <button id="lbInfBtn" class="mode-btn">Infinite</button>
+       
         </div>
 
  
         <div id="leaderboard-list" style="max-height:400px; overflow-y:auto; min-height:200px;">
-            <div style="text-align:center; padding:20px;">Select game mode...</div>
+           
         </div>
     </div>
 </div>
@@ -58,79 +67,13 @@
     </div>
 
     
- <div id="patchOverlay" class="overlay hidden">
-  <div class="overlay-card patch-card">
-    <div class="patch-header">
-      <h2>Patch Notes</h2>
-    </div>
-
-    <div class="patch-content">
-            
-<div class="patch-entry">
-        <div class="patch-title-row">
-          <h3>v1.2</h3>
-          <span class="patch-date">13.02.2026</span>
-        </div>
-        <ul class="patch-list">
-            <li>New UI and Better phone access</li>
-          <li>Added: Hermes, Soniathrym, Cohinem, Snowman, Siatas, Mobet Zoroast, Alzuhod, Arianna
-</li>
-<li>changed Sasir Chapter</li>
-<li>changed age to epoch</li>
-<li>Added leaderboard</li>
-<li>Added Menu and Quote mode</li>
-
-         
-          
-        </ul>
-      </div>
-
-    
-<div class="patch-entry">
-        <div class="patch-title-row">
-          <h3>v1.1 - Beta fix</h3>
-          <span class="patch-date">13.02.2026</span>
-        </div>
-        <ul class="patch-list">
-          <li>Spelling mistakes corrected</li>
-          <li>Suah changed to Male</li>
-          <li>Flegrea changed to Male</li>
-          <li>Game now works on phone!</li>
-          
-        </ul>
-      </div>
-
-      <div class="patch-entry">
-        <div class="patch-title-row">
-          <h3>v1.0 - Beta Release</h3>
-          <span class="patch-date">13.02.2026</span>
-        </div>
-        <ul class="patch-list">
-          <li>🎉 Initial Beta Release!</li>
-          <li>Added 50+ characters from Book 1</li>
-          <li>Daily & Infinite Modes</li>
-          <li>Attributes: Pathway, Sequence, Gender, Age, Faction, Chapter</li>
-          <li>Feedback system implementation</li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="overlay-actions">
-      <button id="patchCloseBtn" class="btn">Close</button>
-    </div>
-  </div>
-
-  
-
-  
-</div>
+ 
   <a class="back-btn" href="index.html">←</a>
     <button class="how-btn" id="howBtn">?</button>
     <button class="how-btn" id="leaderboardBtn" title="Ranking">🏆</button>
     <button class="how-btn" id="themeBtn">🎨</button>
     <button class="how-btn" id="feedbackBtn">📧</button>
-    <button class="how-btn" id="patchBtn">📋</button>
+
 <div class="theme-menu hidden" id="themeMenu">
   <div class="theme-option" data-theme="theme-lotm">LOTM Theme Gold</div>
   <div class="theme-option" data-theme="theme-classic">Classic Theme Black</div>
@@ -142,10 +85,14 @@
       <h1 class="game-title">LOTMDLE</h1>
       <p class="game-subtitle">GUESS THE PATHWAY</p>
 
-      <div class="mode-selector">
-        <button class="mode-btn is-active" id="dailyBtn">DAILY</button>
-        <button class="mode-btn" id="infiniteBtn">INFINITE</button>
-      </div>
+     <div class="mode-selector">
+                    <div class="mode-main">
+                        <button class="mode-btn is-active" id="dailyBtn">DAILY</button>
+                    </div>
+                    <div class="mode-secondary">
+                        <button class="mode-btn" id="infiniteBtn">PRACTISE</button>
+                    </div>
+                </div>
 
       <div class="emotes-box">
         <div class="emotes-title">EMOTES</div>

@@ -118,6 +118,7 @@ body {
 #themeBtn { top: 176px; font-size: 16px; }
 #leaderboardBtn { top:228px; }
 
+
 .theme-menu {
     position: fixed;
     top: 176px;
@@ -901,4 +902,39 @@ body {
 @media (max-width: 768px){
   .emotes-box{ padding: 18px 14px; }
   .emotes{ font-size: 26px; letter-spacing: 4px; }
+}
+
+.mode-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.mode-main {
+    position: relative;
+}
+
+.mode-main .mode-btn {
+    min-width: 180px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.mode-secondary {
+    opacity: 0.8;
+}
+
+.mode-secondary .mode-btn {
+    min-width: 140px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.mode-secondary .mode-btn:hover {
+    min-width: 150px;
+    padding: 12px 18px;
 }

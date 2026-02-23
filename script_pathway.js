@@ -1,4 +1,4 @@
-// script_pathway.js 
+// script_pathway.js (fixed)
 
 // imports
 import { submitScore, loadLeaderboard } from "./leaderboard.js";
@@ -55,7 +55,7 @@ let mode = localStorage.getItem("lotmdle_pathway_mode") || "daily";
 const grid = document.getElementById("grid");
 const list = document.getElementById("list");
 const searchInput = document.getElementById("searchInput");
-const guessBtn = document.getElementById("guessBtn"); 
+const guessBtn = document.getElementById("guessBtn"); // (opcjonalny; w HTML może nie istnieć)
 
 const statusText = document.getElementById("statusText");
 const attemptsText = document.getElementById("attemptsText");
@@ -319,7 +319,7 @@ function updateStreak(won) {
 
     if (!playerName) {
       setTimeout(() => {
-        playerName = (prompt("Congratulations! Write your nickname for the leaderboard!") || "").trim();
+        playerName = (prompt("Gratulacje! Podaj swój nick do rankingu:") || "").trim();
         if (!playerName) return;
 
         if (playerName.length > 15) playerName = playerName.substring(0, 15);
@@ -648,4 +648,3 @@ syncModeUI();
 
 if (mode === "infinite") startInfinite({ forceNew: false });
 else resetDaily();
-

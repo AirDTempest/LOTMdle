@@ -38,7 +38,7 @@ function getModeConfig(mode) {
     return { collName: "LeaderboardQuotesInf", fieldName: "MaxWinstreakQuotesInf" };
   }
 
-  // Pathway emotes (oddzielne rankingi)
+
   if (mode === "dailypathwayemotes") {
     return { collName: "LeaderboardEmotesDaily", fieldName: "MaxWinstreakEmotesDaily" };
   }
