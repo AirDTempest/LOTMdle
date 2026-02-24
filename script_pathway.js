@@ -1,5 +1,4 @@
-// script_pathway.js (fixed)
-
+// script_pathway.js
 // imports
 import { submitScore, loadLeaderboard } from "./leaderboard.js";
 import { initTheme } from "./theme.js";
@@ -319,7 +318,7 @@ function updateStreak(won) {
 
     if (!playerName) {
       setTimeout(() => {
-        playerName = (prompt("Gratulacje! Podaj swój nick do rankingu:") || "").trim();
+        playerName = (prompt("Congratulations! Write your nickname for the leaderboard!") || "").trim();
         if (!playerName) return;
 
         if (playerName.length > 15) playerName = playerName.substring(0, 15);
@@ -648,3 +647,4 @@ syncModeUI();
 
 if (mode === "infinite") startInfinite({ forceNew: false });
 else resetDaily();
+
