@@ -431,7 +431,7 @@ function updateStreak(won) {
 
     if (!playerName) {
       setTimeout(() => {
-        playerName = prompt("Gratulacje! Podaj swój nick do rankingu:");
+        playerName = prompt("Congratulations! Write your nickname for the leaderboard!");
         if (playerName) {
           if (playerName.length > 15) playerName = playerName.substring(0, 15);
           localStorage.setItem("lotmdle_player_name", playerName);
@@ -712,3 +712,4 @@ if (lbInfBtn) lbInfBtn.addEventListener("click", () => {
   lbDailyBtn.classList.remove("is-active");
   loadLeaderboard("infquote");
 });
+
