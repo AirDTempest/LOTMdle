@@ -538,7 +538,7 @@
     loginBtn.onclick = async () => {
       const email = (loginEmail.value || '').trim();
       const pass = (loginPass.value || '').trim();
-      if (!email || !pass) return alert('Email i hasło wymagane.');
+      if (!email || !pass) return alert('Email and password needed.');
       try {
         const u = await login(email, pass);
         await showLoggedInUI(u);
@@ -551,8 +551,8 @@
       const nick = (regNick.value || '').trim();
       const email = (regEmail.value || '').trim();
       const pass = (regPass.value || '').trim();
-      if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 znaków.');
-      if (!email || pass.length < 6) return alert('Email i hasło (min 6) wymagane.');
+      if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 characters.');
+      if (!email || pass.length < 6) return alert('Email and password require 6 characters.');
       try {
         const u = await register(email, pass, nick);
         await showLoggedInUI(u);
@@ -583,3 +583,4 @@
   </script>
 </body>
 </html>
+
