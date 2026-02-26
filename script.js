@@ -137,6 +137,16 @@ function loadDailyState() {
     return null;
   }
 }
+function streakKeyDaily() {
+  const uid = auth.currentUser?.uid || "guest";
+  return `lotmdleclassic_dailystreak_${uid}`;
+}
+
+function streakKeyInf() {
+  const uid = auth.currentUser?.uid || "guest";
+  return `lotmdleclassic_infstreak_${uid}`;
+}
+
 
 
 //INFSAVE
@@ -201,7 +211,7 @@ const lbBtn = document.getElementById("leaderboardBtn");
 const lbOverlay = document.getElementById("leaderboardOverlay");
 const lbCloseBtn = document.getElementById("closeLeaderboard");
 const lbDailyBtn = document.getElementById("lbDailyBtn");
-const lbInfBtn = document.getElementById("lbInfBtn");
+
 let currentLbMode = "daily";
 
 //STATE
@@ -347,22 +357,13 @@ function hideEndScreen() {
 }
 
 async function updateStreak(won) {
-  const streakKey =
-    mode === "daily" ? "lotmdleclassic_dailystreak" : "lotmdleclassic_infstreak";
+  const streakKey = mode === "daily" ? streakKeyDaily() : streakKeyInf();
 
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
 
   if (won) {
     current++;
     localStorage.setItem(streakKey, String(current));
-
-    const u = auth.currentUser;
-    if (!u) {
-      alert("Log in to save data on leaderboard.");
-      return;
-    }
-
-   await submitScoreLoggedIn(current, mode === "daily" ? "daily" : "infinite");
 
   } else {
     localStorage.setItem(streakKey, "0");
@@ -379,16 +380,20 @@ function showEndScreen(won) {
   updateStreak(won).catch(console.warn);
    
   if (mode === "daily") {
-    const u = auth.currentUser;
-    if (u) {
-      submitDailyResultLoggedIn({
-        mode: "daily",             
-        didWin: !!won,
-        playedKey: todayKey(),     
-        
-      }).catch(console.warn);
-    }
+  const u = auth.currentUser;
+  if (u) {
+   const current = parseInt(localStorage.getItem(streakKeyDaily()) || "0", 10);
+
+
+    submitDailyResultLoggedIn({
+      mode: "daily",
+      didWin: !!won,
+      playedKey: todayKey(),
+      currentStreakAfter: won ? current : 0,
+    }).catch(console.warn);
   }
+  }
+
 
 
   if (mode === "daily") {
@@ -694,16 +699,12 @@ if (patchOverlay) patchOverlay.onclick = (e) => { if (e.target === patchOverlay)
 if (lbBtn && lbOverlay) {
   lbBtn.addEventListener("click", () => {
     lbOverlay.classList.remove("hidden");
-    currentLbMode = mode === "daily" ? "daily" : "infinite";
-
-    if (lbDailyBtn && lbInfBtn) {
-      lbDailyBtn.classList.toggle("is-active", currentLbMode === "daily");
-      lbInfBtn.classList.toggle("is-active", currentLbMode === "infinite");
-    }
-
-    loadLeaderboardLoggedIn(currentLbMode);
+    currentLbMode = "daily";
+    lbDailyBtn?.classList.add("is-active");
+    loadLeaderboardLoggedIn("daily");
   });
 }
+
 
 if (lbCloseBtn && lbOverlay)
   lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
@@ -717,17 +718,11 @@ if (lbDailyBtn)
   lbDailyBtn.addEventListener("click", () => {
     currentLbMode = "daily";
     lbDailyBtn.classList.add("is-active");
-    if (lbInfBtn) lbInfBtn.classList.remove("is-active");
+ 
     loadLeaderboardLoggedIn("daily");
   });
 
-if (lbInfBtn)
-  lbInfBtn.addEventListener("click", () => {
-    currentLbMode = "infinite";
-    lbInfBtn.classList.add("is-active");
-    if (lbDailyBtn) lbDailyBtn.classList.remove("is-active");
-    loadLeaderboardLoggedIn("infinite");
-  });
+
 
 
 //THEME

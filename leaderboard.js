@@ -12,12 +12,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import {
   getFirestore,
-  collection,
+  collectionGroup,
   doc,
   setDoc,
   getDoc,
   getDocs,
   query,
+  where,
   orderBy,
   limit,
   serverTimestamp,
@@ -38,23 +39,20 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth = getAuth(app);
 
-function getModeConfig(mode) {
-  if (mode === "daily") return { collName: "LeaderboardDaily", fieldName: "MaxWinstreakDaily" };
-  if (mode === "infinite") return { collName: "LeaderboardInf", fieldName: "MaxWinstreakInf" };
-  if (mode === "dailyquote") return { collName: "LeaderboardQuotesDaily", fieldName: "MaxWinstreakQuotesDaily" };
-  if (mode === "infquote") return { collName: "LeaderboardQuotesInf", fieldName: "MaxWinstreakQuotesInf" };
-  if (mode === "dailypathwayemotes") return { collName: "LeaderboardEmotesDaily", fieldName: "MaxWinstreakEmotesDaily" };
-  if (mode === "infpathwayemotes") return { collName: "LeaderboardEmotesInf", fieldName: "MaxWinstreakEmotesInf" };
-  return { collName: "LeaderboardDaily", fieldName: "MaxWinstreakDaily" };
+
+const USERS_COLL = "users";
+const STATS_SUBCOLL = "stats";
+const STATS_DOC = "main";
+
+function userStatsRef(uid) {
+  return doc(db, USERS_COLL, uid, STATS_SUBCOLL, STATS_DOC);
 }
+
 
 function normalizeNick(nick) {
   const n = (nick ?? "").toString().trim().slice(0, 15);
   return n.length ? n : "Player";
 }
-
-
-const USER_STATS_COLL = "UserStats";
 
 function statsPrefixFromMode(mode) {
   if (mode === "daily") return "classicDaily";
@@ -63,11 +61,7 @@ function statsPrefixFromMode(mode) {
   return null; 
 }
 
-function userStatsRef(uid) {
-  return doc(db, USER_STATS_COLL, uid);
-}
-
-function defaultsForAllStats() {
+function defaultsForAllStats(uid = null, nick = "Player") {
   const make = (p) => ({
     [`${p}Games`]: 0,
     [`${p}Wins`]: 0,
@@ -78,6 +72,9 @@ function defaultsForAllStats() {
   });
 
   return {
+    type: "main",
+    uid: uid ?? null,
+    nick,
     ...make("classicDaily"),
     ...make("quoteDaily"),
     ...make("pathwayDaily"),
@@ -86,12 +83,14 @@ function defaultsForAllStats() {
   };
 }
 
-
 export async function ensureUserStatsDoc(uid) {
   const ref = userStatsRef(uid);
   const snap = await getDoc(ref);
   if (snap.exists()) return;
-  await setDoc(ref, defaultsForAllStats(), { merge: true });
+
+  const u = auth.currentUser;
+  const nick = normalizeNick(u?.displayName || u?.email || "Player");
+  await setDoc(ref, defaultsForAllStats(uid, nick), { merge: true });
 }
 
 
@@ -111,16 +110,13 @@ export async function submitDailyResultLoggedIn({ mode, didWin, playedKey, curre
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref);
 
- 
-    let data = snap.exists() ? snap.data() : null;
+    let data = snap.exists() ? (snap.data() || {}) : null;
     if (!data) {
-      tx.set(ref, defaultsForAllStats(), { merge: true });
-      data = defaultsForAllStats();
+      tx.set(ref, defaultsForAllStats(user.uid, normalizeNick(user.displayName || user.email || "Player")), { merge: true });
+      data = {};
     }
 
     const lastPlayed = data?.[`${prefix}LastPlayed`] ?? null;
-
-
     if (lastPlayed === playedKey) return;
 
     const prevCur = Number(data?.[`${prefix}CurrentStreak`] ?? 0);
@@ -145,8 +141,9 @@ export async function submitDailyResultLoggedIn({ mode, didWin, playedKey, curre
     tx.set(
       ref,
       {
+        type: "main",
         uid: user.uid,
-        nick: normalizeNick(user.displayName || user.email || "Unknown"),
+        nick: normalizeNick(user.displayName || user.email || "Player"),
         updatedAt: serverTimestamp(),
 
         [`${prefix}Games`]: nextGames,
@@ -161,10 +158,9 @@ export async function submitDailyResultLoggedIn({ mode, didWin, playedKey, curre
   });
 }
 
-// Email/password
+
 export async function login(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password);
- 
   try { await ensureUserStatsDoc(cred.user.uid); } catch (e) { console.warn(e); }
   return cred.user;
 }
@@ -174,10 +170,13 @@ export async function register(email, password, nick) {
   const safeNick = normalizeNick(nick);
   await updateProfile(cred.user, { displayName: safeNick });
 
-
   try {
     await ensureUserStatsDoc(cred.user.uid);
-    await setDoc(userStatsRef(cred.user.uid), { nick: safeNick, updatedAt: serverTimestamp() }, { merge: true });
+    await setDoc(
+      userStatsRef(cred.user.uid),
+      { type: "main", uid: cred.user.uid, nick: safeNick, updatedAt: serverTimestamp() },
+      { merge: true }
+    );
   } catch (e) {
     console.warn(e);
   }
@@ -185,17 +184,20 @@ export async function register(email, password, nick) {
   return cred.user;
 }
 
-// Google
 export async function loginGoogle() {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
-
 
   try {
     await ensureUserStatsDoc(result.user.uid);
     await setDoc(
       userStatsRef(result.user.uid),
-      { nick: normalizeNick(result.user.displayName || result.user.email || "Player"), updatedAt: serverTimestamp() },
+      {
+        type: "main",
+        uid: result.user.uid,
+        nick: normalizeNick(result.user.displayName || result.user.email || "Player"),
+        updatedAt: serverTimestamp()
+      },
       { merge: true }
     );
   } catch (e) {
@@ -222,58 +224,74 @@ export function onUserChanged(cb) {
   return onAuthStateChanged(auth, cb);
 }
 
+
 export async function submitScoreLoggedIn(currentStreak, mode) {
   const user = auth.currentUser;
   if (!user) throw new Error("Not logged in");
 
-  const { collName, fieldName } = getModeConfig(mode);
-  const ref = doc(db, collName, user.uid);
-  const snap = await getDoc(ref);
-  const old = snap.exists() ? (snap.data()?.[fieldName] ?? 0) : 0;
+  const prefix = statsPrefixFromMode(mode);
+  if (!prefix) throw new Error("Unsupported mode: " + mode);
 
-  const safeNick = normalizeNick(user.displayName || user.email || "Unknown Player");
+  const ref = userStatsRef(user.uid);
+
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(ref);
+    const data = snap.exists() ? (snap.data() || {}) : {};
+
+    const prevMax = Number(data?.[`${prefix}MaxStreak`] ?? 0);
+    const next = Math.max(prevMax, Number(currentStreak ?? 0));
+
+    tx.set(ref, {
+      type: "main",
+      uid: user.uid,
+      nick: normalizeNick(user.displayName || user.email || "Player"),
+      updatedAt: serverTimestamp(),
+      [`${prefix}MaxStreak`]: next,
+    }, { merge: true });
+  });
+}
 
 
-  const payload = {
-    uid: user.uid,
-    nick: safeNick,
-    updatedAt: serverTimestamp(),
-  };
-
-  if (currentStreak > old) payload[fieldName] = currentStreak;
-  await setDoc(ref, payload, { merge: true });
+function maxFieldFromMode(mode) {
+  const prefix = statsPrefixFromMode(mode);
+  if (!prefix) return null;
+  return `${prefix}MaxStreak`;
 }
 
 export async function loadLeaderboardLoggedIn(mode) {
   const list = document.getElementById("leaderboard-list");
   if (!list) return;
 
-  const { collName, fieldName } = getModeConfig(mode);
+  
 
-  list.innerHTML = "";
-  const loading = document.createElement("div");
-  loading.className = "lb-loading";
-  loading.textContent = "Loading...";
-  list.appendChild(loading);
+  const fieldName = maxFieldFromMode(mode);
+  if (!fieldName) {
+    list.innerHTML = `<div class="lb-error">Unsupported mode.</div>`;
+    return;
+  }
+
+  list.innerHTML = `<div class="lb-loading">Loading...</div>`;
 
   try {
-    const q = query(collection(db, collName), orderBy(fieldName, "desc"), limit(50));
+    const q = query(
+      collectionGroup(db, "stats"),
+      where("type", "==", "main"),
+      orderBy(fieldName, "desc"),
+      limit(50)
+    );
+
     const snapshot = await getDocs(q);
 
     list.innerHTML = "";
 
-    if (snapshot.empty) {
-      const empty = document.createElement("div");
-      empty.className = "lb-empty";
-      empty.textContent = "No scores yet.";
-      list.appendChild(empty);
-      return;
-    }
-
     let rank = 1;
-    snapshot.forEach((d) => {
-      const data = d.data();
-      const score = data?.[fieldName] ?? 0;
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data() || {};
+      const score = Number(data?.[fieldName] ?? 0);
+
+      const nickRaw = (data?.nick ?? "").toString().trim();
+      if (!nickRaw) return;
+      if (nickRaw.toLowerCase() === "unknown") return;
 
       const row = document.createElement("div");
       row.className = "lb-row";
@@ -284,7 +302,7 @@ export async function loadLeaderboardLoggedIn(mode) {
 
       const n = document.createElement("div");
       n.className = "lb-name";
-      n.textContent = data?.nick ?? "Unknown";
+      n.textContent = nickRaw;
 
       const s = document.createElement("div");
       s.className = "lb-score";
@@ -297,24 +315,26 @@ export async function loadLeaderboardLoggedIn(mode) {
 
       rank++;
     });
+
+    if (rank === 1) {
+      const empty = document.createElement("div");
+      empty.className = "lb-empty";
+      empty.textContent = "No scores yet.";
+      list.appendChild(empty);
+    }
   } catch (err) {
     console.error(err);
-    list.innerHTML = "";
-    const e = document.createElement("div");
-    e.className = "lb-error";
-    e.textContent = "Error loading leaderboard.";
-    list.appendChild(e);
+    list.innerHTML = `<div class="lb-error">Error loading leaderboard.</div>`;
   }
 }
 
 
 export async function loadUserStats(uid) {
-  
   try { await ensureUserStatsDoc(uid); } catch (e) { console.warn(e); }
 
   const ref = userStatsRef(uid);
   const snap = await getDoc(ref);
-  const data = snap.exists() ? snap.data() : {};
+  const data = snap.exists() ? (snap.data() || {}) : {};
 
   const safeNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
 
@@ -334,7 +354,7 @@ export async function loadUserStats(uid) {
 
   return {
     uid,
-    nick: data?.nick ?? "Unknown",
+    nick: data?.nick ?? "Player",
 
     // Classic daily
     classicDailyGames: c.games,
@@ -361,6 +381,7 @@ export async function loadUserStats(uid) {
     pathwayDailyWinrate: p.winrate,
   };
 }
+
 
 export const signIn = login;
 export const signInGoogle = loginGoogle;

@@ -25,6 +25,7 @@
     <h2>Welcome!</h2>
     <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
     <p>Use the 🎨 button to change theme.</p>
+    <p>edit: it works now :D</p>
     <div class="overlay-actions">
       <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
     </div>
@@ -313,7 +314,7 @@
       feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
     }
 
-      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v1"; //  KEY
+      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v2"; //  KEY
   const firstRunOverlay = document.getElementById("firstRunOverlay");
   const firstRunOkBtn = document.getElementById("firstRunOkBtn");
 
@@ -538,7 +539,7 @@
     loginBtn.onclick = async () => {
       const email = (loginEmail.value || '').trim();
       const pass = (loginPass.value || '').trim();
-      if (!email || !pass) return alert('Email and password needed.');
+      if (!email || !pass) return alert('Email and password required.');
       try {
         const u = await login(email, pass);
         await showLoggedInUI(u);
@@ -551,8 +552,8 @@
       const nick = (regNick.value || '').trim();
       const email = (regEmail.value || '').trim();
       const pass = (regPass.value || '').trim();
-      if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 characters.');
-      if (!email || pass.length < 6) return alert('Email and password require 6 characters.');
+      if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 characters .');
+      if (!email || pass.length < 6) return alert('Email and password need to be over 6 characters.');
       try {
         const u = await register(email, pass, nick);
         await showLoggedInUI(u);
@@ -583,4 +584,3 @@
   </script>
 </body>
 </html>
-

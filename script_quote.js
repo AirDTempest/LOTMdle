@@ -320,7 +320,7 @@ const lbBtn = document.getElementById("leaderboardBtn");
 const lbOverlay = document.getElementById("leaderboardOverlay");
 const lbCloseBtn = document.getElementById("closeLeaderboard");
 const lbDailyBtn = document.getElementById("lbDailyBtn");
-const lbInfBtn = document.getElementById("lbInfBtn");
+
 let currentLbMode = "dailyquote";
 
 // state
@@ -332,6 +332,15 @@ let attempts = 0;
 let gameOver = false;
 let usedNames = new Set();
 let currentSuggestions = [];
+
+function streakKeyQuoteDaily() {
+  const uid = auth.currentUser?.uid || "guest";
+  return `lotmdle_quote_dailystreak_${uid}`;
+}
+function streakKeyQuoteInf() {
+  const uid = auth.currentUser?.uid || "guest";
+  return `lotmdle_quote_infstreak_${uid}`;
+}
 
 // pick quote
 function pickQuoteDaily() {
@@ -414,27 +423,9 @@ function hideEndScreen() {
 }
 
 async function updateStreak(won) {
-  const streakKey =
-    mode === "daily" ? "lotmdle_quote_daily_streak" : "lotmdle_quote_inf_streak";
-
+  const streakKey = mode === "daily" ? streakKeyQuoteDaily() : streakKeyQuoteInf();
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
-  const finalMode = mode === "daily" ? "dailyquote" : "infquote";
-
-  if (won) {
-    current++;
-    localStorage.setItem(streakKey, String(current));
-
-    const u = auth.currentUser;
-    if (!u) {
-      alert("Log in to save your score on leaderboard.");
-      return;
-    }
-
-   await submitScoreLoggedIn(current, finalMode);
-
-  } else {
-    localStorage.setItem(streakKey, "0");
-  }
+  localStorage.setItem(streakKey, String(won ? current + 1 : 0));
 }
 
 function showEndScreen(won) {
@@ -444,16 +435,21 @@ function showEndScreen(won) {
 
   updateStreak(won).catch(console.warn);
    
-  if (mode === "daily") {
-    const u = auth.currentUser;
-    if (u) {
-      submitDailyResultLoggedIn({
-        mode: "dailyquote", 
-        didWin: !!won,
-        playedKey: todayKey(),
-      }).catch(console.warn);
-    }
+ if (mode === "daily") {
+  const u = auth.currentUser;
+  if (u) {
+    const current = parseInt(localStorage.getItem(streakKeyQuoteDaily()) || "0", 10);
+
+    submitDailyResultLoggedIn({
+      mode: "dailyquote",
+      didWin: !!won,
+      playedKey: todayKey(),
+      currentStreakAfter: won ? current : 0,
+    }).catch(console.warn);
   }
+}
+
+
 
 
   if (mode === "daily") {
@@ -672,8 +668,8 @@ if (howOverlay) howOverlay.onclick = (e) => { if (e.target === howOverlay) howOv
 function openLb() {
   if (!lbOverlay) return;
   lbOverlay.classList.remove("hidden");
-  currentLbMode = mode === "daily" ? "dailyquote" : "infquote";
-  loadLeaderboardLoggedIn(currentLbMode);
+loadLeaderboardLoggedIn("dailyquote");
+
 }
 if (lbBtn) lbBtn.addEventListener("click", openLb);
 
@@ -681,7 +677,7 @@ if (lbCloseBtn && lbOverlay) lbCloseBtn.addEventListener("click", () => lbOverla
 if (lbOverlay) lbOverlay.addEventListener("click", (e) => { if (e.target === lbOverlay) lbOverlay.classList.add("hidden"); });
 
 if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => loadLeaderboardLoggedIn("dailyquote"));
-if (lbInfBtn) lbInfBtn.addEventListener("click", () => loadLeaderboardLoggedIn("infquote"));
+
 
 // init
 initTheme();

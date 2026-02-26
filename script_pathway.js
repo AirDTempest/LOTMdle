@@ -35,7 +35,7 @@ const lbBtn = document.getElementById("leaderboardBtn");
 const lbOverlay = document.getElementById("leaderboardOverlay");
 const lbCloseBtn = document.getElementById("closeLeaderboard");
 const lbDailyBtn = document.getElementById("lbDailyBtn");
-const lbInfBtn = document.getElementById("lbInfBtn");
+
 
 // overlays
 const howBtn = document.getElementById("howBtn");
@@ -82,6 +82,25 @@ let currentSuggestions = [];
 let currentPuzzle = null;
 let revealedEmotes = [];
 let remainingEmotes = [];
+
+function updateSuggestions() {
+  if (!list || !searchInput) return;
+
+  const q = searchInput.value.trim().toLowerCase();
+  if (!q) {
+    closeList();
+    return;
+  }
+
+  currentSuggestions = pathways
+    .filter((p) => p.name.toLowerCase().includes(q))
+    .slice(0, 30);
+
+  renderList(currentSuggestions);
+
+  if (currentSuggestions.length > 0) openList();
+  else closeList();
+}
 
 // ===== daily helpers
 function todayKey() {
@@ -238,6 +257,16 @@ function closeList() {
   if (list) list.classList.add("hidden");
 }
 
+function streakKeyPathwayDaily() {
+  const uid = auth.currentUser?.uid || "guest";
+  return `lotmdle_pathway_dailystreak_${uid}`;
+}
+
+function streakKeyPathwayInf() {
+  const uid = auth.currentUser?.uid || "guest";
+  return `lotmdle_pathway_infstreak_${uid}`;
+}
+
 function renderList(items) {
   if (!list) return;
   list.innerHTML = "";
@@ -264,23 +293,20 @@ function renderList(items) {
   });
 }
 
-function updateSuggestions() {
-  if (!list || !searchInput) return;
-  const q = searchInput.value.trim().toLowerCase();
+async function updateStreak(won) {
+  const streakKey = mode === "daily" ? streakKeyPathwayDaily() : streakKeyPathwayInf();
+  let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
 
-  if (!q) {
-    closeList();
-    return;
+  if (won) {
+    current++;
+    localStorage.setItem(streakKey, String(current));
+  } else {
+    localStorage.setItem(streakKey, "0");
   }
-
-  currentSuggestions = pathways
-    .filter((p) => p.name.toLowerCase().includes(q))
-    .slice(0, 30);
-
-  renderList(currentSuggestions);
-  if (currentSuggestions.length > 0) openList();
-  else closeList();
 }
+
+
+
 
 
 function syncModeUI() {
@@ -304,29 +330,7 @@ function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
 }
 
-async function updateStreak(won) {
-  const streakKey =
-    mode === "daily" ? "lotmdle_pathway_daily_streak" : "lotmdle_pathway_inf_streak";
 
-  let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
-  const finalMode = mode === "daily" ? "dailypathwayemotes" : "infpathwayemotes";
-
-  if (won) {
-    current++;
-    localStorage.setItem(streakKey, String(current));
-
-    const u = auth.currentUser;
-    if (!u) {
-      alert("Log in to save your score on leaderboard.");
-      return;
-    }
-
-   await submitScoreLoggedIn(current, finalMode);
-
-  } else {
-    localStorage.setItem(streakKey, "0");
-  }
-}
 
 
 function renderShareTiles(won) {
@@ -361,16 +365,21 @@ function showEndScreen(won) {
   renderShareTiles(won);
   updateStreak(won).catch(console.warn);
 
-  if (mode === "daily") {
-    const u = auth.currentUser;
-    if (u) {
-      submitDailyResultLoggedIn({
-        mode: "dailypathwayemotes", 
-        didWin: !!won,
-        playedKey: todayKey(),
-      }).catch(console.warn);
-    }
+if (mode === "daily") {
+  const u = auth.currentUser;
+  if (u) {
+    const current = parseInt(localStorage.getItem(streakKeyPathwayDaily()) || "0", 10);
+
+    submitDailyResultLoggedIn({
+      mode: "dailypathwayemotes",
+      didWin: !!won,
+      playedKey: todayKey(),
+      currentStreakAfter: won ? current : 0,
+    }).catch(console.warn);
   }
+}
+
+
 
 
 
@@ -545,15 +554,11 @@ function openLb() {
   if (!lbOverlay) return;
   lbOverlay.classList.remove("hidden");
 
-  const lbMode = mode === "daily" ? "dailypathwayemotes" : "infpathwayemotes";
+  lbDailyBtn?.classList.add("is-active");
 
-  if (lbDailyBtn && lbInfBtn) {
-    lbDailyBtn.classList.toggle("is-active", lbMode === "dailypathwayemotes");
-    lbInfBtn.classList.toggle("is-active", lbMode === "infpathwayemotes");
-  }
-
-  loadLeaderboardLoggedIn(lbMode);
+  loadLeaderboardLoggedIn("dailypathwayemotes");
 }
+
 
 if (lbBtn) lbBtn.addEventListener("click", openLb);
 
@@ -570,18 +575,11 @@ if (lbOverlay) {
 if (lbDailyBtn) {
   lbDailyBtn.addEventListener("click", () => {
     lbDailyBtn.classList.add("is-active");
-    if (lbInfBtn) lbInfBtn.classList.remove("is-active");
     loadLeaderboardLoggedIn("dailypathwayemotes");
   });
 }
 
-if (lbInfBtn) {
-  lbInfBtn.addEventListener("click", () => {
-    lbInfBtn.classList.add("is-active");
-    if (lbDailyBtn) lbDailyBtn.classList.remove("is-active");
-    loadLeaderboardLoggedIn("infpathwayemotes");
-  });
-}
+
 
 
 
