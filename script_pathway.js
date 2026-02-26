@@ -1,6 +1,8 @@
-// script_pathway.js
+// script_pathway.js 
+
 // imports
-import { submitScore, loadLeaderboard } from "./leaderboard.js";
+import { auth, submitScoreLoggedIn, loadLeaderboardLoggedIn, submitDailyResultLoggedIn } from "./leaderboard.js";
+
 import { initTheme } from "./theme.js";
 
 // data
@@ -54,7 +56,7 @@ let mode = localStorage.getItem("lotmdle_pathway_mode") || "daily";
 const grid = document.getElementById("grid");
 const list = document.getElementById("list");
 const searchInput = document.getElementById("searchInput");
-const guessBtn = document.getElementById("guessBtn"); // (opcjonalny; w HTML może nie istnieć)
+const guessBtn = document.getElementById("guessBtn"); 
 
 const statusText = document.getElementById("statusText");
 const attemptsText = document.getElementById("attemptsText");
@@ -108,7 +110,7 @@ function dailyIndex(key, size) {
   return h % size;
 }
 
-// ===== rng (fixed)
+// ===== rng 
 function hash32(str) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -148,7 +150,7 @@ function shuffle(arr) {
   return a;
 }
 
-// ===== infinite save
+
 function infSaveKey() {
   return "lotmdle_pathway_inf_save_v1";
 }
@@ -193,7 +195,7 @@ function loadInfiniteState() {
   }
 }
 
-// ===== puzzle/emotes
+
 function pickPuzzle() {
   if (!pathways || pathways.length === 0) return { name: "Error", emotes: ["❌"] };
   if (mode === "daily") return pathways[dailyIndex(todayKey(), pathways.length)];
@@ -228,7 +230,6 @@ function setupEmotesForCurrentPuzzle() {
   }
 }
 
-// ===== dropdown
 function openList() {
   if (list) list.classList.remove("hidden");
 }
@@ -281,7 +282,7 @@ function updateSuggestions() {
   else closeList();
 }
 
-// ===== flow
+
 function syncModeUI() {
   if (dailyBtn) dailyBtn.classList.toggle("is-active", mode === "daily");
   if (infiniteBtn) infiniteBtn.classList.toggle("is-active", mode !== "daily");
@@ -298,41 +299,35 @@ function setMode(newMode) {
   else resetDaily();
 }
 
-// ===== end overlay / streak
+
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
 }
 
-function updateStreak(won) {
+async function updateStreak(won) {
   const streakKey =
     mode === "daily" ? "lotmdle_pathway_daily_streak" : "lotmdle_pathway_inf_streak";
 
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
+  const finalMode = mode === "daily" ? "dailypathwayemotes" : "infpathwayemotes";
 
   if (won) {
     current++;
     localStorage.setItem(streakKey, String(current));
 
-    let playerName = localStorage.getItem("lotmdle_player_name");
-    const finalMode = mode === "daily" ? "dailypathwayemotes" : "infpathwayemotes";
-
-    if (!playerName) {
-      setTimeout(() => {
-        playerName = (prompt("Congratulations! Write your nickname for the leaderboard!") || "").trim();
-        if (!playerName) return;
-
-        if (playerName.length > 15) playerName = playerName.substring(0, 15);
-        localStorage.setItem("lotmdle_player_name", playerName);
-
-        submitScore(playerName, current, finalMode);
-      }, 300);
-    } else {
-      submitScore(playerName, current, finalMode);
+    const u = auth.currentUser;
+    if (!u) {
+      alert("Log in to save your score on leaderboard.");
+      return;
     }
+
+   await submitScoreLoggedIn(current, finalMode);
+
   } else {
     localStorage.setItem(streakKey, "0");
   }
 }
+
 
 function renderShareTiles(won) {
   const shareEl = document.getElementById("owShare");
@@ -364,7 +359,20 @@ function showEndScreen(won) {
 
   revealAllEmotes();
   renderShareTiles(won);
-  updateStreak(won);
+  updateStreak(won).catch(console.warn);
+
+  if (mode === "daily") {
+    const u = auth.currentUser;
+    if (u) {
+      submitDailyResultLoggedIn({
+        mode: "dailypathwayemotes", 
+        didWin: !!won,
+        playedKey: todayKey(),
+      }).catch(console.warn);
+    }
+  }
+
+
 
   const triesEl = document.getElementById("owTries");
   const maxEl = document.getElementById("owMax");
@@ -389,7 +397,7 @@ function showEndScreen(won) {
   }
 }
 
-// ===== games
+
 function resetDaily() {
   hideEndScreen();
 
@@ -481,7 +489,7 @@ function startInfinite({ forceNew = false } = {}) {
   saveInfiniteState();
 }
 
-// ===== guess
+
 function makeGuess(name) {
   if (gameOver || attempts >= maxAttempts) return;
   if (usedNames.has(name)) return;
@@ -533,12 +541,18 @@ function makeGuess(name) {
   if (mode === "infinite") saveInfiniteState();
 }
 
-// ===== leaderboard (listeners only once)
 function openLb() {
   if (!lbOverlay) return;
   lbOverlay.classList.remove("hidden");
+
   const lbMode = mode === "daily" ? "dailypathwayemotes" : "infpathwayemotes";
-  loadLeaderboard(lbMode);
+
+  if (lbDailyBtn && lbInfBtn) {
+    lbDailyBtn.classList.toggle("is-active", lbMode === "dailypathwayemotes");
+    lbInfBtn.classList.toggle("is-active", lbMode === "infpathwayemotes");
+  }
+
+  loadLeaderboardLoggedIn(lbMode);
 }
 
 if (lbBtn) lbBtn.addEventListener("click", openLb);
@@ -553,10 +567,24 @@ if (lbOverlay) {
   });
 }
 
-if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => loadLeaderboard("dailypathwayemotes"));
-if (lbInfBtn) lbInfBtn.addEventListener("click", () => loadLeaderboard("infpathwayemotes"));
+if (lbDailyBtn) {
+  lbDailyBtn.addEventListener("click", () => {
+    lbDailyBtn.classList.add("is-active");
+    if (lbInfBtn) lbInfBtn.classList.remove("is-active");
+    loadLeaderboardLoggedIn("dailypathwayemotes");
+  });
+}
 
-// ===== other overlays
+if (lbInfBtn) {
+  lbInfBtn.addEventListener("click", () => {
+    lbInfBtn.classList.add("is-active");
+    if (lbDailyBtn) lbDailyBtn.classList.remove("is-active");
+    loadLeaderboardLoggedIn("infpathwayemotes");
+  });
+}
+
+
+
 if (howBtn && howOverlay) howBtn.onclick = () => howOverlay.classList.remove("hidden");
 if (howCloseBtn && howOverlay) howCloseBtn.onclick = () => howOverlay.classList.add("hidden");
 if (howOverlay) howOverlay.onclick = (e) => {
@@ -576,7 +604,7 @@ if (patchOverlay) patchOverlay.onclick = (e) => {
   if (e.target === patchOverlay) patchOverlay.classList.add("hidden");
 };
 
-// ===== events
+
 if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
 if (infiniteBtn) infiniteBtn.onclick = () => setMode("infinite");
 
@@ -641,10 +669,9 @@ if (guessBtn) {
   };
 }
 
-// ===== start
+
 initTheme();
 syncModeUI();
 
 if (mode === "infinite") startInfinite({ forceNew: false });
 else resetDaily();
-

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOTMDLE - Global Leaderboard</title>
+  <link rel="canonical" href="https://lotmdle.com/leaderboard.html" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <a href="index.html" class="back-btn" title="Back to Main Menu">←</a>
+
+  <button class="how-btn" id="themeBtn" type="button">🎨</button>
+  <div class="theme-menu hidden" id="themeMenu">
+    <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
+    <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
+    <div class="theme-option" data-theme="theme-evernight">Evernight</div>
+    <div class="theme-option" data-theme="theme-sun">Eternal Sun</div>
+  </div>
+
+  <div class="game-container">
+    <div class="game-panel">
+      <h1 class="game-title">LOTMDLE</h1>
+      <p class="game-subtitle">GLOBAL LEADERBOARD (DAILY) <br><br> YOU NEED TO LOG IN TOO SEE YOUR NICKNAME</p>
+     
+
+      <div class="mode-selector" style="margin-bottom: 18px;">
+        <div class="mode-main" style="display:flex; gap:12px; justify-content:center; width:100%;">
+          <button class="mode-btn is-active" id="modeClassicBtn" type="button">CLASSIC</button>
+          <button class="mode-btn" id="modeQuoteBtn" type="button">QUOTE</button>
+          <button class="mode-btn" id="modePathBtn" type="button">PATHWAY</button>
+        </div>
+      </div>
+
+      <div id="leaderboard-list" style="max-height: 520px; overflow-y:auto; min-height: 240px;"></div>
+
+      <div class="game-status" style="margin-top: 16px;">
+        <span id="statusText">Top 50 best streaks.</span>
+        <span id="attemptsText">DAILY</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { loadLeaderboardLoggedIn } from "./leaderboard.js";
+
+
+    const themeBtn = document.getElementById("themeBtn");
+    const themeMenu = document.getElementById("themeMenu");
+    const themeOptions = document.querySelectorAll(".theme-option");
+
+    let currentTheme = localStorage.getItem("lotmdletheme") || "theme-lotm";
+    document.body.classList.add(currentTheme);
+    themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === currentTheme));
+
+    function setTheme(theme) {
+      document.body.classList.forEach((cls) => {
+        if (cls.startsWith("theme-")) document.body.classList.remove(cls);
+      });
+      document.body.classList.add(theme);
+      currentTheme = theme;
+      localStorage.setItem("lotmdletheme", theme);
+      themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
+    }
+
+    if (themeBtn) themeBtn.onclick = (e) => { e.stopPropagation(); themeMenu.classList.toggle("hidden"); };
+    document.addEventListener("click", (e) => {
+      if (!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden");
+    });
+    themeOptions.forEach(opt => opt.onclick = () => { setTheme(opt.dataset.theme); themeMenu.classList.add("hidden"); });
+
+  
+    const modeClassicBtn = document.getElementById("modeClassicBtn");
+    const modeQuoteBtn = document.getElementById("modeQuoteBtn");
+    const modePathBtn = document.getElementById("modePathBtn");
+    const statusText = document.getElementById("statusText");
+
+    let category = "classic"; 
+
+    function modeKey() {
+      if (category === "classic") return "daily";
+      if (category === "quote") return "dailyquote";
+      if (category === "pathway") return "dailypathwayemotes";
+      return "daily";
+    }
+
+    function syncUI() {
+      modeClassicBtn.classList.toggle("is-active", category === "classic");
+      modeQuoteBtn.classList.toggle("is-active", category === "quote");
+      modePathBtn.classList.toggle("is-active", category === "pathway");
+    }
+
+    async function refresh() {
+      syncUI();
+      if (statusText) statusText.textContent = category === "classic"
+        ? "Classic (Daily) — Top 50."
+        : category === "quote"
+          ? "Quote (Daily) — Top 50."
+          : "Pathway (Daily) — Top 50.";
+      await loadLeaderboardLoggedIn(modeKey());
+    }
+
+    modeClassicBtn.onclick = () => { category = "classic"; refresh(); };
+    modeQuoteBtn.onclick = () => { category = "quote"; refresh(); };
+    modePathBtn.onclick = () => { category = "pathway"; refresh(); };
+
+    refresh();
+  </script> 
+</body>
+</html>

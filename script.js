@@ -1,4 +1,5 @@
-import { submitScore, loadLeaderboard } from './leaderboard.js';
+import { auth, submitScoreLoggedIn, loadLeaderboardLoggedIn, submitDailyResultLoggedIn } from "./leaderboard.js";
+
 
 const characters = [
     { name: "Adam", age: "3rd Epoch", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
@@ -344,31 +345,30 @@ function updateSuggestions() {
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
 }
-function updateStreak(won) {
-  const streakKey = mode === "daily" ? "lotmdleclassic_dailystreak" : "lotmdleclassic_infstreak";
+
+async function updateStreak(won) {
+  const streakKey =
+    mode === "daily" ? "lotmdleclassic_dailystreak" : "lotmdleclassic_infstreak";
+
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
 
   if (won) {
     current++;
     localStorage.setItem(streakKey, String(current));
 
-    let playerName = localStorage.getItem("lotmdleplayername");
-    if (!playerName) {
-      setTimeout(() => {
-        playerName = (prompt("Congratulations! Write your nickname for the leaderboard!") || "").trim();
-        if (playerName) {
-          if (playerName.length > 15) playerName = playerName.substring(0, 15);
-          localStorage.setItem("lotmdleplayername", playerName);
-          submitScore(playerName, current, mode === "daily" ? "daily" : "infinite");
-        }
-      }, 400);
-    } else {
-      submitScore(playerName, current, mode === "daily" ? "daily" : "infinite");
+    const u = auth.currentUser;
+    if (!u) {
+      alert("Log in to save data on leaderboard.");
+      return;
     }
+
+   await submitScoreLoggedIn(current, mode === "daily" ? "daily" : "infinite");
+
   } else {
     localStorage.setItem(streakKey, "0");
   }
 }
+
 function showEndScreen(won) {
   if (endTitle) endTitle.textContent = won ? "You got it!" : "Not quite!";
   if (endDesc && answer) {
@@ -376,12 +376,24 @@ function showEndScreen(won) {
   }
   if (endOverlay) endOverlay.classList.remove("hidden");
 
-  updateStreak(won);
+  updateStreak(won).catch(console.warn);
+   
+  if (mode === "daily") {
+    const u = auth.currentUser;
+    if (u) {
+      submitDailyResultLoggedIn({
+        mode: "daily",             
+        didWin: !!won,
+        playedKey: todayKey(),     
+        
+      }).catch(console.warn);
+    }
+  }
+
 
   if (mode === "daily") {
     setDailyDone();
     clearDailyState();
-
     if (playAgainBtn) {
       playAgainBtn.disabled = true;
       playAgainBtn.textContent = "Come back tomorrow";
@@ -419,8 +431,8 @@ function showEndScreen(won) {
       shareEl.appendChild(t);
     }
   }
-  
 }
+
 
 //FLOW
 function syncModeUI() {
@@ -679,33 +691,44 @@ if (patchBtn && patchOverlay) patchBtn.onclick = () => patchOverlay.classList.re
 if (patchCloseBtn && patchOverlay) patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
 if (patchOverlay) patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
 
-//LEADERBOARD
 if (lbBtn && lbOverlay) {
   lbBtn.addEventListener("click", () => {
     lbOverlay.classList.remove("hidden");
     currentLbMode = mode === "daily" ? "daily" : "infinite";
+
     if (lbDailyBtn && lbInfBtn) {
       lbDailyBtn.classList.toggle("is-active", currentLbMode === "daily");
       lbInfBtn.classList.toggle("is-active", currentLbMode === "infinite");
     }
-    loadLeaderboard(currentLbMode);
+
+    loadLeaderboardLoggedIn(currentLbMode);
   });
 }
-if (lbCloseBtn && lbOverlay) lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
-if (lbOverlay) lbOverlay.addEventListener("click", (e) => { if (e.target === lbOverlay) lbOverlay.classList.add("hidden"); });
 
-if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => {
-  currentLbMode = "daily";
-  lbDailyBtn.classList.add("is-active");
-  if (lbInfBtn) lbInfBtn.classList.remove("is-active");
-  loadLeaderboard("daily");
-});
-if (lbInfBtn) lbInfBtn.addEventListener("click", () => {
-  currentLbMode = "infinite";
-  lbInfBtn.classList.add("is-active");
-  if (lbDailyBtn) lbDailyBtn.classList.remove("is-active");
-  loadLeaderboard("infinite");
-});
+if (lbCloseBtn && lbOverlay)
+  lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
+
+if (lbOverlay)
+  lbOverlay.addEventListener("click", (e) => {
+    if (e.target === lbOverlay) lbOverlay.classList.add("hidden");
+  });
+
+if (lbDailyBtn)
+  lbDailyBtn.addEventListener("click", () => {
+    currentLbMode = "daily";
+    lbDailyBtn.classList.add("is-active");
+    if (lbInfBtn) lbInfBtn.classList.remove("is-active");
+    loadLeaderboardLoggedIn("daily");
+  });
+
+if (lbInfBtn)
+  lbInfBtn.addEventListener("click", () => {
+    currentLbMode = "infinite";
+    lbInfBtn.classList.add("is-active");
+    if (lbDailyBtn) lbDailyBtn.classList.remove("is-active");
+    loadLeaderboardLoggedIn("infinite");
+  });
+
 
 //THEME
 const themeBtn = document.getElementById("themeBtn");
@@ -746,4 +769,3 @@ if (themeBtn && themeMenu) {
 syncModeUI();
 if (mode === "infinite") startInfinite(false);
 else resetDaily();
-

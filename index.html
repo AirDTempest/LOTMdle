@@ -1,201 +1,585 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOTMDLE - Home</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://lotmdle.com/" />
 
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L8TV140QGB"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOTMDLE - Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="Demoness_Symbol2.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
 
-  gtag('config', 'G-L8TV140QGB');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L8TV140QGB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L8TV140QGB');
+  </script>
 </head>
+
 <body>
-
-      <div class="overlay hidden" id="feedbackOverlay">
-        <div class="overlay-card">
-            <h2>Feedback</h2>
-            <p>Found a bug? Have a suggestion? Want to report an error in character data?</p>
-            <p>I'd love to hear from you!</p>
-            <p><strong>Contact me:</strong></p>
-            <p>📧 Email: lotmdle@proton.me<br>💬 Discord: tempescik.</p>
-            <div class="overlay-actions">
-                <button class="btn" id="feedbackCloseBtn">Close</button>
-            </div>
-        </div>
-    </div>
-    
- <div id="patchOverlay" class="overlay hidden">
-  <div class="overlay-card patch-card">
-    <div class="patch-header">
-      <h2>Patch Notes</h2>
-    </div>
-
-    <div class="patch-content">
-            
-<div class="patch-entry">
-        <div class="patch-title-row">
-          <h3>v1.2 </h3>
-          <span class="patch-date">13.02.2026</span>
-        </div>
-        <ul class="patch-list">
-            <li>New UI and Better phone access</li>
-          <li>Added: Hermes, Soniathrym, Cohinem, Snowman, Siatas, Mobet Zoroast, Alzuhod, Arianna
-</li>
-<li>changed Sasir Chapter</li>
-<li>changed age to epoch</li>
-<li>Added leaderboard</li>
-<li>Added Menu and Quote mode</li>
-
-         
-          
-        </ul>
-      </div>
-
-    
-<div class="patch-entry">
-        <div class="patch-title-row">
-          <h3>v1.1 - Beta fix</h3>
-          <span class="patch-date">13.02.2026</span>
-        </div>
-        <ul class="patch-list">
-          <li>Spelling mistakes corrected</li>
-          <li>Suah changed to Male</li>
-          <li>Flegrea changed to Male</li>
-          <li>Game now works on phone!</li>
-          
-        </ul>
-      </div>
-
-      <div class="patch-entry">
-        <div class="patch-title-row">
-          <h3>v1.0 - Beta Release</h3>
-          <span class="patch-date">13.02.2026</span>
-        </div>
-        <ul class="patch-list">
-          <li>🎉 Initial Beta Release!</li>
-          <li>Added 50+ characters from Book 1</li>
-          <li>Daily & Infinite Modes</li>
-          <li>Attributes: Pathway, Sequence, Gender, Age, Faction, Chapter</li>
-          <li>Feedback system implementation</li>
-        </ul>
-      </div>
-
-    </div>
-
+  <div class="overlay hidden" id="firstRunOverlay">
+  <div class="overlay-card">
+    <h2>Welcome!</h2>
+    <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
+    <p>Use the 🎨 button to change theme.</p>
     <div class="overlay-actions">
-      <button id="patchCloseBtn" class="btn">Close</button>
+      <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
     </div>
   </div>
-
-  
 </div>
 
-    <button class="how-btn" id="feedbackBtn">📧</button>
-    <button class="how-btn" id="patchBtn">📋</button>
-    <button class="how-btn" id="themeBtn">🎨</button>
+  <div class="overlay hidden" id="accountOverlay">
+    <div class="overlay-card account-card">
+      <button class="ow-x" id="accCloseX" type="button">×</button>
 
-    <div class="theme-menu hidden" id="themeMenu">
-        <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
-        <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
-        <div class="theme-option" data-theme="theme-evernight">Evernight</div>
-<div class="theme-option" data-theme="theme-sun">Eternal Sun</div>
+      <div class="account-head">
+        <div class="account-avatar" id="accAvatar">?</div>
+        <div class="account-meta">
+          <p class="account-title" id="accTitle">Account</p>
+          <p class="account-sub" id="accSub">Not logged in.</p>
+        </div>
+      </div>
+
+      <div class="account-tabs" id="accTabs">
+        <button class="tab-btn is-active" id="tabLogin" type="button">Login</button>
+        <button class="tab-btn" id="tabRegister" type="button">Register</button>
+      </div>
+
+      <div class="account-section" id="secProfile" style="display:none;">
+        <div class="acc-row">
+          <span class="acc-chip" id="chipName">Name: -</span>
+          <span class="acc-chip" id="chipEmail">Email: -</span>
+        </div>
+
+        <div class="stats-cols" id="statsCols">
+          <div></div>
+          <div class="stats-h">Classic</div>
+          <div class="stats-h">Quote</div>
+          <div class="stats-h">Pathway</div>
+
+          <div class="stats-l">Daily games</div>
+          <div class="stats-v"><div class="stats-num" id="cGames">-</div><div class="stats-sub">played</div></div>
+          <div class="stats-v"><div class="stats-num" id="qGames">-</div><div class="stats-sub">played</div></div>
+          <div class="stats-v"><div class="stats-num" id="pGames">-</div><div class="stats-sub">played</div></div>
+
+          <div class="stats-l">Winstreak</div>
+          <div class="stats-v"><div class="stats-num" id="cCur">-</div><div class="stats-sub">current</div></div>
+          <div class="stats-v"><div class="stats-num" id="qCur">-</div><div class="stats-sub">current</div></div>
+          <div class="stats-v"><div class="stats-num" id="pCur">-</div><div class="stats-sub">current</div></div>
+
+          <div class="stats-l">Best streak</div>
+          <div class="stats-v"><div class="stats-num" id="cMax">-</div><div class="stats-sub">best</div></div>
+          <div class="stats-v"><div class="stats-num" id="qMax">-</div><div class="stats-sub">best</div></div>
+          <div class="stats-v"><div class="stats-num" id="pMax">-</div><div class="stats-sub">best</div></div>
+
+          <div class="stats-l">Winrate</div>
+          <div class="stats-v"><div class="stats-num" id="cWr">-</div><div class="stats-sub">%</div></div>
+          <div class="stats-v"><div class="stats-num" id="qWr">-</div><div class="stats-sub">%</div></div>
+          <div class="stats-v"><div class="stats-num" id="pWr">-</div><div class="stats-sub">%</div></div>
+        </div>
+
+        <div class="stats-mobile" id="statsMobile">
+          <div class="mcard">
+            <h3 class="mcard-title">Classic</h3>
+            <div class="mstats">
+              <div class="mstat"><div class="mnum" id="mcGames">-</div><div class="mlbl">Daily games</div></div>
+              <div class="mstat"><div class="mnum" id="mcCur">-</div><div class="mlbl">Winstreak</div></div>
+              <div class="mstat"><div class="mnum" id="mcMax">-</div><div class="mlbl">Best streak</div></div>
+              <div class="mstat"><div class="mnum" id="mcWr">-</div><div class="mlbl">Winrate</div></div>
+            </div>
+          </div>
+
+          <div class="mcard">
+            <h3 class="mcard-title">Quote</h3>
+            <div class="mstats">
+              <div class="mstat"><div class="mnum" id="mqGames">-</div><div class="mlbl">Daily games</div></div>
+              <div class="mstat"><div class="mnum" id="mqCur">-</div><div class="mlbl">Winstreak</div></div>
+              <div class="mstat"><div class="mnum" id="mqMax">-</div><div class="mlbl">Best streak</div></div>
+              <div class="mstat"><div class="mnum" id="mqWr">-</div><div class="mlbl">Winrate</div></div>
+            </div>
+          </div>
+
+          <div class="mcard">
+            <h3 class="mcard-title">Pathway</h3>
+            <div class="mstats">
+              <div class="mstat"><div class="mnum" id="mpGames">-</div><div class="mlbl">Daily games</div></div>
+              <div class="mstat"><div class="mnum" id="mpCur">-</div><div class="mlbl">Winstreak</div></div>
+              <div class="mstat"><div class="mnum" id="mpMax">-</div><div class="mlbl">Best streak</div></div>
+              <div class="mstat"><div class="mnum" id="mpWr">-</div><div class="mlbl">Winrate</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="overlay-actions">
+          <button class="btn" id="accLogoutBtn" type="button">Logout</button>
+          <button class="btn ow-primary" id="accCloseBtn" type="button">Close</button>
+        </div>
+      </div>
+
+      <div class="account-section is-active" id="secLogin" style="display:block;">
+        <div class="form-grid">
+          <input class="acc-input" id="loginEmail" placeholder="Email" autocomplete="email" />
+          <input class="acc-input" id="loginPass" placeholder="Password" type="password" autocomplete="current-password" />
+        </div>
+
+        <div class="overlay-actions">
+          <button class="btn" id="googleBtn" type="button">Continue with Google</button>
+        </div>
+
+        <div class="overlay-actions">
+          <button class="btn ow-primary" id="loginBtn" type="button">Login</button>
+          <button class="btn" id="goRegisterBtn" type="button">Go to Register</button>
+        </div>
+      </div>
+
+      <div class="account-section" id="secRegister" style="display:none;">
+        <div class="form-grid">
+          <input class="acc-input" id="regNick" placeholder="Nickname (3-15)" maxlength="15" autocomplete="nickname" />
+          <input class="acc-input" id="regEmail" placeholder="Email" autocomplete="email" />
+          <input class="acc-input" id="regPass" placeholder="Password (min 6)" type="password" autocomplete="new-password" />
+        </div>
+        <div class="overlay-actions">
+          <button class="btn ow-primary" id="regBtn" type="button">Create account</button>
+          <button class="btn" id="goLoginBtn" type="button">Go to Login</button>
+        </div>
+      </div>
     </div>
-
-    <div class="menu-container">
-        <h1 class="game-title" style="font-size: 64px; margin-bottom: 10px;">LOTMDLE</h1>
-
-
-        <div class="menu-grid">
-            
-            <a href="classic.html" class="menu-card">
-                <div class="card-icon">🎭</div>
-                <div class="card-content">
-                    <h2>Classic Mode</h2>
-                    <p>Guess the character by their attributes (Pathway, Sequence, Faction...)</p>
-                </div>
-            </a>
-
-           
-            <a href="quote.html" class="menu-card">
-                <div class="card-icon">📜</div>
-                <div class="card-content">
-                    <h2>Quote Mode</h2>
-                    <p>Guess the character based on a famous quote.</p>
-                </div>
-            </a>
-            
-
-
-            <a href="pathway.html" class="menu-card">
-  <div class="card-icon">🧬</div>
-  <div class="card-content">
-    <h2>Pathway Mode</h2>
-    <p>Guess the pathway based on emotes.</p>
   </div>
-</a>
 
-        
+  <div class="overlay hidden" id="feedbackOverlay">
+    <div class="overlay-card">
+      <h2>Feedback</h2>
+      <p>Found a bug? Have a suggestion? Want to report an error in character data?</p>
+      <p>I'd love to hear from you!</p>
+      <p><strong>Contact me:</strong></p>
+      <p>📧 Email: lotmdle@proton.me<br />💬 Discord: tempescik.</p>
+      <div class="overlay-actions">
+        <button class="btn" id="feedbackCloseBtn" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="patchOverlay" class="overlay hidden">
+    <div class="overlay-card patch-card">
+      <div class="patch-header">
+        <h2>Patch Notes</h2>
+      </div>
+
+      <div class="patch-content">
+        <div class="patch-entry">
+          <div class="patch-title-row">
+            <h3>v1.2</h3>
+            <span class="patch-date">13.02.2026</span>
+          </div>
+          <ul class="patch-list">
+            <li>New UI and Better phone access</li>
+            <li>Added: Hermes, Soniathrym, Cohinem, Snowman, Siatas, Mobet Zoroast, Alzuhod, Arianna</li>
+            <li>changed Sasir Chapter</li>
+            <li>changed age to epoch</li>
+            <li>Added leaderboard</li>
+            <li>Added Menu and Quote mode</li>
+          </ul>
         </div>
-        
-        <div class="footer-links">
-            <a href="https://github.com/AirDTempest/LOTMdle" target="_blank">GitHub</a> • 
-            <span id="credits">Created by Tempescik.</span>
+
+        <div class="patch-entry">
+          <div class="patch-title-row">
+            <h3>v1.1 - Beta fix</h3>
+            <span class="patch-date">13.02.2026</span>
+          </div>
+          <ul class="patch-list">
+            <li>Spelling mistakes corrected</li>
+            <li>Suah changed to Male</li>
+            <li>Flegrea changed to Male</li>
+            <li>Game now works on phone!</li>
+          </ul>
         </div>
+
+        <div class="patch-entry">
+          <div class="patch-title-row">
+            <h3>v1.0 - Beta Release</h3>
+            <span class="patch-date">13.02.2026</span>
+          </div>
+          <ul class="patch-list">
+            <li>🎉 Initial Beta Release!</li>
+            <li>Added 50+ characters from Book 1</li>
+            <li>Daily & Infinite Modes</li>
+            <li>Attributes: Pathway, Sequence, Gender, Age, Faction, Chapter</li>
+            <li>Feedback system implementation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="overlay-actions">
+        <button id="patchCloseBtn" class="btn" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="how-btn" id="accountBtn" title="Account" type="button">👤</button>
+  <button class="how-btn" id="feedbackBtn" type="button">📧</button>
+  <button class="how-btn" id="patchBtn" type="button">📋</button>
+  <button class="how-btn" id="themeBtn" type="button">🎨</button>
+
+  <div class="theme-menu hidden" id="themeMenu">
+    <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
+    <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
+    <div class="theme-option" data-theme="theme-evernight">Evernight</div>
+    <div class="theme-option" data-theme="theme-sun">Eternal Sun</div>
+  </div>
+
+  <div class="menu-container">
+    <h1 class="game-title" style="font-size: 64px; margin-bottom: 10px;">LOTMDLE</h1>
+
+    <div class="menu-grid">
+      <a href="classic.html" class="menu-card">
+        <div class="card-icon">🎭</div>
+        <div class="card-content">
+          <h2>Classic Mode</h2>
+          <p>Guess the character by their attributes (Pathway, Sequence, Faction...)</p>
+        </div>
+      </a>
+
+      <a href="quote.html" class="menu-card">
+        <div class="card-icon">📜</div>
+        <div class="card-content">
+          <h2>Quote Mode</h2>
+          <p>Guess the character based on a famous quote.</p>
+        </div>
+      </a>
+
+      <a href="pathway.html" class="menu-card">
+        <div class="card-icon">🧬</div>
+        <div class="card-content">
+          <h2>Pathway Mode</h2>
+          <p>Guess the pathway based on emotes.</p>
+        </div>
+      </a>
+     <a href="leaderboard.html" class="menu-card">
+      <div class="card-icon">🏆</div>
+      <div class="card-content">
+        <h2>Global Leaderboard</h2>
+        <p>See the top players across Classic, Quote, and Pathway.</p>
+      </div>
+    </a>
+
     </div>
 
-    <script>
-        const themeBtn = document.getElementById("themeBtn");
-        const themeMenu = document.getElementById("themeMenu");
-        const themeOptions = document.querySelectorAll(".theme-option");
-        
-        let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
-        document.body.classList.add(currentTheme);
+    <div class="footer-links">
+      <a href="https://github.com/AirDTempest/LOTMdle" target="_blank">GitHub</a> •
+      <span id="credits">Created by Tempescik.</span>
+    </div>
+  </div>
 
-      function setTheme(theme) {
-  document.body.classList.forEach((cls) => {
-    if (cls.startsWith("theme-")) document.body.classList.remove(cls);
-  });
+  <script>
+    const themeBtn = document.getElementById("themeBtn");
+    const themeMenu = document.getElementById("themeMenu");
+    const themeOptions = document.querySelectorAll(".theme-option");
 
-  document.body.classList.add(theme);
-  currentTheme = theme;
-  localStorage.setItem("lotmdletheme", theme);
+    let currentTheme = localStorage.getItem("lotmdletheme") || "theme-lotm";
+    document.body.classList.add(currentTheme);
 
-  themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
-}
+    function setTheme(theme) {
+      document.body.classList.forEach((cls) => {
+        if (cls.startsWith("theme-")) document.body.classList.remove(cls);
+      });
+      document.body.classList.add(theme);
+      currentTheme = theme;
+      localStorage.setItem("lotmdletheme", theme);
+      themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
+    }
 
+    if (themeBtn) themeBtn.onclick = (e) => { e.stopPropagation(); themeMenu.classList.toggle("hidden"); };
+    document.onclick = (e) => { if (!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden"); };
+    themeOptions.forEach(opt => opt.onclick = () => { setTheme(opt.dataset.theme); themeMenu.classList.add("hidden"); });
 
-        if(themeBtn) themeBtn.onclick = (e) => { e.stopPropagation(); themeMenu.classList.toggle("hidden"); };
-        document.onclick = (e) => { if(!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden"); };
-        themeOptions.forEach(opt => opt.onclick = () => { setTheme(opt.dataset.theme); themeMenu.classList.add("hidden"); });
-        
-        
-        const patchBtn = document.getElementById("patchBtn");
-        const patchOverlay = document.getElementById("patchOverlay");
-const patchCloseBtn = document.getElementById("patchCloseBtn");
-if (patchBtn && patchOverlay) {
-    patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
-    patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
-    patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
+    const patchBtn = document.getElementById("patchBtn");
+    const patchOverlay = document.getElementById("patchOverlay");
+    const patchCloseBtn = document.getElementById("patchCloseBtn");
+    if (patchBtn && patchOverlay) {
+      patchBtn.onclick = () => patchOverlay.classList.remove("hidden");
+      patchCloseBtn.onclick = () => patchOverlay.classList.add("hidden");
+      patchOverlay.onclick = (e) => { if (e.target === patchOverlay) patchOverlay.classList.add("hidden"); };
+    }
 
+    const feedbackBtn = document.getElementById("feedbackBtn");
+    const feedbackOverlay = document.getElementById("feedbackOverlay");
+    const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");
+    if (feedbackBtn && feedbackOverlay) {
+      feedbackBtn.onclick = () => feedbackOverlay.classList.remove("hidden");
+      feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
+      feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
+    }
+
+      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v1"; //  KEY
+  const firstRunOverlay = document.getElementById("firstRunOverlay");
+  const firstRunOkBtn = document.getElementById("firstRunOkBtn");
+
+  function closeFirstRun() {
+    localStorage.setItem(FIRST_RUN_KEY, "1");
+    firstRunOverlay?.classList.add("hidden");
   }
-const feedbackBtn = document.getElementById("feedbackBtn");
-const feedbackOverlay = document.getElementById("feedbackOverlay");
-const feedbackCloseBtn = document.getElementById("feedbackCloseBtn");
-if (feedbackBtn && feedbackOverlay) {
-    feedbackBtn.onclick = () => feedbackOverlay.classList.remove("hidden");
-    feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
-    feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
-}
 
-    </script>
+  
+  if (!localStorage.getItem(FIRST_RUN_KEY) && firstRunOverlay) {
+    firstRunOverlay.classList.remove("hidden");
+  }
+
+  firstRunOkBtn && (firstRunOkBtn.onclick = closeFirstRun);
+  firstRunOverlay && (firstRunOverlay.onclick = (e) => {
+    if (e.target === firstRunOverlay) closeFirstRun();
+  });
+  </script>
+
+  <script type="module">
+    import { auth, login, register, logout, loadUserStats, loginGoogle, finishGoogleRedirectIfAny } from './leaderboard.js';
+
+    const googleBtn = document.getElementById('googleBtn');
+
+    const accountBtn = document.getElementById('accountBtn');
+    const overlay = document.getElementById('accountOverlay');
+    const closeBtn = document.getElementById('accCloseBtn');
+    const closeX = document.getElementById('accCloseX');
+
+    const accTabs = document.getElementById('accTabs');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+
+    const secProfile = document.getElementById('secProfile');
+    const secLogin = document.getElementById('secLogin');
+    const secRegister = document.getElementById('secRegister');
+
+    const accAvatar = document.getElementById('accAvatar');
+    const accTitle = document.getElementById('accTitle');
+    const accSub = document.getElementById('accSub');
+    const chipName = document.getElementById('chipName');
+    const chipEmail = document.getElementById('chipEmail');
+
+    const cGames = document.getElementById('cGames');
+    const cCur = document.getElementById('cCur');
+    const cMax = document.getElementById('cMax');
+    const cWr = document.getElementById('cWr');
+
+    const qGames = document.getElementById('qGames');
+    const qCur = document.getElementById('qCur');
+    const qMax = document.getElementById('qMax');
+    const qWr = document.getElementById('qWr');
+
+    const pGames = document.getElementById('pGames');
+    const pCur = document.getElementById('pCur');
+    const pMax = document.getElementById('pMax');
+    const pWr = document.getElementById('pWr');
+
+    const statsMobile = document.getElementById('statsMobile');
+
+    const mcGames = document.getElementById('mcGames');
+    const mcCur = document.getElementById('mcCur');
+    const mcMax = document.getElementById('mcMax');
+    const mcWr = document.getElementById('mcWr');
+
+    const mqGames = document.getElementById('mqGames');
+    const mqCur = document.getElementById('mqCur');
+    const mqMax = document.getElementById('mqMax');
+    const mqWr = document.getElementById('mqWr');
+
+    const mpGames = document.getElementById('mpGames');
+    const mpCur = document.getElementById('mpCur');
+    const mpMax = document.getElementById('mpMax');
+    const mpWr = document.getElementById('mpWr');
+
+    const accLogoutBtn = document.getElementById('accLogoutBtn');
+
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPass = document.getElementById('loginPass');
+    const loginBtn = document.getElementById('loginBtn');
+
+    const regNick = document.getElementById('regNick');
+    const regEmail = document.getElementById('regEmail');
+    const regPass = document.getElementById('regPass');
+    const regBtn = document.getElementById('regBtn');
+
+    const goRegisterBtn = document.getElementById('goRegisterBtn');
+    const goLoginBtn = document.getElementById('goLoginBtn');
+
+    function open() { overlay?.classList.remove('hidden'); }
+    function close() { overlay?.classList.add('hidden'); }
+
+    function setActive(tab) {
+      tabLogin.classList.toggle('is-active', tab === 'login');
+      tabRegister.classList.toggle('is-active', tab === 'register');
+
+      secLogin.classList.toggle('is-active', tab === 'login');
+      secRegister.classList.toggle('is-active', tab === 'register');
+
+      secLogin.style.display = tab === 'login' ? 'block' : 'none';
+      secRegister.style.display = tab === 'register' ? 'block' : 'none';
+    }
+
+    function initials(s) {
+      const x = (s || '').trim();
+      if (!x) return '?';
+      return (x[0] || '?').toUpperCase();
+    }
+
+    function setBlankStats() {
+      [
+        cGames,cCur,cMax,cWr,qGames,qCur,qMax,qWr,pGames,pCur,pMax,pWr,
+        mcGames,mcCur,mcMax,mcWr,mqGames,mqCur,mqMax,mqWr,mpGames,mpCur,mpMax,mpWr
+      ].forEach(el => { if (el) el.textContent = '-'; });
+    }
+
+    function syncStatsLayout() {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (statsMobile) statsMobile.style.display = isMobile ? 'grid' : 'none';
+      const statsCols = document.getElementById('statsCols');
+      if (statsCols) statsCols.style.display = isMobile ? 'none' : 'grid';
+    }
+    window.addEventListener('resize', syncStatsLayout);
+
+    function showLoggedOutUI() {
+      accTabs.style.display = 'flex';
+      secProfile.style.display = 'none';
+      secLogin.style.display = 'block';
+      secRegister.style.display = 'none';
+      setActive('login');
+
+      googleBtn.style.display = 'inline-flex';
+
+      accLogoutBtn.disabled = true;
+      accTitle.textContent = 'Account';
+      accSub.textContent = 'Not logged in.';
+      chipName.textContent = 'Name: -';
+      chipEmail.textContent = 'Email: -';
+      accAvatar.textContent = '?';
+      setBlankStats();
+      syncStatsLayout();
+    }
+
+    async function showLoggedInUI(user) {
+      accTabs.style.display = 'none';
+      secLogin.style.display = 'none';
+      secRegister.style.display = 'none';
+      secProfile.style.display = 'block';
+      accLogoutBtn.disabled = false;
+
+      googleBtn.style.display = 'none';
+
+      const name = user.displayName || 'Player';
+      accTitle.textContent = name;
+      accSub.textContent = 'Logged in.';
+      chipName.textContent = `Name: ${name}`;
+      chipEmail.textContent = `Email: ${user.email || '-'}`;
+      accAvatar.textContent = initials(name);
+
+      try {
+        const s = await loadUserStats(user.uid);
+
+        const cg = String(s?.classicDailyGames ?? 0);
+        const cc = String(s?.classicDailyCurrentStreak ?? 0);
+        const cm = String(s?.classicDailyMaxStreak ?? 0);
+        const cw = `${s?.classicDailyWinrate ?? 0}%`;
+
+        const qg = String(s?.quoteDailyGames ?? 0);
+        const qc = String(s?.quoteDailyCurrentStreak ?? 0);
+        const qm = String(s?.quoteDailyMaxStreak ?? 0);
+        const qw = `${s?.quoteDailyWinrate ?? 0}%`;
+
+        const pg = String(s?.pathwayDailyGames ?? 0);
+        const pc = String(s?.pathwayDailyCurrentStreak ?? 0);
+        const pm = String(s?.pathwayDailyMaxStreak ?? 0);
+        const pw = `${s?.pathwayDailyWinrate ?? 0}%`;
+
+        cGames.textContent = cg; cCur.textContent = cc; cMax.textContent = cm; cWr.textContent = cw;
+        qGames.textContent = qg; qCur.textContent = qc; qMax.textContent = qm; qWr.textContent = qw;
+        pGames.textContent = pg; pCur.textContent = pc; pMax.textContent = pm; pWr.textContent = pw;
+
+        if (mcGames) mcGames.textContent = cg;
+        if (mcCur) mcCur.textContent = cc;
+        if (mcMax) mcMax.textContent = cm;
+        if (mcWr) mcWr.textContent = cw;
+
+        if (mqGames) mqGames.textContent = qg;
+        if (mqCur) mqCur.textContent = qc;
+        if (mqMax) mqMax.textContent = qm;
+        if (mqWr) mqWr.textContent = qw;
+
+        if (mpGames) mpGames.textContent = pg;
+        if (mpCur) mpCur.textContent = pc;
+        if (mpMax) mpMax.textContent = pm;
+        if (mpWr) mpWr.textContent = pw;
+      } catch {
+        setBlankStats();
+      }
+
+      syncStatsLayout();
+    }
+
+    accountBtn && (accountBtn.onclick = () => open());
+    closeBtn && (closeBtn.onclick = close);
+    closeX && (closeX.onclick = close);
+    overlay && (overlay.onclick = (e) => { if (e.target === overlay) close(); });
+
+    tabLogin.onclick = () => setActive('login');
+    tabRegister.onclick = () => setActive('register');
+    goRegisterBtn.onclick = () => setActive('register');
+    goLoginBtn.onclick = () => setActive('login');
+
+    googleBtn.onclick = async () => {
+      try {
+        const u = await loginGoogle();
+        if (u) await showLoggedInUI(u);
+      } catch (e) {
+        alert(e?.message || String(e));
+      }
+    };
+
+    loginBtn.onclick = async () => {
+      const email = (loginEmail.value || '').trim();
+      const pass = (loginPass.value || '').trim();
+      if (!email || !pass) return alert('Email i hasło wymagane.');
+      try {
+        const u = await login(email, pass);
+        await showLoggedInUI(u);
+      } catch (e) {
+        alert(e?.message || String(e));
+      }
+    };
+
+    regBtn.onclick = async () => {
+      const nick = (regNick.value || '').trim();
+      const email = (regEmail.value || '').trim();
+      const pass = (regPass.value || '').trim();
+      if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 znaków.');
+      if (!email || pass.length < 6) return alert('Email i hasło (min 6) wymagane.');
+      try {
+        const u = await register(email, pass, nick);
+        await showLoggedInUI(u);
+      } catch (e) {
+        alert(e?.message || String(e));
+      }
+    };
+
+    accLogoutBtn.onclick = async () => {
+      try {
+        await logout();
+        showLoggedOutUI();
+      } catch (e) {
+        alert(e?.message || String(e));
+      }
+    };
+
+    auth.onAuthStateChanged((u) => {
+      if (!u) showLoggedOutUI();
+      else showLoggedInUI(u);
+    });
+
+
+    finishGoogleRedirectIfAny().catch(() => {});
+
+    if (!auth.currentUser) showLoggedOutUI();
+    else showLoggedInUI(auth.currentUser);
+  </script>
 </body>
 </html>
