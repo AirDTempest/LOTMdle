@@ -24,8 +24,8 @@
   <div class="overlay-card">
     <h2>Welcome!</h2>
     <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
-    <p>Use the 🎨 button to change theme.</p>
-    <p>edit: it works now :D, sorry for all disturbances</p>
+    <p>Use the 🎨 button to change theme. it now saves :D</p>
+    
     <div class="overlay-actions">
       <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
     </div>
@@ -275,26 +275,7 @@
   </div>
 
   <script>
-    const themeBtn = document.getElementById("themeBtn");
-    const themeMenu = document.getElementById("themeMenu");
-    const themeOptions = document.querySelectorAll(".theme-option");
-
-    let currentTheme = localStorage.getItem("lotmdletheme") || "theme-lotm";
-    document.body.classList.add(currentTheme);
-
-    function setTheme(theme) {
-      document.body.classList.forEach((cls) => {
-        if (cls.startsWith("theme-")) document.body.classList.remove(cls);
-      });
-      document.body.classList.add(theme);
-      currentTheme = theme;
-      localStorage.setItem("lotmdletheme", theme);
-      themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
-    }
-
-    if (themeBtn) themeBtn.onclick = (e) => { e.stopPropagation(); themeMenu.classList.toggle("hidden"); };
-    document.onclick = (e) => { if (!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden"); };
-    themeOptions.forEach(opt => opt.onclick = () => { setTheme(opt.dataset.theme); themeMenu.classList.add("hidden"); });
+  
 
     const patchBtn = document.getElementById("patchBtn");
     const patchOverlay = document.getElementById("patchOverlay");
@@ -314,7 +295,7 @@
       feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
     }
 
-      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v2"; //  KEY
+      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v3"; //  KEY
   const firstRunOverlay = document.getElementById("firstRunOverlay");
   const firstRunOkBtn = document.getElementById("firstRunOkBtn");
 
@@ -582,6 +563,11 @@
     if (!auth.currentUser) showLoggedOutUI();
     else showLoggedInUI(auth.currentUser);
   </script>
+
+  <script type="module">
+  import { initTheme } from "./theme.js";
+  initTheme();
+</script>
+
 </body>
 </html>
-

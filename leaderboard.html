@@ -44,34 +44,15 @@
       </div>
     </div>
   </div>
+<script type="module">
+  import { initTheme } from "./theme.js";
+  initTheme();
+</script>
 
   <script type="module">
     import { loadLeaderboardLoggedIn } from "./leaderboard.js";
 
 
-    const themeBtn = document.getElementById("themeBtn");
-    const themeMenu = document.getElementById("themeMenu");
-    const themeOptions = document.querySelectorAll(".theme-option");
-
-    let currentTheme = localStorage.getItem("lotmdletheme") || "theme-lotm";
-    document.body.classList.add(currentTheme);
-    themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === currentTheme));
-
-    function setTheme(theme) {
-      document.body.classList.forEach((cls) => {
-        if (cls.startsWith("theme-")) document.body.classList.remove(cls);
-      });
-      document.body.classList.add(theme);
-      currentTheme = theme;
-      localStorage.setItem("lotmdletheme", theme);
-      themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
-    }
-
-    if (themeBtn) themeBtn.onclick = (e) => { e.stopPropagation(); themeMenu.classList.toggle("hidden"); };
-    document.addEventListener("click", (e) => {
-      if (!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.add("hidden");
-    });
-    themeOptions.forEach(opt => opt.onclick = () => { setTheme(opt.dataset.theme); themeMenu.classList.add("hidden"); });
 
   
     const modeClassicBtn = document.getElementById("modeClassicBtn");

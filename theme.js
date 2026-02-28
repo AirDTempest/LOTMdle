@@ -3,20 +3,22 @@ export function initTheme() {
   const themeMenu = document.getElementById("themeMenu");
   const themeOptions = document.querySelectorAll(".theme-option");
 
-  let currentTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
+  const STORAGE_KEY = "lotmdle_theme";
+  let currentTheme = localStorage.getItem(STORAGE_KEY) || "theme-lotm";
 
- function setTheme(theme) {
-  document.body.classList.forEach((cls) => {
-    if (cls.startsWith("theme-")) document.body.classList.remove(cls);
-  });
+  function setTheme(theme) {
+    [...document.body.classList].forEach((cls) => {
+      if (cls.startsWith("theme-")) document.body.classList.remove(cls);
+    });
 
-  document.body.classList.add(theme);
-  currentTheme = theme;
-  localStorage.setItem("lotmdletheme", theme);
+    document.body.classList.add(theme);
+    currentTheme = theme;
+    localStorage.setItem(STORAGE_KEY, theme);
 
-  themeOptions.forEach((opt) => opt.classList.toggle("active", opt.dataset.theme === theme));
-}
-
+    themeOptions.forEach((opt) =>
+      opt.classList.toggle("active", opt.dataset.theme === theme)
+    );
+  }
 
   setTheme(currentTheme);
 
@@ -32,7 +34,7 @@ export function initTheme() {
       }
     });
 
-    themeOptions.forEach(opt => {
+    themeOptions.forEach((opt) => {
       opt.addEventListener("click", () => {
         setTheme(opt.dataset.theme);
         themeMenu.classList.add("hidden");
