@@ -24,7 +24,8 @@
   <div class="overlay-card">
     <h2>Welcome!</h2>
     <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
-    <p>Use the 🎨 button to change theme. it now saves :D</p>
+    <p>New UI :DDD</p>
+    <p>Join discord server: <a href="https://discord.gg/2JkpvR2b9y">DISCORD</a></p>
     
     <div class="overlay-actions">
       <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
@@ -206,7 +207,7 @@
           <ul class="patch-list">
             <li>🎉 Initial Beta Release!</li>
             <li>Added 50+ characters from Book 1</li>
-            <li>Daily & Infinite Modes</li>
+            <li>Daily & Practise Modes</li>
             <li>Attributes: Pathway, Sequence, Gender, Age, Faction, Chapter</li>
             <li>Feedback system implementation</li>
           </ul>
@@ -223,7 +224,7 @@
   <button class="how-btn" id="feedbackBtn" type="button">📧</button>
   <button class="how-btn" id="patchBtn" type="button">📋</button>
   <button class="how-btn" id="themeBtn" type="button">🎨</button>
-
+<a href="https://discord.gg/2JkpvR2b9y" class="how-btn" id="discord" target="_blank"><img src="discord.png"></a>
   <div class="theme-menu hidden" id="themeMenu">
     <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
     <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
@@ -245,7 +246,7 @@
     </div>
     <div class="mode-tags">
       <span class="tag">Daily</span>
-      <span class="tag">Infinite</span>
+      <span class="tag">Practise</span>
     </div>
   </a>
 
@@ -259,7 +260,7 @@
     </div>
     <div class="mode-tags">
       <span class="tag">Daily</span>
-      <span class="tag">Infinite</span>
+      <span class="tag">Practise</span>
     </div>
   </a>
 
@@ -273,10 +274,10 @@
     </div>
     <div class="mode-tags">
       <span class="tag">Daily</span>
-      <span class="tag">Infinite</span>
+      <span class="tag">Practise</span>
     </div>
   </a>
-      <a href="leaderboard.html" class="menu-card">
+  <a href="leaderboard.html" class="menu-card">
   <div class="card-icon">🏆</div>
   <div class="card-content">
     <h2>Leaderboard</h2>
@@ -314,7 +315,7 @@
       feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
     }
 
-      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v3"; //  KEY
+      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v4"; //  KEY
   const firstRunOverlay = document.getElementById("firstRunOverlay");
   const firstRunOkBtn = document.getElementById("firstRunOkBtn");
 
@@ -590,4 +591,3 @@
 
 </body>
 </html>
-

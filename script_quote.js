@@ -258,12 +258,12 @@ function dailyIndex(key, size) {
   return h % size;
 }
 
-// infinite save
+// Practise save
 function infSaveKey() {
   return "lotmdle_quote_inf_save_v1";
 }
-function saveInfiniteState() {
-  if (mode !== "infinite") return;
+function savePractiseState() {
+  if (mode !== "Practise") return;
   if (!currentQuote) return;
 
   const rows = Array.from(grid?.children || []);
@@ -283,10 +283,10 @@ function saveInfiniteState() {
 
   localStorage.setItem(infSaveKey(), JSON.stringify(payload));
 }
-function clearInfiniteState() {
+function clearPractiseState() {
   localStorage.removeItem(infSaveKey());
 }
-function loadInfiniteState() {
+function loadPractiseState() {
   const raw = localStorage.getItem(infSaveKey());
   if (!raw) return null;
   try {
@@ -307,7 +307,7 @@ const attemptsText = document.getElementById("attemptsText");
 const quoteText = document.getElementById("quoteText");
 
 const dailyBtn = document.getElementById("dailyBtn");
-const infiniteBtn = document.getElementById("infiniteBtn");
+const PractiseBtn = document.getElementById("PractiseBtn");
 
 const endOverlay = document.getElementById("endOverlay");
 const endTitle = document.getElementById("endTitle");
@@ -347,7 +347,7 @@ function pickQuoteDaily() {
   if (!quotesData || quotesData.length === 0) return { text: "No quotes", name: "Error" };
   return quotesData[dailyIndex(todayKey(), quotesData.length)];
 }
-function pickQuoteInfinite() {
+function pickQuotePractise() {
   if (!quotesData || quotesData.length === 0) return { text: "No quotes", name: "Error" };
   return quotesData[Math.floor(Math.random() * quotesData.length)];
 }
@@ -406,14 +406,14 @@ function updateSuggestions() {
 function syncModeUI() {
   const isDaily = mode === "daily";
   if (dailyBtn) dailyBtn.classList.toggle("is-active", isDaily);
-  if (infiniteBtn) infiniteBtn.classList.toggle("is-active", !isDaily);
+  if (PractiseBtn) PractiseBtn.classList.toggle("is-active", !isDaily);
 }
 function setMode(newMode) {
   if (mode === newMode) return;
   mode = newMode;
   localStorage.setItem("lotmdle_quote_mode", mode);
   syncModeUI();
-  if (mode === "infinite") startInfinite({ forceNew: false });
+  if (mode === "Practise") startPractise({ forceNew: false });
   else resetDaily();
 }
 
@@ -459,7 +459,7 @@ function showEndScreen(won) {
       playAgainBtn.textContent = "Come back tomorrow";
     }
   } else {
-    clearInfiniteState();
+    clearPractiseState();
     if (playAgainBtn) {
       playAgainBtn.disabled = false;
       playAgainBtn.textContent = "Play again";
@@ -505,12 +505,12 @@ function resetDaily() {
   if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
 }
 
-// infinite game
-function startInfinite({ forceNew = false } = {}) {
+// Practise game
+function startPractise({ forceNew = false } = {}) {
   hideEndScreen();
 
   if (!forceNew) {
-    const s = loadInfiniteState();
+    const s = loadPractiseState();
     if (s && s.quoteText && s.answerName) {
       currentQuote = { text: s.quoteText, name: s.answerName };
       answerName = s.answerName;
@@ -545,7 +545,7 @@ function startInfinite({ forceNew = false } = {}) {
     }
   }
 
-  currentQuote = pickQuoteInfinite();
+  currentQuote = pickQuotePractise();
   answerName = currentQuote.name;
 
   attempts = 0;
@@ -560,7 +560,7 @@ function startInfinite({ forceNew = false } = {}) {
   if (searchInput) searchInput.value = "";
   closeList();
 
-  saveInfiniteState();
+  savePractiseState();
 }
 
 // guess
@@ -584,7 +584,7 @@ function makeGuess(name) {
     row.appendChild(cell);
     if (grid) grid.appendChild(row);
     gameOver = true;
-    if (mode === "infinite") saveInfiniteState();
+    if (mode === "Practise") savePractiseState();
     showEndScreen(true);
     return;
   }
@@ -600,21 +600,21 @@ function makeGuess(name) {
   if (!gameOver && attempts >= maxAttempts) {
     if (statusText) statusText.textContent = `Game Over. It was ${answerName}.`;
     gameOver = true;
-    if (mode === "infinite") saveInfiniteState();
+    if (mode === "Practise") savePractiseState();
     showEndScreen(false);
     return;
   }
 
-  if (mode === "infinite") saveInfiniteState();
+  if (mode === "Practise") savePractiseState();
 }
 
 // events
 if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
-if (infiniteBtn) infiniteBtn.onclick = () => setMode("infinite");
+if (PractiseBtn) PractiseBtn.onclick = () => setMode("Practise");
 
 if (playAgainBtn) {
   playAgainBtn.onclick = () => {
-    if (mode === "infinite") startInfinite({ forceNew: true });
+    if (mode === "Practise") startPractise({ forceNew: true });
     else resetDaily();
   };
 }
@@ -682,5 +682,5 @@ if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => loadLeaderboardLogged
 // init
 initTheme();
 syncModeUI();
-if (mode === "infinite") startInfinite({ forceNew: false });
+if (mode === "Practise") startPractise({ forceNew: false });
 else resetDaily();

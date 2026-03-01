@@ -153,8 +153,8 @@ function streakKeyInf() {
 function infSaveKey() {
   return "lotmdleclassic_infsave_v1";
 }
-function saveInfiniteState() {
-  if (mode !== "infinite") return;
+function savePractiseState() {
+  if (mode !== "Practise") return;
   if (!answer) return;
 
   const rows = Array.from(grid?.children || []);
@@ -176,10 +176,10 @@ function saveInfiniteState() {
 
   localStorage.setItem(infSaveKey(), JSON.stringify(payload));
 }
-function clearInfiniteState() {
+function clearPractiseState() {
   localStorage.removeItem(infSaveKey());
 }
-function loadInfiniteState() {
+function loadPractiseState() {
   const raw = localStorage.getItem(infSaveKey());
   if (!raw) return null;
   try {
@@ -199,7 +199,7 @@ const statusText = document.getElementById("statusText");
 const attemptsText = document.getElementById("attemptsText");
 
 const dailyBtn = document.getElementById("dailyBtn");
-const infiniteBtn = document.getElementById("infiniteBtn");
+const PractiseBtn = document.getElementById("PractiseBtn");
 
 const endOverlay = document.getElementById("endOverlay");
 const endTitle = document.getElementById("endTitle");
@@ -286,7 +286,7 @@ function pickDailyAnswer() {
   const idx = dailyIndex(todayKey(), characters.length);
   return characters[idx];
 }
-function pickInfiniteAnswer() {
+function pickPractiseAnswer() {
   if (!characters.length) return null;
   return characters[Math.floor(Math.random() * characters.length)];
 }
@@ -404,7 +404,7 @@ function showEndScreen(won) {
       playAgainBtn.textContent = "Come back tomorrow";
     }
   } else {
-    clearInfiniteState();
+    clearPractiseState();
     if (playAgainBtn) {
       playAgainBtn.disabled = false;
       playAgainBtn.textContent = "Play again";
@@ -418,7 +418,7 @@ function showEndScreen(won) {
 
   if (triesEl) triesEl.textContent = String(attempts);
   if (maxEl) maxEl.textContent = String(maxAttempts);
-  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "INFINITE";
+  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "Practise";
 
   if (shareEl) {
     shareEl.innerHTML = "";
@@ -443,9 +443,9 @@ function showEndScreen(won) {
 function syncModeUI() {
   const isDaily = mode === "daily";
   if (dailyBtn) dailyBtn.classList.toggle("is-active", isDaily);
-  if (infiniteBtn) infiniteBtn.classList.toggle("is-active", !isDaily);
+  if (PractiseBtn) PractiseBtn.classList.toggle("is-active", !isDaily);
   if (dailyBtn) dailyBtn.setAttribute("aria-pressed", String(isDaily));
-  if (infiniteBtn) infiniteBtn.setAttribute("aria-pressed", String(!isDaily));
+  if (PractiseBtn) PractiseBtn.setAttribute("aria-pressed", String(!isDaily));
 }
 function resetDaily() {
   hideEndScreen();
@@ -503,11 +503,11 @@ function resetDaily() {
   saveDailyState();
 }
 
-function startInfinite(forceNew = false) {
+function startPractise(forceNew = false) {
   hideEndScreen();
 
   if (!forceNew) {
-    const s = loadInfiniteState();
+    const s = loadPractiseState();
     if (s && s.answerName) {
       const restoredAnswer = characters.find((c) => c.name === s.answerName);
       if (restoredAnswer) {
@@ -542,7 +542,7 @@ function startInfinite(forceNew = false) {
     }
   }
 
-  answer = pickInfiniteAnswer();
+  answer = pickPractiseAnswer();
   attempts = 0;
   gameOver = false;
   usedNames = new Set();
@@ -555,14 +555,14 @@ function startInfinite(forceNew = false) {
   if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
   if (statusText) statusText.textContent = "Select a character to start.";
 
-  saveInfiniteState();
+  savePractiseState();
 }
 function setMode(newMode) {
   if (mode === newMode) return;
   mode = newMode;
   localStorage.setItem("lotmdleclassicmode", mode);
   syncModeUI();
-  if (mode === "infinite") startInfinite(false);
+  if (mode === "Practise") startPractise(false);
   else resetDaily();
 }
 
@@ -603,7 +603,7 @@ function makeGuess(guess) {
   if (won) {
     if (statusText) statusText.textContent = `You got it! The answer was ${answer.name}.`;
     gameOver = true;
-    if (mode === "infinite") saveInfiniteState();
+    if (mode === "Practise") savePractiseState();
     if (mode === "daily") saveDailyState();
 
     showEndScreen(true);
@@ -613,7 +613,7 @@ function makeGuess(guess) {
   if (attempts >= maxAttempts) {
     if (statusText) statusText.textContent = `Out of attempts. The answer was ${answer.name}.`;
     gameOver = true;
-    if (mode === "infinite") saveInfiniteState();
+    if (mode === "Practise") savePractiseState();
     if (mode === "daily") saveDailyState();
 
     showEndScreen(false);
@@ -621,18 +621,18 @@ function makeGuess(guess) {
   }
 
   if (statusText) statusText.textContent = "Keep guessing...";
-  if (mode === "infinite") saveInfiniteState();
+  if (mode === "Practise") savePractiseState();
   if (mode === "daily") saveDailyState();
 
 }
 
 //EVENTS
 if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
-if (infiniteBtn) infiniteBtn.onclick = () => setMode("infinite");
+if (PractiseBtn) PractiseBtn.onclick = () => setMode("Practise");
 
 if (playAgainBtn) {
   playAgainBtn.onclick = () => {
-    if (mode === "infinite") startInfinite(true);
+    if (mode === "Practise") startPractise(true);
     else resetDaily();
   };
 }
@@ -728,5 +728,5 @@ if (lbDailyBtn)
 
 //INIT
 syncModeUI();
-if (mode === "infinite") startInfinite(false);
+if (mode === "Practise") startPractise(false);
 else resetDaily();

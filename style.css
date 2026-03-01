@@ -114,9 +114,13 @@ body {
 
 #howBtn { top: 20px; }
 #feedbackBtn { top: 72px; }
-#patchBtn { top: 124px; }
+#patchBtn { top: 200px; }
 #themeBtn { top: 176px; font-size: 16px; }
 #leaderboardBtn { top:178px; }
+#discord { top:304px; }
+img{
+width: 100%;
+}
 
 
 .theme-menu {
@@ -1169,9 +1173,10 @@ body {
   outline-offset: 3px;
 }
 
-#feedbackBtn{ top: 92px; }
-#patchBtn{ top: 166px; }
-#themeBtn{ top: 240px; }
+#feedbackBtn{ top: 100px; }
+#patchBtn{ top: 150px; }
+#discord{ top: 200px; }
+#themeBtn{ top: 250px; }
 
 @media (max-width: 768px){
   #accountBtn{
