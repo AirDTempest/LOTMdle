@@ -1,6 +1,6 @@
 import { auth, submitScoreLoggedIn, loadLeaderboardLoggedIn, submitDailyResultLoggedIn } from "./leaderboard.js";
 
-
+import { initTheme } from "./theme.js";
 const characters = [
     { name: "Adam", age: "3rd Epoch", gender: "Male", pathway: "Visionary", sequence: 0, factions: ["Twilight Hermit Order", "Psychology Alchemists", "King of Angels"], firstChapter: 448 },
     { name: "Alger Wilson", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: 4, factions: ["Tarot Club", "Church of the Fool"], firstChapter: 5 },
@@ -900,4 +900,5 @@ if (mode === "Practise") {
 } else {
   resetDaily();
 }
+
 
