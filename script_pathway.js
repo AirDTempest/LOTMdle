@@ -774,6 +774,12 @@ if (guessBtn) {
     closeList();
   };
 }
+(function practiseHardResetOnce() {
+  const KEY = "lotmdleclassic_practise_hard_reset_v2"; 
+  if (localStorage.getItem(KEY) === "1") return;
+  localStorage.setItem(KEY, "1");
+  clearPractiseState(); 
+})();
 
 
 initTheme();
@@ -794,3 +800,4 @@ if (mode === "Practise") {
 } else {
   resetDaily();
 }
+
