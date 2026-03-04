@@ -21,11 +21,14 @@
 <body>
 <a href="index.html" class="back-btn" title="Back to Main Menu">⬅</a>
 
-    <button class="how-btn" id="howBtn">?</button>
-    <button class="how-btn" id="feedbackBtn">📧</button>
-    <button class="how-btn" id="themeBtn">🎨</button>
-    <button class="how-btn" id="leaderboardBtn" title="Ranking">🏆</button>
-
+<div class="right-dock" id="rightDock">
+  <button class="dock-btn" id="howBtn" title="How to play" aria-label="How to play">?</button>
+  <button class="dock-btn" id="themeBtn" title="Theme" aria-label="Theme">🎨</button>
+  <a class="dock-btn" id="discordBtn" href="https://discord.gg/2JkpvR2b9y" target="_blank" rel="noopener"
+     title="Discord" aria-label="Discord"><img src="discord.png"></a>
+  <button class="dock-btn" id="feedbackBtn" title="Feedback" aria-label="Feedback">✉</button>
+  <button class="dock-btn" id="leaderboardBtn" title="Ranking" aria-label="Ranking">🏆</button>
+</div>
 <div class="theme-menu hidden" id="themeMenu">
     <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
     <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>

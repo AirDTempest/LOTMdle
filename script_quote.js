@@ -297,7 +297,6 @@ function loadPractiseState() {
 
 // elements
 let mode = localStorage.getItem("lotmdle_quote_mode") || "daily";
-const resetInfiniteBtn = document.getElementById("resetInfiniteBtn");
 
 const grid = document.getElementById("grid");
 const list = document.getElementById("list");
@@ -420,18 +419,9 @@ function setMode(newMode) {
 // overlay
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
-
-
-  if (mode === "infinite" && (gameOver || attempts >= maxAttempts)) {
-    clearInfiniteState();
-    startInfinite(true);
-  }
-
-
   clearInterval(window.__lotmdleNextDailyTimerQuote);
 
 }
-
 
 async function updateStreak(won) {
   const streakKey = mode === "daily" ? streakKeyQuoteDaily() : streakKeyQuoteInf();
@@ -749,7 +739,11 @@ if (playAgainBtn) {
   };
 }
 
-if (closeOverlayBtn) closeOverlayBtn.onclick = hideEndScreen;
+if (closeOverlayBtn) closeOverlayBtn.onclick = () => {
+  if (mode === "Practise" && gameOver) startPractise(true);
+  else hideEndScreen();
+};
+
 
 document.addEventListener("pointerdown", (e) => {
   if (!list || !searchInput) return;
@@ -778,6 +772,14 @@ if (searchInput) {
     }
   });
 }
+if (endOverlay) {
+  endOverlay.onclick = (e) => {
+    if (e.target !== endOverlay) return;
+    if (mode === "Practise" && gameOver) startPractise(true);
+    else hideEndScreen();
+  };
+}
+
 
 // other overlays
 const patchBtn = document.getElementById("patchBtn");
@@ -810,7 +812,18 @@ if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => loadLeaderboardLogged
 
 
 // init
+const ONCE_KEY = "lotmdlequote_practise_force_new_once_v1";
+
 initTheme();
 syncModeUI();
-if (mode === "Practise") startPractise({ forceNew: false });
-else resetDaily();
+
+if (mode === "Practise") {
+  if (localStorage.getItem(ONCE_KEY) !== "1") {
+    localStorage.setItem(ONCE_KEY, "1");
+    startPractise(true);
+  } else {
+    startPractise(false);
+  }
+} else {
+  resetDaily();
+}

@@ -29,7 +29,6 @@ const pathways = [
   { name: "Justiciar", emotes: ["⚖️", "📜", "👮♂️", "🔒", "🏛️", "🖋️", "🧿", "🧱", "🪙", "🕯️"] },
   { name: "Wheel of Fortune", emotes: ["🎡", "🍀", "🐍", "⏳", "🧿", "🔁", "🪙", "🌀", "🕰️", "🎲"] },
 ];
-const resetInfiniteBtn = document.getElementById("resetInfiniteBtn");
 
 // leaderboard elements
 const lbBtn = document.getElementById("leaderboardBtn");
@@ -307,11 +306,6 @@ async function updateStreak(won) {
 }
 
 
-if (resetInfiniteBtn) resetInfiniteBtn.onclick = () => {
-  if (mode !== "infinite") setMode("infinite");
-
-
-};
 
 
 
@@ -335,18 +329,6 @@ function setMode(newMode) {
 function hideEndScreen() {
   clearInterval(window.__lotmdleNextDailyTimerPathway);
   if (endOverlay) endOverlay.classList.add("hidden");
-  if (mode === "infinite") {
-  attempts = 0;
-  gameOver = false;
-  usedNames = new Set();
-  if (grid) grid.innerHTML = "";
-  if (attemptsText) attemptsText.textContent = `Attempts 0 / ${maxAttempts}`;
-  if (statusText) statusText.textContent = "Which Pathway is this?";
-  currentPuzzle = pickPuzzle();
-  setupEmotesForCurrentPuzzle();
-  revealOneMoreEmote();
-  saveInfiniteState();
-}
 }
 
 
@@ -733,10 +715,16 @@ if (playAgainBtn) {
   };
 }
 
-if (closeOverlayBtn) closeOverlayBtn.onclick = hideEndScreen;
+if (closeOverlayBtn) closeOverlayBtn.onclick = () => {
+  if (mode === "Practise" && gameOver) startPractise({ forceNew: true });
+  else hideEndScreen();
+};
+
 if (endOverlay) {
   endOverlay.addEventListener("click", (e) => {
-    if (e.target === endOverlay) hideEndScreen();
+    if (e.target !== endOverlay) return;
+    if (mode === "Practise" && gameOver) startPractise({ forceNew: true });
+    else hideEndScreen();
   });
 }
 
@@ -791,5 +779,18 @@ if (guessBtn) {
 initTheme();
 syncModeUI();
 
-if (mode === "Practise") startPractise({ forceNew: false });
-else resetDaily();
+const ONCE_KEY = "lotmdle_practise_force_new_once_v1";
+
+
+
+
+if (mode === "Practise") {
+  if (localStorage.getItem(ONCE_KEY) !== "1") {
+    localStorage.setItem(ONCE_KEY, "1");
+    startPractise({ forceNew: true });
+  } else {
+    startPractise({ forceNew: false });
+  }
+} else {
+  resetDaily();
+}
