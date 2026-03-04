@@ -876,6 +876,12 @@ if (lbDailyBtn)
 
 
 
+(function practiseHardResetOnce() {
+  const KEY = "lotmdleclassic_practise_hard_reset_v2"; 
+  if (localStorage.getItem(KEY) === "1") return;
+  localStorage.setItem(KEY, "1");
+  clearPractiseState(); 
+})();
 
 
 //INIT
@@ -894,3 +900,4 @@ if (mode === "Practise") {
 } else {
   resetDaily();
 }
+
