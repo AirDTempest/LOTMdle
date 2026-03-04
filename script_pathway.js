@@ -327,6 +327,7 @@ function setMode(newMode) {
 
 
 function hideEndScreen() {
+  clearInterval(window.__lotmdleNextDailyTimerPathway);
   if (endOverlay) endOverlay.classList.add("hidden");
 }
 
@@ -358,30 +359,12 @@ function renderShareTiles(won) {
 
 function showEndScreen(won) {
   if (endTitle) endTitle.textContent = won ? "You got it!" : "Not quite!";
-  if (endDesc) endDesc.textContent = `Pathway: ${currentPuzzle?.name || "???"}`;
+  if (endDesc) endDesc.textContent = `Pathway: ${currentPuzzle?.name ?? "???"}`;
   if (endOverlay) endOverlay.classList.remove("hidden");
 
   revealAllEmotes();
   renderShareTiles(won);
   updateStreak(won).catch(console.warn);
-
-if (mode === "daily") {
-  const u = auth.currentUser;
-  if (u) {
-    const current = parseInt(localStorage.getItem(streakKeyPathwayDaily()) || "0", 10);
-
-    submitDailyResultLoggedIn({
-      mode: "dailypathwayemotes",
-      didWin: !!won,
-      playedKey: todayKey(),
-      currentStreakAfter: won ? current : 0,
-    }).catch(console.warn);
-  }
-}
-
-
-
-
 
   const triesEl = document.getElementById("owTries");
   const maxEl = document.getElementById("owMax");
@@ -389,7 +372,7 @@ if (mode === "daily") {
 
   if (triesEl) triesEl.textContent = String(attempts);
   if (maxEl) maxEl.textContent = String(maxAttempts);
-  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY PATHWAY" : "∞ PATHWAY";
+  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "PATHWAY";
 
   if (mode === "daily") {
     setDailyDone();
@@ -398,13 +381,132 @@ if (mode === "daily") {
       playAgainBtn.textContent = "Come back tomorrow";
     }
   } else {
-    clearPractiseState();
+    clearInfiniteState();
     if (playAgainBtn) {
       playAgainBtn.disabled = false;
       playAgainBtn.textContent = "Play again";
     }
   }
+
+
+
+  const keyForOffsetDays = (offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const pickDailyPuzzleForKey = (key) => {
+    if (!pathways || !pathways.length) return null;
+    const idx = dailyIndex(key, pathways.length);
+    return pathways[idx];
+  };
+
+  const msToHMS = (ms) => {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    const h = String(Math.floor(s / 3600)).padStart(2, "0");
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+    const ss = String(s % 60).padStart(2, "0");
+    return `${h}:${m}:${ss}`;
+  };
+
+  const msToNextLocalMidnight = () => {
+    const now = new Date();
+    const next = new Date(now);
+    next.setHours(24, 0, 0, 0);
+    return next - now;
+  };
+
+ 
+  const badge = document.getElementById("owBadge");
+  if (badge) {
+    badge.textContent = won ? "WIN" : "LOSE";
+    badge.classList.toggle("win", !!won);
+    badge.classList.toggle("lose", !won);
+  }
+
+
+  const ydEl = document.getElementById("yesterdayDaily");
+  if (ydEl) {
+    if (mode === "daily") {
+      const yKey = keyForOffsetDays(-1);
+      const yP = pickDailyPuzzleForKey(yKey);
+      ydEl.textContent = yP?.name ?? "—";
+    } else {
+      ydEl.textContent = "—";
+    }
+  }
+
+
+  const nextEl = document.getElementById("nextDailyIn");
+  if (nextEl) {
+    if (mode === "daily") {
+      nextEl.textContent = msToHMS(msToNextLocalMidnight());
+      clearInterval(window.__lotmdleNextDailyTimerPathway);
+      window.__lotmdleNextDailyTimerPathway = setInterval(() => {
+        nextEl.textContent = msToHMS(msToNextLocalMidnight());
+      }, 1000);
+    } else {
+      nextEl.textContent = "—";
+      clearInterval(window.__lotmdleNextDailyTimerPathway);
+    }
+  }
+
+
+  const endXBtn = document.getElementById("endXBtn");
+  if (endXBtn) {
+    endXBtn.onclick = () => {
+      clearInterval(window.__lotmdleNextDailyTimerPathway);
+      if (endOverlay) endOverlay.classList.add("hidden");
+    };
+  }
+
+
+  const toast = document.getElementById("owToast");
+  const copyBtn = document.getElementById("copyResultBtn");
+  const openLbBtn = document.getElementById("openLbBtn");
+
+  const pageUrl =
+    (location && location.origin ? location.origin : "") +
+    (location && location.pathname ? location.pathname : "");
+
+  const shareText =
+    `LOTMDLE PATHWAY ${mode === "daily" ? "DAILY" : "PRACTISE"}: ` +
+    `${won ? "WIN" : "LOSE"} (${attempts}/${maxAttempts})\n` +
+    `Pathway: ${currentPuzzle?.name ?? "???"}\n` +
+    (mode === "daily" ? `Yesterday daily: ${ydEl?.textContent ?? "—"}\n` : "") +
+    pageUrl;
+
+  const showToast = (msg) => {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.remove("hidden");
+    clearTimeout(window.__lotmdleToastTPathway);
+    window.__lotmdleToastTPathway = setTimeout(() => toast.classList.add("hidden"), 1200);
+  };
+
+  if (copyBtn) {
+    copyBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        showToast("Copied!");
+      } catch {
+        alert(shareText);
+      }
+    };
+  }
+
+  if (openLbBtn) {
+    openLbBtn.onclick = () => {
+      const lb = document.getElementById("leaderboardBtn");
+      if (lb) lb.click();
+    };
+  }
 }
+
 
 
 function resetDaily() {

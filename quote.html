@@ -60,13 +60,14 @@
 
 
     <a href="index.html" class="back-btn" title="Back to Classic Mode">⬅</a>
-
-    <button class="how-btn" id="howBtn">?</button>
-
-    <button class="how-btn" id="themeBtn">🎨</button>
-    <button class="how-btn" id="feedbackBtn">📧</button>
-   
-        <button class="how-btn" id="leaderboardBtn" title="Ranking">🏆</button>
+<div class="right-dock" id="rightDock">
+  <button class="dock-btn" id="howBtn" title="How to play" aria-label="How to play">?</button>
+  <button class="dock-btn" id="themeBtn" title="Theme" aria-label="Theme">🎨</button>
+  <a class="dock-btn" id="discordBtn" href="https://discord.gg/2JkpvR2b9y" target="_blank" rel="noopener"
+     title="Discord" aria-label="Discord"><img src="discord.png"></a>
+  <button class="dock-btn" id="feedbackBtn" title="Feedback" aria-label="Feedback">✉</button>
+  <button class="dock-btn" id="leaderboardBtn" title="Ranking" aria-label="Ranking">🏆</button>
+</div>
 
     <div class="theme-menu hidden" id="themeMenu">
         <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
@@ -133,33 +134,58 @@
     </div>
 
     <div class="overlay hidden" id="endOverlay">
-        <div class="overlay-wordle">
-            <div class="ow-head">
-                <h2 class="ow-title" id="endTitle">You got it!</h2>
-                <button class="ow-x" onclick="document.getElementById('endOverlay').classList.add('hidden')">✕</button>
-            </div>
-            <p class="ow-desc" id="endDesc">Answer: Klein Moretti</p>
-            <div class="ow-stats">
-                <div class="ow-stat">
-                    <div class="ow-stat-num" id="owTries">0</div>
-                    <div class="ow-stat-label">TRIES</div>
-                </div>
-                <div class="ow-stat">
-                    <div class="ow-stat-num" id="owMax">7</div>
-                    <div class="ow-stat-label">MAX</div>
-                </div>
-                <div class="ow-stat">
-                    <div class="ow-stat-num" id="owMode">DAILY</div>
-                    <div class="ow-stat-label">MODE</div>
-                </div>
-            </div>
-            <div class="ow-share" id="owShare"></div>
-            <div class="ow-actions">
-                <button class="btn" id="closeOverlayBtn">Close</button>
-                <button class="btn ow-primary" id="playAgainBtn">Play again</button>
-            </div>
-        </div>
+  <div class="overlay-wordle ow-card">
+
+    <div class="ow-head">
+      <div class="ow-head-left">
+        <span class="ow-badge" id="owBadge">RESULT</span>
+        <h2 class="ow-title" id="endTitle">You got it!</h2>
+      </div>
+
+      <button class="ow-x" type="button" id="endXBtn" aria-label="Close">×</button>
     </div>
+
+    <p class="ow-desc" id="endDesc">Speaker ...</p>
+
+    <div class="ow-mini">
+      <div class="ow-mini-row">
+        <span class="ow-mini-label">Yesterday daily</span>
+        <span class="ow-mini-val" id="yesterdayDaily">—</span>
+      </div>
+      <div class="ow-mini-row">
+        <span class="ow-mini-label">Next daily in</span>
+        <span class="ow-mini-val" id="nextDailyIn">—</span>
+      </div>
+    </div>
+
+    <div class="ow-stats">
+      <div class="ow-stat">
+        <div class="ow-stat-num" id="owTries">0</div>
+        <div class="ow-stat-label">TRIES</div>
+      </div>
+      <div class="ow-stat">
+        <div class="ow-stat-num" id="owMax">7</div>
+        <div class="ow-stat-label">MAX</div>
+      </div>
+      <div class="ow-stat">
+        <div class="ow-stat-num" id="owMode">DAILY</div>
+        <div class="ow-stat-label">MODE</div>
+      </div>
+    </div>
+
+    <div class="ow-share" id="owShare"></div>
+
+    <div class="ow-actions">
+      <button class="btn" id="closeOverlayBtn" type="button">Close</button>
+      <button class="btn" id="copyResultBtn" type="button">Copy result</button>
+      <button class="btn" id="openLbBtn" type="button"><a href="leaderboard.html">Leaderboard</a></button>
+      <button class="btn ow-primary" id="playAgainBtn" type="button">Play again</button>
+    </div>
+
+    <div class="ow-toast hidden" id="owToast">Copied!</div>
+  </div>
+</div>
+
 
     <script type="module" src="script_quote.js"></script>
 </body>

@@ -82,6 +82,36 @@ function todayKey() {
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
+function keyForOffsetDays(offset) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function pickDailyAnswerForKey(key) {
+  if (!characters.length) return null;
+  const idx = dailyIndex(key, characters.length);
+  return characters[idx];
+}
+
+function msToHMS(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const h = String(Math.floor(s / 3600)).padStart(2, "0");
+  const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return `${h}:${m}:${ss}`;
+}
+
+function msToNextLocalMidnight() {
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(24, 0, 0, 0);
+  return next - now;
+}
+
 function dailyDoneKey() {
   return `lotmdleclassicdailydone_${todayKey()}`;
 }
@@ -354,6 +384,8 @@ function updateSuggestions() {
 //END
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
+  clearInterval(window.__lotmdleNextDailyTimer);
+
 }
 
 async function updateStreak(won) {
@@ -378,22 +410,19 @@ function showEndScreen(won) {
   if (endOverlay) endOverlay.classList.remove("hidden");
 
   updateStreak(won).catch(console.warn);
-   
+
   if (mode === "daily") {
-  const u = auth.currentUser;
-  if (u) {
-   const current = parseInt(localStorage.getItem(streakKeyDaily()) || "0", 10);
-
-
-    submitDailyResultLoggedIn({
-      mode: "daily",
-      didWin: !!won,
-      playedKey: todayKey(),
-      currentStreakAfter: won ? current : 0,
-    }).catch(console.warn);
+    const u = auth.currentUser;
+    if (u) {
+      const current = parseInt(localStorage.getItem(streakKeyDaily()) || "0", 10);
+      submitDailyResultLoggedIn({
+        mode: "daily",
+        didWin: !!won,
+        playedKey: todayKey(),
+        currentStreakAfter: won ? current : 0,
+      }).catch(console.warn);
+    }
   }
-  }
-
 
 
   if (mode === "daily") {
@@ -436,7 +465,124 @@ function showEndScreen(won) {
       shareEl.appendChild(t);
     }
   }
+
+
+
+  const keyForOffsetDays = (offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const pickDailyAnswerForKey = (key) => {
+    if (!characters || !characters.length) return null;
+    const idx = dailyIndex(key, characters.length);
+    return characters[idx];
+  };
+
+  const msToHMS = (ms) => {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    const h = String(Math.floor(s / 3600)).padStart(2, "0");
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+    const ss = String(s % 60).padStart(2, "0");
+    return `${h}:${m}:${ss}`;
+  };
+
+  const msToNextLocalMidnight = () => {
+    const now = new Date();
+    const next = new Date(now);
+    next.setHours(24, 0, 0, 0);
+    return next - now;
+  };
+
+  const badge = document.getElementById("owBadge");
+  if (badge) {
+    badge.textContent = won ? "WIN" : "LOSE";
+    badge.classList.toggle("win", !!won);
+    badge.classList.toggle("lose", !won);
+  }
+
+
+  const ydEl = document.getElementById("yesterdayDaily");
+  if (ydEl) {
+    if (mode === "daily") {
+      const yKey = keyForOffsetDays(-1);
+      const yAns = pickDailyAnswerForKey(yKey);
+      ydEl.textContent = yAns?.name ?? "—";
+    } else {
+      ydEl.textContent = "—";
+    }
+  }
+
+  const nextEl = document.getElementById("nextDailyIn");
+  if (nextEl) {
+    if (mode === "daily") {
+      nextEl.textContent = msToHMS(msToNextLocalMidnight());
+      clearInterval(window.__lotmdleNextDailyTimer);
+      window.__lotmdleNextDailyTimer = setInterval(() => {
+        nextEl.textContent = msToHMS(msToNextLocalMidnight());
+      }, 1000);
+    } else {
+      nextEl.textContent = "—";
+      clearInterval(window.__lotmdleNextDailyTimer);
+    }
+  }
+
+ 
+  const endXBtn = document.getElementById("endXBtn");
+  if (endXBtn) {
+    endXBtn.onclick = () => {
+      clearInterval(window.__lotmdleNextDailyTimer);
+      if (endOverlay) endOverlay.classList.add("hidden");
+    };
+  }
+
+  const toast = document.getElementById("owToast");
+  const copyBtn = document.getElementById("copyResultBtn");
+  const openLbBtn = document.getElementById("openLbBtn");
+
+  const pageUrl =
+    (location && location.origin ? location.origin : "") +
+    (location && location.pathname ? location.pathname : "");
+
+  const shareText =
+    `LOTMDLE CLASSIC ${mode === "daily" ? "DAILY" : "PRACTISE"}: ` +
+    `${won ? "WIN" : "LOSE"} (${attempts}/${maxAttempts})\n` +
+    `Answer: ${answer?.name ?? "?"}\n` +
+    (mode === "daily" ? `Yesterday daily: ${ydEl?.textContent ?? "—"}\n` : "") +
+    pageUrl;
+
+  const showToast = (msg) => {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.remove("hidden");
+    clearTimeout(window.__lotmdleToastT);
+    window.__lotmdleToastT = setTimeout(() => toast.classList.add("hidden"), 1200);
+  };
+
+  if (copyBtn) {
+    copyBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        showToast("Copied!");
+      } catch {
+        alert(shareText);
+      }
+    };
+  }
+
+  if (openLbBtn) {
+    openLbBtn.onclick = () => {
+      const lb = document.getElementById("leaderboardBtn");
+      if (lb) lb.click();
+    };
+  }
 }
+
+
 
 
 //FLOW

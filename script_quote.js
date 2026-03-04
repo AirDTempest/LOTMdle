@@ -193,7 +193,8 @@ const quotesData = [
 { text: "Doctor, your luck will get worse.", name: "Will Auceptin" },
   { text: "Haha, I’ll reveal my cards. I have long discovered that you can resist my prophetic senses. Perhaps you can use it to seal it.", name: "Will Auceptin" },
   { text: "Why don’t you come in for a cup of tea?", name: "Will Auceptin" },
-  { text: "Do you think that’s realistic? Not only are you getting a newborn to write a letter to you, he still needs to hold a ritual and summon a messenger? [...] The laws of nature still need to be respected!", name: "Will Auceptin" },
+  { text: "Do you think that’s realistic? Not only are you getting a newborn to write a letter to you, he still needs to hold a ritual and summon a messenger? [...] The laws of nature still need to be respected!", name: "Will Auceptin" },
+  { text: "You should say that to my parents!", name: "Will Auceptin" },
   { text: "What’s the point in having such gifts? You might as well give me Gwadar. At the very least, that can be drunk!", name: "Will Auceptin" },
   { text: "Life is just so hard…", name: "Will Auceptin" },
   { text: "Backlund really isn’t suitable for children to live in!", name: "Will Auceptin" },
@@ -418,6 +419,8 @@ function setMode(newMode) {
 // overlay
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
+  clearInterval(window.__lotmdleNextDailyTimerQuote);
+
 }
 
 async function updateStreak(won) {
@@ -428,27 +431,10 @@ async function updateStreak(won) {
 
 function showEndScreen(won) {
   if (endTitle) endTitle.textContent = won ? "You got it!" : "Not quite!";
-  if (endDesc) endDesc.textContent = `Speaker: ${answerName}`;
+  if (endDesc) endDesc.textContent = `Speaker: ${answerName ?? "?"}`;
   if (endOverlay) endOverlay.classList.remove("hidden");
 
   updateStreak(won).catch(console.warn);
-   
- if (mode === "daily") {
-  const u = auth.currentUser;
-  if (u) {
-    const current = parseInt(localStorage.getItem(streakKeyQuoteDaily()) || "0", 10);
-
-    submitDailyResultLoggedIn({
-      mode: "dailyquote",
-      didWin: !!won,
-      playedKey: todayKey(),
-      currentStreakAfter: won ? current : 0,
-    }).catch(console.warn);
-  }
-}
-
-
-
 
   if (mode === "daily") {
     setDailyDone();
@@ -457,7 +443,7 @@ function showEndScreen(won) {
       playAgainBtn.textContent = "Come back tomorrow";
     }
   } else {
-    clearPractiseState();
+    clearInfiniteState();
     if (playAgainBtn) {
       playAgainBtn.disabled = false;
       playAgainBtn.textContent = "Play again";
@@ -467,13 +453,149 @@ function showEndScreen(won) {
   const triesEl = document.getElementById("owTries");
   const maxEl = document.getElementById("owMax");
   const modeEl = document.getElementById("owMode");
+  const shareEl = document.getElementById("owShare");
+
   if (triesEl) triesEl.textContent = String(attempts);
   if (maxEl) maxEl.textContent = String(maxAttempts);
-  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY QUOTE" : "∞ QUOTE";
+  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "QUOTE";
 
-  const shareEl = document.getElementById("owShare");
-  if (shareEl) shareEl.innerHTML = "";
+
+  if (shareEl) {
+    shareEl.innerHTML = "";
+    const total = Math.min(maxAttempts, 7);
+    for (let i = 0; i < total; i++) {
+      const t = document.createElement("div");
+      t.className = "ow-tile";
+      if (i < attempts) {
+        if (won && i === attempts - 1) t.classList.add("correct");
+        else t.classList.add("wrong");
+      } else {
+        t.classList.add("wrong");
+        t.style.opacity = "0.35";
+      }
+      shareEl.appendChild(t);
+    }
+  }
+
+
+
+  const keyForOffsetDays = (offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const pickDailyQuoteForKey = (key) => {
+    if (!quotesData || !quotesData.length) return null;
+    const idx = dailyIndex(key, quotesData.length);
+    return quotesData[idx];
+  };
+
+  const msToHMS = (ms) => {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    const h = String(Math.floor(s / 3600)).padStart(2, "0");
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+    const ss = String(s % 60).padStart(2, "0");
+    return `${h}:${m}:${ss}`;
+  };
+
+  const msToNextLocalMidnight = () => {
+    const now = new Date();
+    const next = new Date(now);
+    next.setHours(24, 0, 0, 0);
+    return next - now;
+  };
+
+
+  const badge = document.getElementById("owBadge");
+  if (badge) {
+    badge.textContent = won ? "WIN" : "LOSE";
+    badge.classList.toggle("win", !!won);
+    badge.classList.toggle("lose", !won);
+  }
+
+
+  const ydEl = document.getElementById("yesterdayDaily");
+  if (ydEl) {
+    if (mode === "daily") {
+      const yKey = keyForOffsetDays(-1);
+      const yQ = pickDailyQuoteForKey(yKey);
+      ydEl.textContent = yQ?.name ?? "—";
+    } else {
+      ydEl.textContent = "—";
+    }
+  }
+
+
+  const nextEl = document.getElementById("nextDailyIn");
+  if (nextEl) {
+    if (mode === "daily") {
+      nextEl.textContent = msToHMS(msToNextLocalMidnight());
+      clearInterval(window.__lotmdleNextDailyTimerQuote);
+      window.__lotmdleNextDailyTimerQuote = setInterval(() => {
+        nextEl.textContent = msToHMS(msToNextLocalMidnight());
+      }, 1000);
+    } else {
+      nextEl.textContent = "—";
+      clearInterval(window.__lotmdleNextDailyTimerQuote);
+    }
+  }
+
+
+  const endXBtn = document.getElementById("endXBtn");
+  if (endXBtn) {
+    endXBtn.onclick = () => {
+      clearInterval(window.__lotmdleNextDailyTimerQuote);
+      if (endOverlay) endOverlay.classList.add("hidden");
+    };
+  }
+
+
+  const toast = document.getElementById("owToast");
+  const copyBtn = document.getElementById("copyResultBtn");
+  const openLbBtn = document.getElementById("openLbBtn");
+
+  const pageUrl =
+    (location && location.origin ? location.origin : "") +
+    (location && location.pathname ? location.pathname : "");
+
+  const shareText =
+    `LOTMDLE QUOTE ${mode === "daily" ? "DAILY" : "PRACTISE"}: ` +
+    `${won ? "WIN" : "LOSE"} (${attempts}/${maxAttempts})\n` +
+    `Speaker: ${answerName ?? "?"}\n` +
+    (mode === "daily" ? `Yesterday daily: ${ydEl?.textContent ?? "—"}\n` : "") +
+    pageUrl;
+
+  const showToast = (msg) => {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.remove("hidden");
+    clearTimeout(window.__lotmdleToastTQuote);
+    window.__lotmdleToastTQuote = setTimeout(() => toast.classList.add("hidden"), 1200);
+  };
+
+  if (copyBtn) {
+    copyBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        showToast("Copied!");
+      } catch {
+        alert(shareText);
+      }
+    };
+  }
+
+  if (openLbBtn) {
+    openLbBtn.onclick = () => {
+      const lb = document.getElementById("leaderboardBtn");
+      if (lb) lb.click();
+    };
+  }
 }
+
 
 // daily game
 function resetDaily() {
