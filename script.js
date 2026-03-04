@@ -36,7 +36,7 @@ const characters = [
     { name: "God of Knowledge and Wisdom", age: "2nd Epoch", gender: "Male", pathway: "White Tower", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
     { name: "Hidden Sage", age: "5th Epoch", gender: "Male", pathway: "Hermit", sequence: 0, factions: ["Moses Ascetic Order"], firstChapter: 164 },
     { name: "Hermes", age: "2nd Epoch", gender: "Male", pathway: "Visionary", sequence: 2, factions: ["Psychology Alchemists", "Twilight Hermit Order"], firstChapter: 484 },
-    { name: "Ince Zangwill", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["None"], firstChapter: 19 },
+    { name: "Ince Zangwill", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Church of Evernight Goddess"], firstChapter: 19 },
     { name: "Katarina Pelle", age: "4th Epoch", gender: "Female", pathway: "Demoness", sequence: 3, factions: ["Demoness Sect"], firstChapter: 199 },
     { name: "Klein Moretti", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: 0, factions: ["Tarot Club", "Transmigrator", "Church of the Fool", "Nighthawks"], firstChapter: 1 },
     { name: "Lenevus", age: "5th Epoch", gender: "Male", pathway: "Error", sequence: 8, factions: ["Aurora Order"], firstChapter: 62 },
@@ -905,3 +905,4 @@ if (mode === "Practise") {
 } else {
   resetDaily();
 }
+
