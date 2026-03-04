@@ -29,6 +29,7 @@ const pathways = [
   { name: "Justiciar", emotes: ["⚖️", "📜", "👮♂️", "🔒", "🏛️", "🖋️", "🧿", "🧱", "🪙", "🕯️"] },
   { name: "Wheel of Fortune", emotes: ["🎡", "🍀", "🐍", "⏳", "🧿", "🔁", "🪙", "🌀", "🕰️", "🎲"] },
 ];
+const resetInfiniteBtn = document.getElementById("resetInfiniteBtn");
 
 // leaderboard elements
 const lbBtn = document.getElementById("leaderboardBtn");
@@ -306,6 +307,11 @@ async function updateStreak(won) {
 }
 
 
+if (resetInfiniteBtn) resetInfiniteBtn.onclick = () => {
+  if (mode !== "infinite") setMode("infinite");
+
+
+};
 
 
 
@@ -329,6 +335,18 @@ function setMode(newMode) {
 function hideEndScreen() {
   clearInterval(window.__lotmdleNextDailyTimerPathway);
   if (endOverlay) endOverlay.classList.add("hidden");
+  if (mode === "infinite") {
+  attempts = 0;
+  gameOver = false;
+  usedNames = new Set();
+  if (grid) grid.innerHTML = "";
+  if (attemptsText) attemptsText.textContent = `Attempts 0 / ${maxAttempts}`;
+  if (statusText) statusText.textContent = "Which Pathway is this?";
+  currentPuzzle = pickPuzzle();
+  setupEmotesForCurrentPuzzle();
+  revealOneMoreEmote();
+  saveInfiniteState();
+}
 }
 
 

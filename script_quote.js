@@ -297,6 +297,7 @@ function loadPractiseState() {
 
 // elements
 let mode = localStorage.getItem("lotmdle_quote_mode") || "daily";
+const resetInfiniteBtn = document.getElementById("resetInfiniteBtn");
 
 const grid = document.getElementById("grid");
 const list = document.getElementById("list");
@@ -419,9 +420,18 @@ function setMode(newMode) {
 // overlay
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
+
+
+  if (mode === "infinite" && (gameOver || attempts >= maxAttempts)) {
+    clearInfiniteState();
+    startInfinite(true);
+  }
+
+
   clearInterval(window.__lotmdleNextDailyTimerQuote);
 
 }
+
 
 async function updateStreak(won) {
   const streakKey = mode === "daily" ? streakKeyQuoteDaily() : streakKeyQuoteInf();

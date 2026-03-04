@@ -218,6 +218,7 @@ function loadPractiseState() {
     return null;
   }
 }
+const resetInfiniteBtn = document.getElementById("resetInfiniteBtn");
 
 //ELEMENTS
 let mode = localStorage.getItem("lotmdleclassicmode") || "daily";
@@ -384,9 +385,16 @@ function updateSuggestions() {
 //END
 function hideEndScreen() {
   if (endOverlay) endOverlay.classList.add("hidden");
+
+  
+  if (mode === "infinite" && (gameOver || attempts >= maxAttempts)) {
+    clearInfiniteState();
+    startInfinite(true);
+  }
   clearInterval(window.__lotmdleNextDailyTimer);
 
 }
+
 
 async function updateStreak(won) {
   const streakKey = mode === "daily" ? streakKeyDaily() : streakKeyInf();
