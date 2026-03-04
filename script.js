@@ -8,8 +8,10 @@ const characters = [
     { name: "Alzuhod", age: "2nd Epoch", gender: "Male", pathway: "Visionary", sequence: 1, factions: ["None"], firstChapter: 238 },
     { name: "Amon", age: "3rd Epoch", gender: "Male", pathway: "Error", sequence: 2, factions: ["King of Angels"], firstChapter: 60 },
     { name: "Anderson Hood", age: "5th Epoch", gender: "Male", pathway: "Red Priest", sequence: 4, factions: ["Treasure Hunter"], firstChapter: 649 },
-    { name: "Antigonus", age: "2nd Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Solomon Empire"], firstChapter: 1381 },
-    { name: "Arianna", age: "5th Epoch", gender: "Female", pathway: "Darkness", sequence: 2, factions: ["None"], firstChapter: 950 },
+     { name: "Anthony Stevenson", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 3, factions: ["Church of Evernight Goddess"], firstChapter: 474 },
+
+    { name: "Antigonus", age: "2nd Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Solomon Empire, Church of Evernight Goddesss"], firstChapter: 1381 },
+    { name: "Arianna", age: "5th Epoch", gender: "Female", pathway: "Darkness", sequence: 2, factions: ["Church of Evernight Goddess"], firstChapter: 950 },
     { name: "Audrey Hall", age: "5th Epoch", gender: "Female", pathway: "Visionary", sequence: 3, factions: ["Tarot Club", "Psychology Alchemists"], firstChapter: 5 },
     { name: "Azik Eggers", age: "4th Epoch", gender: "Male", pathway: "Death", sequence: 2, factions: ["Church of the Fool"], firstChapter: 9 },
     { name: "Bernadette Gustav", age: "5th Epoch", gender: "Female", pathway: "Hermit", sequence: 2, factions: ["Emerald City"], firstChapter: 321 },
@@ -38,7 +40,7 @@ const characters = [
     { name: "Katarina Pelle", age: "4th Epoch", gender: "Female", pathway: "Demoness", sequence: 3, factions: ["Demoness Sect"], firstChapter: 199 },
     { name: "Klein Moretti", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: 0, factions: ["Tarot Club", "Transmigrator", "Church of the Fool", "Nighthawks"], firstChapter: 1 },
     { name: "Lenevus", age: "5th Epoch", gender: "Male", pathway: "Error", sequence: 8, factions: ["Aurora Order"], firstChapter: 62 },
-    { name: "Leonard Mitchell", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Tarot Club", "Red Gloves", "Nighthawks"], firstChapter: 10 },
+    { name: "Leonard Mitchell", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Tarot Club", "Church of Evernight Goddess", "Nighthawks"], firstChapter: 10 },
     { name: "Lilith", age: "2nd Epoch", gender: "Female", pathway: "Mother", sequence: 0, factions: ["Sanguines"], firstChapter: 3 },
     { name: "Lord of Storms", age: "3rd Epoch", gender: "Male", pathway: "Tyrant", sequence: 0, factions: ["Rose Redemption"], firstChapter: 3 },
     { name: "Lovia Tiffany", age: "5th Epoch", gender: "Female", pathway: "Hanged Man", sequence: 4, factions: ["City of Silver"], firstChapter: 202 },
@@ -60,7 +62,11 @@ const characters = [
     { name: "Trissy", age: "5th Epoch", gender: "Female", pathway: "Demoness", sequence: 4, factions: ["Demoness Sect"], firstChapter: 56 },
     { name: "Will Auceptin", age: "5th Epoch", gender: "Male", pathway: "Wheel of Fortune", sequence: 1, factions: ["Church of the Fool"], firstChapter: 326 },
     { name: "Xio Derecha", age: "5th Epoch", gender: "Female", pathway: "Justiciar", sequence: 4, factions: ["Tarot Club"], firstChapter: 107 },
-    { name: "Zaratul", age: "4th Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Secret Order"], firstChapter: 59 }
+    { name: "Zaratul", age: "4th Epoch", gender: "Male", pathway: "Fool", sequence: 2, factions: ["Secret Order"], firstChapter: 59 },
+    { name: "Ilya", age: "5th Epoch", gender: "Female", pathway: "Darkness", sequence: 3, factions: ["Church of Evernight Goddess"], firstChapter: 885 },
+     { name: "Selena", age: "3th Epoch", gender: "Female", pathway: "Darkness", sequence: 4, factions: ["Church of Evernight Goddess"], firstChapter: 109 },
+ { name: "Crestet Cesimir", age: "5th Epoch", gender: "Male", pathway: "Darkness", sequence: 4, factions: ["Church of Evernight Goddess"], firstChapter: 166 },
+
 ];
 
 
@@ -876,17 +882,16 @@ if (lbDailyBtn)
 
 
 
+
+
+//INIT
+const ONCE_KEY = "lotmdlequote_practise_force_new_once_v1";
 (function practiseHardResetOnce() {
   const KEY = "lotmdleclassic_practise_hard_reset_v2"; 
   if (localStorage.getItem(KEY) === "1") return;
   localStorage.setItem(KEY, "1");
   clearPractiseState(); 
 })();
-
-
-//INIT
-const ONCE_KEY = "lotmdlequote_practise_force_new_once_v1";
-
 initTheme();
 syncModeUI();
 
@@ -900,5 +905,3 @@ if (mode === "Practise") {
 } else {
   resetDaily();
 }
-
-
