@@ -812,6 +812,13 @@ if (lbDailyBtn) lbDailyBtn.addEventListener("click", () => loadLeaderboardLogged
 
 
 // init
+(function practiseHardResetOnce() {
+  const KEY = "lotmdleclassic_practise_hard_reset_v2"; 
+  if (localStorage.getItem(KEY) === "1") return;
+  localStorage.setItem(KEY, "1");
+  clearPractiseState(); 
+})();
+
 const ONCE_KEY = "lotmdlequote_practise_force_new_once_v1";
 
 initTheme();
@@ -827,3 +834,4 @@ if (mode === "Practise") {
 } else {
   resetDaily();
 }
+
