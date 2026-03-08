@@ -39,15 +39,16 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth = getAuth(app);
 
-
 const USERS_COLL = "users";
 const STATS_SUBCOLL = "stats";
 const STATS_DOC = "main";
 
+const LB_CACHE_TTL = 60 * 1000;
+const lbCache = new Map();
+
 function userStatsRef(uid) {
   return doc(db, USERS_COLL, uid, STATS_SUBCOLL, STATS_DOC);
 }
-
 
 function normalizeNick(nick) {
   const n = (nick ?? "").toString().trim().slice(0, 15);
@@ -58,7 +59,7 @@ function statsPrefixFromMode(mode) {
   if (mode === "daily") return "classicDaily";
   if (mode === "dailyquote") return "quoteDaily";
   if (mode === "dailypathwayemotes") return "pathwayDaily";
-  return null; 
+  return null;
 }
 
 function defaultsForAllStats(uid = null, nick = "Player") {
@@ -83,16 +84,41 @@ function defaultsForAllStats(uid = null, nick = "Player") {
   };
 }
 
+function statsInitKey(uid) {
+  return `lotmdle-stats-init-${uid}`;
+}
+
+function hasUserStatsBeenInitialized(uid) {
+  try {
+    return localStorage.getItem(statsInitKey(uid)) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markUserStatsInitialized(uid) {
+  try {
+    localStorage.setItem(statsInitKey(uid), "1");
+  } catch {}
+}
+
 export async function ensureUserStatsDoc(uid) {
+  if (!uid) return;
+  // if (hasUserStatsBeenInitialized(uid)) return;
+
   const ref = userStatsRef(uid);
   const snap = await getDoc(ref);
-  if (snap.exists()) return;
+
+  if (snap.exists()) {
+    markUserStatsInitialized(uid);
+    return;
+  }
 
   const u = auth.currentUser;
   const nick = normalizeNick(u?.displayName || u?.email || "Player");
   await setDoc(ref, defaultsForAllStats(uid, nick), { merge: true });
+  markUserStatsInitialized(uid);
 }
-
 
 export async function submitDailyResultLoggedIn({ mode, didWin, playedKey, currentStreakAfter } = {}) {
   const user = auth.currentUser;
@@ -145,7 +171,6 @@ export async function submitDailyResultLoggedIn({ mode, didWin, playedKey, curre
         uid: user.uid,
         nick: normalizeNick(user.displayName || user.email || "Player"),
         updatedAt: serverTimestamp(),
-
         [`${prefix}Games`]: nextGames,
         [`${prefix}Wins`]: nextWins,
         [`${prefix}Losses`]: nextLosses,
@@ -156,12 +181,13 @@ export async function submitDailyResultLoggedIn({ mode, didWin, playedKey, curre
       { merge: true }
     );
   });
-}
 
+  markUserStatsInitialized(user.uid);
+}
 
 export async function login(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password);
-  try { await ensureUserStatsDoc(cred.user.uid); } catch (e) { console.warn(e); }
+  markUserStatsInitialized(cred.user.uid);
   return cred.user;
 }
 
@@ -177,6 +203,7 @@ export async function register(email, password, nick) {
       { type: "main", uid: cred.user.uid, nick: safeNick, updatedAt: serverTimestamp() },
       { merge: true }
     );
+    markUserStatsInitialized(cred.user.uid);
   } catch (e) {
     console.warn(e);
   }
@@ -196,10 +223,11 @@ export async function loginGoogle() {
         type: "main",
         uid: result.user.uid,
         nick: normalizeNick(result.user.displayName || result.user.email || "Player"),
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       },
       { merge: true }
     );
+    markUserStatsInitialized(result.user.uid);
   } catch (e) {
     console.warn(e);
   }
@@ -208,9 +236,11 @@ export async function loginGoogle() {
 }
 
 export async function finishGoogleRedirectIfAny() {
-  const provider = new GoogleAuthProvider();
   try {
-    await getRedirectResult(auth, provider);
+    const result = await getRedirectResult(auth);
+    if (result?.user?.uid) {
+      markUserStatsInitialized(result.user.uid);
+    }
   } catch (e) {
     console.error("Redirect finish failed", e);
   }
@@ -223,7 +253,6 @@ export async function logout() {
 export function onUserChanged(cb) {
   return onAuthStateChanged(auth, cb);
 }
-
 
 export async function submitScoreLoggedIn(currentStreak, mode) {
   const user = auth.currentUser;
@@ -241,16 +270,21 @@ export async function submitScoreLoggedIn(currentStreak, mode) {
     const prevMax = Number(data?.[`${prefix}MaxStreak`] ?? 0);
     const next = Math.max(prevMax, Number(currentStreak ?? 0));
 
-    tx.set(ref, {
-      type: "main",
-      uid: user.uid,
-      nick: normalizeNick(user.displayName || user.email || "Player"),
-      updatedAt: serverTimestamp(),
-      [`${prefix}MaxStreak`]: next,
-    }, { merge: true });
+    tx.set(
+      ref,
+      {
+        type: "main",
+        uid: user.uid,
+        nick: normalizeNick(user.displayName || user.email || "Player"),
+        updatedAt: serverTimestamp(),
+        [`${prefix}MaxStreak`]: next,
+      },
+      { merge: true }
+    );
   });
-}
 
+  markUserStatsInitialized(user.uid);
+}
 
 function maxFieldFromMode(mode) {
   const prefix = statsPrefixFromMode(mode);
@@ -258,15 +292,63 @@ function maxFieldFromMode(mode) {
   return `${prefix}MaxStreak`;
 }
 
+function renderLeaderboardRows(list, rows) {
+  list.innerHTML = "";
+
+  let rank = 1;
+  rows.forEach((data) => {
+    const nickRaw = (data?.nick ?? "").toString().trim();
+    if (!nickRaw) return;
+    if (nickRaw.toLowerCase() === "unknown") return;
+
+    const score = Number(data?.score ?? 0);
+
+    const row = document.createElement("div");
+    row.className = "lb-row";
+
+    const r = document.createElement("div");
+    r.className = "lb-rank";
+    r.textContent = String(rank);
+
+    const n = document.createElement("div");
+    n.className = "lb-name";
+    n.textContent = nickRaw;
+
+    const s = document.createElement("div");
+    s.className = "lb-score";
+    s.textContent = String(score);
+
+    row.appendChild(r);
+    row.appendChild(n);
+    row.appendChild(s);
+    list.appendChild(row);
+
+    rank++;
+  });
+
+  if (rank === 1) {
+    const empty = document.createElement("div");
+    empty.className = "lb-empty";
+    empty.textContent = "No scores yet.";
+    list.appendChild(empty);
+  }
+}
+
 export async function loadLeaderboardLoggedIn(mode) {
   const list = document.getElementById("leaderboard-list");
   if (!list) return;
 
-  
-
   const fieldName = maxFieldFromMode(mode);
   if (!fieldName) {
     list.innerHTML = `<div class="lb-error">Unsupported mode.</div>`;
+    return;
+  }
+
+  const cacheKey = `lb:${mode}`;
+  const cached = lbCache.get(cacheKey);
+
+  if (cached && Date.now() - cached.ts < LB_CACHE_TTL) {
+    renderLeaderboardRows(list, cached.rows);
     return;
   }
 
@@ -282,55 +364,29 @@ export async function loadLeaderboardLoggedIn(mode) {
 
     const snapshot = await getDocs(q);
 
-    list.innerHTML = "";
-
-    let rank = 1;
+    const rows = [];
     snapshot.forEach((docSnap) => {
       const data = docSnap.data() || {};
-      const score = Number(data?.[fieldName] ?? 0);
-
-      const nickRaw = (data?.nick ?? "").toString().trim();
-      if (!nickRaw) return;
-      if (nickRaw.toLowerCase() === "unknown") return;
-
-      const row = document.createElement("div");
-      row.className = "lb-row";
-
-      const r = document.createElement("div");
-      r.className = "lb-rank";
-      r.textContent = String(rank);
-
-      const n = document.createElement("div");
-      n.className = "lb-name";
-      n.textContent = nickRaw;
-
-      const s = document.createElement("div");
-      s.className = "lb-score";
-      s.textContent = String(score);
-
-      row.appendChild(r);
-      row.appendChild(n);
-      row.appendChild(s);
-      list.appendChild(row);
-
-      rank++;
+      rows.push({
+        nick: data?.nick ?? "",
+        score: Number(data?.[fieldName] ?? 0),
+      });
     });
 
-    if (rank === 1) {
-      const empty = document.createElement("div");
-      empty.className = "lb-empty";
-      empty.textContent = "No scores yet.";
-      list.appendChild(empty);
-    }
+    lbCache.set(cacheKey, { ts: Date.now(), rows });
+    renderLeaderboardRows(list, rows);
   } catch (err) {
     console.error(err);
     list.innerHTML = `<div class="lb-error">Error loading leaderboard.</div>`;
   }
 }
 
-
 export async function loadUserStats(uid) {
-  try { await ensureUserStatsDoc(uid); } catch (e) { console.warn(e); }
+  try {
+    await ensureUserStatsDoc(uid);
+  } catch (e) {
+    console.warn(e);
+  }
 
   const ref = userStatsRef(uid);
   const snap = await getDoc(ref);
@@ -355,24 +411,18 @@ export async function loadUserStats(uid) {
   return {
     uid,
     nick: data?.nick ?? "Player",
-
-    // Classic daily
     classicDailyGames: c.games,
     classicDailyWins: c.wins,
     classicDailyLosses: c.losses,
     classicDailyCurrentStreak: c.cur,
     classicDailyMaxStreak: c.max,
     classicDailyWinrate: c.winrate,
-
-    // Quote daily
     quoteDailyGames: q.games,
     quoteDailyWins: q.wins,
     quoteDailyLosses: q.losses,
     quoteDailyCurrentStreak: q.cur,
     quoteDailyMaxStreak: q.max,
     quoteDailyWinrate: q.winrate,
-
-    // Pathway daily
     pathwayDailyGames: p.games,
     pathwayDailyWins: p.wins,
     pathwayDailyLosses: p.losses,
@@ -382,9 +432,10 @@ export async function loadUserStats(uid) {
   };
 }
 
-
 export const signIn = login;
 export const signInGoogle = loginGoogle;
 export const signUp = register;
 export const signUpGoogle = register;
-export async function logoutGoogle() { return logout(); }
+export async function logoutGoogle() {
+  return logout();
+}

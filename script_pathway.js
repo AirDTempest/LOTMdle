@@ -366,6 +366,20 @@ function showEndScreen(won) {
   renderShareTiles(won);
   updateStreak(won).catch(console.warn);
 
+if (mode === "daily") {
+  const u = auth.currentUser;
+  if (u) {
+    const current = parseInt(localStorage.getItem(streakKeyPathwayDaily()) || "0", 10);
+    submitDailyResultLoggedIn({
+      mode: "dailypathwayemotes",
+      didWin: !!won,
+      playedKey: todayKey(),
+      currentStreakAfter: won ? current : 0,
+    }).catch(console.warn);
+  }
+}
+
+
   const triesEl = document.getElementById("owTries");
   const maxEl = document.getElementById("owMax");
   const modeEl = document.getElementById("owMode");

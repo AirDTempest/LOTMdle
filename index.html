@@ -20,19 +20,18 @@
 </head>
 
 <body>
-  <button id="accountBtn" title="Account" type="button">👤</button> 
+  <button id="accountBtn" title="Account" type="button">👤</button>
   <div class="overlay hidden" id="firstRunOverlay">
-  <div class="overlay-card">
-    <h2>Welcome!</h2>
-    <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
-    <p>New UI :DDD</p>
-    <p>Join discord server: <a href="https://discord.gg/2JkpvR2b9y">DISCORD</a></p>
-    
-    <div class="overlay-actions">
-      <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
+    <div class="overlay-card">
+      <h2>Welcome!</h2>
+      <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
+      <p>New UI :DDD</p>
+      <p>Join discord server: <a href="https://discord.gg/2JkpvR2b9y">DISCORD</a></p>
+      <div class="overlay-actions">
+        <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
+      </div>
     </div>
   </div>
-</div>
 
   <div class="overlay hidden" id="accountOverlay">
     <div class="overlay-card account-card">
@@ -165,17 +164,12 @@
     </div>
   </div>
 
-
-
-
   <div class="right-dock" id="rightDock">
-   
-  <button class="dock-btn" id="themeBtn" title="Theme" aria-label="Theme">🎨</button>
-  <a class="dock-btn" id="discordBtn" href="https://discord.gg/2JkpvR2b9y" target="_blank" rel="noopener"
-     title="Discord" aria-label="Discord"><img src="discord.png"></a>
-  <button class="dock-btn" id="feedbackBtn" title="Feedback" aria-label="Feedback">✉</button>
+    <button class="dock-btn" id="themeBtn" title="Theme" aria-label="Theme">🎨</button>
+    <a class="dock-btn" id="discordBtn" href="https://discord.gg/2JkpvR2b9y" target="_blank" rel="noopener" title="Discord" aria-label="Discord"><img src="discord.png"></a>
+    <button class="dock-btn" id="feedbackBtn" title="Feedback" aria-label="Feedback">✉</button>
+  </div>
 
-</div>
   <div class="theme-menu hidden" id="themeMenu">
     <div class="theme-option" data-theme="theme-lotm">LOTM Theme (Gold)</div>
     <div class="theme-option" data-theme="theme-classic">Classic Theme (Black)</div>
@@ -187,57 +181,56 @@
     <h1 class="game-title" style="font-size: 64px; margin-bottom: 10px;">LOTMDLE</h1>
 
     <div class="mode-list">
-  <a class="mode-row" href="classic.html">
-    <div class="mode-left">
-      <div class="mode-ico">🎴</div>
-      <div>
-        <div class="mode-name">Classic</div>
-        <div class="mode-desc">Attributes: Pathway, Seq, Faction, Chapter…</div>
-      </div>
-    </div>
-    <div class="mode-tags">
-      <span class="tag">Daily</span>
-      <span class="tag">Practise</span>
-    </div>
-  </a>
+      <a class="mode-row" href="classic.html">
+        <div class="mode-left">
+          <div class="mode-ico">🎴</div>
+          <div>
+            <div class="mode-name">Classic</div>
+            <div class="mode-desc">Attributes: Pathway, Seq, Faction, Chapter…</div>
+          </div>
+        </div>
+        <div class="mode-tags">
+          <span class="tag">Daily</span>
+          <span class="tag">Practise</span>
+        </div>
+      </a>
 
-  <a class="mode-row" href="quote.html">
-    <div class="mode-left">
-      <div class="mode-ico">❝</div>
-      <div>
-        <div class="mode-name">Quote</div>
-        <div class="mode-desc">Guess the speaker from a quote.</div>
-      </div>
-    </div>
-    <div class="mode-tags">
-      <span class="tag">Daily</span>
-      <span class="tag">Practise</span>
-    </div>
-  </a>
+      <a class="mode-row" href="quote.html">
+        <div class="mode-left">
+          <div class="mode-ico">❝</div>
+          <div>
+            <div class="mode-name">Quote</div>
+            <div class="mode-desc">Guess the speaker from a quote.</div>
+          </div>
+        </div>
+        <div class="mode-tags">
+          <span class="tag">Daily</span>
+          <span class="tag">Practise</span>
+        </div>
+      </a>
 
-  <a class="mode-row" href="pathway.html">
-    <div class="mode-left">
-      <div class="mode-ico">🗺️</div>
-      <div>
-        <div class="mode-name">Pathway</div>
-        <div class="mode-desc">Guess the Pathway from emotes.</div>
-      </div>
-    </div>
-    <div class="mode-tags">
-      <span class="tag">Daily</span>
-      <span class="tag">Practise</span>
-    </div>
-  </a>
-  <a href="leaderboard.html" class="menu-card">
-  <div class="card-icon">🏆</div>
-  <div class="card-content">
-    <h2>Leaderboard</h2>
-    <p>Top players across Classic, Quote and Pathway.</p>
-  </div>
-</a>
+      <a class="mode-row" href="pathway.html">
+        <div class="mode-left">
+          <div class="mode-ico">🗺️</div>
+          <div>
+            <div class="mode-name">Pathway</div>
+            <div class="mode-desc">Guess the Pathway from emotes.</div>
+          </div>
+        </div>
+        <div class="mode-tags">
+          <span class="tag">Daily</span>
+          <span class="tag">Practise</span>
+        </div>
+      </a>
 
-</div>
-
+      <a href="leaderboard.html" class="menu-card">
+        <div class="card-icon">🏆</div>
+        <div class="card-content">
+          <h2>Leaderboard</h2>
+          <p>Top players across Classic, Quote and Pathway.</p>
+        </div>
+      </a>
+    </div>
 
     <div class="footer-links">
       <a href="https://github.com/AirDTempest/LOTMdle" target="_blank">GitHub</a> •
@@ -246,8 +239,6 @@
   </div>
 
   <script>
-  
-
     const patchBtn = document.getElementById("patchBtn");
     const patchOverlay = document.getElementById("patchOverlay");
     const patchCloseBtn = document.getElementById("patchCloseBtn");
@@ -266,24 +257,25 @@
       feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
     }
 
-      const FIRST_RUN_KEY = "lotmdle_first_run_seen_v4"; //  KEY
-  const firstRunOverlay = document.getElementById("firstRunOverlay");
-  const firstRunOkBtn = document.getElementById("firstRunOkBtn");
+    const FIRST_RUN_KEY = "lotmdle_first_run_seen_v4";
+    const firstRunOverlay = document.getElementById("firstRunOverlay");
+    const firstRunOkBtn = document.getElementById("firstRunOkBtn");
 
-  function closeFirstRun() {
-    localStorage.setItem(FIRST_RUN_KEY, "1");
-    firstRunOverlay?.classList.add("hidden");
-  }
+    function closeFirstRun() {
+      localStorage.setItem(FIRST_RUN_KEY, "1");
+      firstRunOverlay?.classList.add("hidden");
+    }
 
-  
-  if (!localStorage.getItem(FIRST_RUN_KEY) && firstRunOverlay) {
-    firstRunOverlay.classList.remove("hidden");
-  }
+    if (!localStorage.getItem(FIRST_RUN_KEY) && firstRunOverlay) {
+      firstRunOverlay.classList.remove("hidden");
+    }
 
-  firstRunOkBtn && (firstRunOkBtn.onclick = closeFirstRun);
-  firstRunOverlay && (firstRunOverlay.onclick = (e) => {
-    if (e.target === firstRunOverlay) closeFirstRun();
-  });
+    if (firstRunOkBtn) firstRunOkBtn.onclick = closeFirstRun;
+    if (firstRunOverlay) {
+      firstRunOverlay.onclick = (e) => {
+        if (e.target === firstRunOverlay) closeFirstRun();
+      };
+    }
   </script>
 
   <script type="module">
@@ -356,16 +348,24 @@
     const goRegisterBtn = document.getElementById('goRegisterBtn');
     const goLoginBtn = document.getElementById('goLoginBtn');
 
-    function open() { overlay?.classList.remove('hidden'); }
-    function close() { overlay?.classList.add('hidden'); }
+    let accountStatsCache = null;
+    let accountStatsCacheUid = null;
+    let accountStatsCacheTs = 0;
+    const ACCOUNT_STATS_TTL = 60 * 1000;
+
+    function open() {
+      overlay?.classList.remove('hidden');
+    }
+
+    function close() {
+      overlay?.classList.add('hidden');
+    }
 
     function setActive(tab) {
       tabLogin.classList.toggle('is-active', tab === 'login');
       tabRegister.classList.toggle('is-active', tab === 'register');
-
       secLogin.classList.toggle('is-active', tab === 'login');
       secRegister.classList.toggle('is-active', tab === 'register');
-
       secLogin.style.display = tab === 'login' ? 'block' : 'none';
       secRegister.style.display = tab === 'register' ? 'block' : 'none';
     }
@@ -378,9 +378,11 @@
 
     function setBlankStats() {
       [
-        cGames,cCur,cMax,cWr,qGames,qCur,qMax,qWr,pGames,pCur,pMax,pWr,
-        mcGames,mcCur,mcMax,mcWr,mqGames,mqCur,mqMax,mqWr,mpGames,mpCur,mpMax,mpWr
-      ].forEach(el => { if (el) el.textContent = '-'; });
+        cGames, cCur, cMax, cWr, qGames, qCur, qMax, qWr, pGames, pCur, pMax, pWr,
+        mcGames, mcCur, mcMax, mcWr, mqGames, mqCur, mqMax, mqWr, mpGames, mpCur, mpMax, mpWr
+      ].forEach((el) => {
+        if (el) el.textContent = '-';
+      });
     }
 
     function syncStatsLayout() {
@@ -389,6 +391,13 @@
       const statsCols = document.getElementById('statsCols');
       if (statsCols) statsCols.style.display = isMobile ? 'none' : 'grid';
     }
+
+    function clearAccountStatsCache() {
+      accountStatsCache = null;
+      accountStatsCacheUid = null;
+      accountStatsCacheTs = 0;
+    }
+
     window.addEventListener('resize', syncStatsLayout);
 
     function showLoggedOutUI() {
@@ -397,9 +406,7 @@
       secLogin.style.display = 'block';
       secRegister.style.display = 'none';
       setActive('login');
-
       googleBtn.style.display = 'inline-flex';
-
       accLogoutBtn.disabled = true;
       accTitle.textContent = 'Account';
       accSub.textContent = 'Not logged in.';
@@ -416,7 +423,6 @@
       secRegister.style.display = 'none';
       secProfile.style.display = 'block';
       accLogoutBtn.disabled = false;
-
       googleBtn.style.display = 'none';
 
       const name = user.displayName || 'Player';
@@ -427,7 +433,20 @@
       accAvatar.textContent = initials(name);
 
       try {
-        const s = await loadUserStats(user.uid);
+        let s;
+
+        if (
+          accountStatsCache &&
+          accountStatsCacheUid === user.uid &&
+          Date.now() - accountStatsCacheTs < ACCOUNT_STATS_TTL
+        ) {
+          s = accountStatsCache;
+        } else {
+          s = await loadUserStats(user.uid);
+          accountStatsCache = s;
+          accountStatsCacheUid = user.uid;
+          accountStatsCacheTs = Date.now();
+        }
 
         const cg = String(s?.classicDailyGames ?? 0);
         const cc = String(s?.classicDailyCurrentStreak ?? 0);
@@ -444,9 +463,20 @@
         const pm = String(s?.pathwayDailyMaxStreak ?? 0);
         const pw = `${s?.pathwayDailyWinrate ?? 0}%`;
 
-        cGames.textContent = cg; cCur.textContent = cc; cMax.textContent = cm; cWr.textContent = cw;
-        qGames.textContent = qg; qCur.textContent = qc; qMax.textContent = qm; qWr.textContent = qw;
-        pGames.textContent = pg; pCur.textContent = pc; pMax.textContent = pm; pWr.textContent = pw;
+        cGames.textContent = cg;
+        cCur.textContent = cc;
+        cMax.textContent = cm;
+        cWr.textContent = cw;
+
+        qGames.textContent = qg;
+        qCur.textContent = qc;
+        qMax.textContent = qm;
+        qWr.textContent = qw;
+
+        pGames.textContent = pg;
+        pCur.textContent = pc;
+        pMax.textContent = pm;
+        pWr.textContent = pw;
 
         if (mcGames) mcGames.textContent = cg;
         if (mcCur) mcCur.textContent = cc;
@@ -469,65 +499,84 @@
       syncStatsLayout();
     }
 
-    accountBtn && (accountBtn.onclick = () => open());
-    closeBtn && (closeBtn.onclick = close);
-    closeX && (closeX.onclick = close);
-    overlay && (overlay.onclick = (e) => { if (e.target === overlay) close(); });
+    if (accountBtn) accountBtn.onclick = () => open();
+    if (closeBtn) closeBtn.onclick = close;
+    if (closeX) closeX.onclick = close;
+    if (overlay) {
+      overlay.onclick = (e) => {
+        if (e.target === overlay) close();
+      };
+    }
 
-    tabLogin.onclick = () => setActive('login');
-    tabRegister.onclick = () => setActive('register');
-    goRegisterBtn.onclick = () => setActive('register');
-    goLoginBtn.onclick = () => setActive('login');
+    if (tabLogin) tabLogin.onclick = () => setActive('login');
+    if (tabRegister) tabRegister.onclick = () => setActive('register');
+    if (goRegisterBtn) goRegisterBtn.onclick = () => setActive('register');
+    if (goLoginBtn) goLoginBtn.onclick = () => setActive('login');
 
-    googleBtn.onclick = async () => {
-      try {
-        const u = await loginGoogle();
-        if (u) await showLoggedInUI(u);
-      } catch (e) {
-        alert(e?.message || String(e));
-      }
-    };
+    if (googleBtn) {
+      googleBtn.onclick = async () => {
+        try {
+          const u = await loginGoogle();
+          clearAccountStatsCache();
+          if (u) await showLoggedInUI(u);
+        } catch (e) {
+          alert(e?.message || String(e));
+        }
+      };
+    }
 
-    loginBtn.onclick = async () => {
-      const email = (loginEmail.value || '').trim();
-      const pass = (loginPass.value || '').trim();
-      if (!email || !pass) return alert('Email and password required.');
-      try {
-        const u = await login(email, pass);
-        await showLoggedInUI(u);
-      } catch (e) {
-        alert(e?.message || String(e));
-      }
-    };
+    if (loginBtn) {
+      loginBtn.onclick = async () => {
+        const email = (loginEmail.value || '').trim();
+        const pass = (loginPass.value || '').trim();
+        if (!email || !pass) return alert('Email and password required.');
+        try {
+          const u = await login(email, pass);
+          clearAccountStatsCache();
+          await showLoggedInUI(u);
+        } catch (e) {
+          alert(e?.message || String(e));
+        }
+      };
+    }
 
-    regBtn.onclick = async () => {
-      const nick = (regNick.value || '').trim();
-      const email = (regEmail.value || '').trim();
-      const pass = (regPass.value || '').trim();
-      if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 characters .');
-      if (!email || pass.length < 6) return alert('Email and password need to be over 6 characters.');
-      try {
-        const u = await register(email, pass, nick);
-        await showLoggedInUI(u);
-      } catch (e) {
-        alert(e?.message || String(e));
-      }
-    };
+    if (regBtn) {
+      regBtn.onclick = async () => {
+        const nick = (regNick.value || '').trim();
+        const email = (regEmail.value || '').trim();
+        const pass = (regPass.value || '').trim();
+        if (nick.length < 3 || nick.length > 15) return alert('Nickname 3-15 characters .');
+        if (!email || pass.length < 6) return alert('Email and password need to be over 6 characters.');
+        try {
+          const u = await register(email, pass, nick);
+          clearAccountStatsCache();
+          await showLoggedInUI(u);
+        } catch (e) {
+          alert(e?.message || String(e));
+        }
+      };
+    }
 
-    accLogoutBtn.onclick = async () => {
-      try {
-        await logout();
-        showLoggedOutUI();
-      } catch (e) {
-        alert(e?.message || String(e));
-      }
-    };
+    if (accLogoutBtn) {
+      accLogoutBtn.onclick = async () => {
+        try {
+          await logout();
+          clearAccountStatsCache();
+          showLoggedOutUI();
+        } catch (e) {
+          alert(e?.message || String(e));
+        }
+      };
+    }
 
     auth.onAuthStateChanged((u) => {
-      if (!u) showLoggedOutUI();
-      else showLoggedInUI(u);
+      if (!u) {
+        clearAccountStatsCache();
+        showLoggedOutUI();
+      } else {
+        showLoggedInUI(u);
+      }
     });
-
 
     finishGoogleRedirectIfAny().catch(() => {});
 
@@ -536,9 +585,8 @@
   </script>
 
   <script type="module">
-  import { initTheme } from "./theme.js";
-  initTheme();
-</script>
-
+    import { initTheme } from "./theme.js";
+    initTheme();
+  </script>
 </body>
 </html>

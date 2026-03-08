@@ -435,6 +435,20 @@ function showEndScreen(won) {
   if (endOverlay) endOverlay.classList.remove("hidden");
 
   updateStreak(won).catch(console.warn);
+  
+if (mode === "daily") {
+  const u = auth.currentUser;
+  if (u) {
+    const current = parseInt(localStorage.getItem(streakKeyQuoteDaily()) || "0", 10);
+    submitDailyResultLoggedIn({
+      mode: "dailyquote",
+      didWin: !!won,
+      playedKey: todayKey(),
+      currentStreakAfter: won ? current : 0,
+    }).catch(console.warn);
+  }
+}
+
 
   if (mode === "daily") {
     setDailyDone();
