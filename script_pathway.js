@@ -2,27 +2,28 @@ import { auth, submitScoreLoggedIn, loadLeaderboardLoggedIn, submitDailyResultLo
 import { initTheme } from "./theme.js";
 
 const pathways = [
-  { name: "Fool", description: "This pathway represents the authority over history, time, and change. High-level Beyonders can summon Historical Void projections, perform terrifying miracles, and effortlessly fool fate, time, and history itself. Its sequences are often associated with divination, magic tricks, bizarre occurrences, and the power to resurrect from the dead." },
-  { name: "Door", description: "Known for the ultimate mastery over space, sealing, and wandering. Beyonders of this route can travel through the cosmos, record and replicate other people's Beyonder powers, and pass through any physical or conceptual barrier. They are scholars of the starry sky and the ultimate escape artists." },
-  { name: "Error", description: "The pathway of deception, time-theft, and paradoxes. Its Beyonders specialize in stealing powers, thoughts, destinies, and even the lifespans of others. They are swindlers of the highest order, capable of exploiting loopholes in the rules of the world and creating countless avatars." },
-  { name: "Visionary", description: "This route revolves around the mind, dreams, and the power of imagination. Its followers can manipulate human consciousness, implant psychological cues, and eventually turn imagined things into reality. They orchestrate the tides of the times behind the scenes, treating the world as their personal theater." },
-  { name: "Tyrant", description: "The embodiment of extreme power, storms, oceans, and lightning. Followers of this route possess terrifying physical destruction capabilities, commanding the weather and dominating the seas. They are irascible, domineering, and often act as the absolute rulers of the oceans." },
-  { name: "Sun", description: "A pathway of purification, light, and oaths. Its Beyonders are the nemesis of the undead and evil spirits, wielding holy light to cleanse corruption. They can create powerful buffs, enforce unbreakable contracts, and eventually become a miniature sun that illuminates the darkness." },
-  { name: "Darkness", description: "Associated with night, sleep, concealment, and serenity. Followers of this route can drag enemies into deep slumber, manipulate bad luck, and erase concepts from reality using absolute concealment. They find comfort in the dark and hold authority over the resting dead." },
-  { name: "Death", description: "The masters of the Underworld and spirits. They can command the undead, induce decay and death, and communicate directly with spirits. At higher levels, they become immortal entities, turning their surroundings into a realm of the dead where no living thing can survive." },
-  { name: "Red Priest", description: "The pathway of war, conspiracy, and destruction. Its Beyonders excel at provoking enemies, manipulating flames, and leading armies into battle. They turn every conflict into a fiery massacre and gain their true power through warfare and the blood of their enemies." },
-  { name: "Demoness", description: "A path of curses, plagues, and deadly allure. It fundamentally changes the gender of its followers to female at higher sequences. They manipulate black flames, ice, invisible threads, and devastating diseases, hiding extreme danger behind an incredibly beautiful and seductive appearance." },
-  { name: "Black Emperor", description: "The embodiment of order, distortion, and loopholes. Beyonders here can distort physical rules, exploit the law, and enforce their own chaotic order upon the world. As long as their nation and rules stand, they can continuously resurrect from their mausoleums." },
-  { name: "Hermit", description: "Deeply connected to esoteric knowledge, mystery, and hidden information. Followers can decipher complex magical rituals, peer into hidden truths, and use fairy tales or mystical knowledge as physical attacks. They are the ultimate sages, but constantly threatened by the madness of raw knowledge." },
-  { name: "Paragon", description: "The pathway of machinery, alchemy, and civilization. Its Beyonders have absolute understanding of tools, physics, and creation. They can infuse life into machines, create miraculous artifacts, and push the boundaries of technological and mystical enlightenment." },
-  { name: "Moon", description: "Tied to vampires, spirituality, and life force. Followers possess immense vitality, mastery over potions, and the ability to control darkness and the moon's phases. They excel in healing, but can also use curses and blood manipulation." },
-  { name: "Mother", description: "The origin of life, nature, and mutation. Beyonders of this route can command plants, breed terrifying biological mutations, and manipulate the flesh and blood of all living creatures. They represent both the nurturing and the terrifying, grotesque sides of raw life." },
-  { name: "Chained", description: "A pathway of extreme temperance, curses, and monstrous transformations. Followers often appear as zombies, wraiths, or puppets. They suppress their desires to gain power, but can unleash them to transform into horrifying, uncontrollable monsters." },
-  { name: "Hanged Man", description: "Associated with flesh, secrets, and degeneration. Its Beyonders can manipulate shadows, corrupt the environment, and use their own flesh and blood for terrifying magical effects. They thrive in the shadows and graze on the souls of others." },
-  { name: "Twilight Giant", description: "The pinnacle of physical combat, decay, and dusk. Followers are heavily armored warriors, wielding giant broadswords and the power of twilight, which accelerates decay. They are unmatched in close combat and represent the inevitable end of all things." },
-  { name: "White Tower", description: "The pathway of omniscience, prophecy, and imitation. Beyonders here can analyze and replicate almost any Beyonder ability they witness. They are ultimate scholars who predict the future, decipher the enemy's weaknesses, and use knowledge as their absolute weapon." },
-  { name: "Justiciar", description: "The enforcers of law and order. They can lay down absolute rules that all within a certain range must follow (e.g., 'No magic allowed here'). They punish rule-breakers and rely on strict discipline and the judgment of their enforced laws." },
-  { name: "Wheel of Fortune", description: "The most unique pathway, revolving entirely around luck, probability, and fate. Its followers are monsters of luck, capable of predicting the future, manipulating fortune, and continuously reincarnating. They do not rely on direct combat, but let fate destroy their enemies." }
+  { name: "Fool", description: "This pathway represents the authority over history, time, change, and concealment. High-level Beyonders can summon Historical Void projections, perform terrifying miracles, and effortlessly fool fate, time, and history itself. Its sequences are often associated with divination, magic tricks, bizarre occurrences, shapeshifting, and the power to resurrect from the dead." },
+  { name: "Door", description: "Known for the ultimate mastery over space, sealing, and wandering. Beyonders of this route can travel through the cosmos, record and replicate other people's Beyonder powers, and pass through any physical or conceptual barrier. They are scholars of the starry sky, masters of dimensional manipulation, and the ultimate escape artists." },
+  { name: "Error", description: "The pathway of deception, time-theft, and paradoxes. Its Beyonders specialize in stealing powers, thoughts, destinies, and even the lifespans of others. They are swindlers of the highest order, capable of exploiting loopholes in the rules of the world, creating countless avatars, and parasitizing almost any existence." },
+  { name: "Visionary", description: "This route revolves around the mind, dreams, and the power of imagination. Its followers can manipulate human consciousness, implant psychological cues, and eventually turn imagined things into reality. They orchestrate the tides of the times behind the scenes, treating the world as their personal theater where every development follows their script." },
+  { name: "Tyrant", description: "The embodiment of extreme power, storms, oceans, and lightning. Followers of this route possess terrifying physical destruction capabilities, commanding the weather and dominating the seas. They are irascible, domineering, and often act as the absolute rulers of the sky and the oceans, singing songs that induce dread." },
+  { name: "Sun", description: "A pathway of purification, light, and oaths. Its Beyonders are the nemesis of the undead and evil spirits, wielding holy light to cleanse corruption. They can create powerful buffs, enforce unbreakable contracts, unshadow any deceit, and eventually become a miniature sun that illuminates the darkness." },
+  { name: "Darkness", description: "Associated with night, sleep, concealment, and serenity. Followers of this route can drag enemies into deep slumber, manipulate bad luck, and erase concepts from reality using absolute concealment. They find comfort in the dark, possess domain over soul manipulation, and hold authority over the resting dead." },
+  { name: "Death", description: "The masters of the Underworld and spirits. They can command the undead, induce decay and death, and communicate directly with spirits. At higher levels, they become immortal entities, turning their surroundings into a realm of the dead where no living thing can survive, utilizing pale white flames to burn souls." },
+  { name: "Red Priest", description: "The pathway of war, conspiracy, and destruction. Its Beyonders excel at provoking enemies, manipulating flames, and leading armies into battle. They turn every conflict into a fiery massacre, specializing in changing weather and environments, and gain their true power through warfare and the blood of their enemies." },
+  { name: "Demoness", description: "A path of curses, plagues, and deadly allure. It fundamentally changes the gender of its followers to female at higher sequences. They manipulate black flames, frost, invisible threads, and devastating diseases, hiding extreme danger and apocalyptic calamities behind an incredibly beautiful and seductive appearance." },
+  { name: "Black Emperor", description: "The embodiment of order, distortion, and loopholes. Beyonders here can distort physical rules, exploit the law, and enforce their own chaotic order upon the world. They use bribery and magnification of effects to their advantage, and as long as their nation and rules stand, they can continuously resurrect from their mausoleums." },
+  { name: "Justiciar", description: "The strict enforcers of law and order. They can lay down absolute rules that all within a certain range must follow. They punish rule-breakers, prohibit specific actions, and rely on strict discipline. At the pinnacle, they become the embodiment of the world's rules, passing inevitable judgments upon their targets." },
+  { name: "Hermit", description: "Deeply connected to esoteric knowledge, mystery, and hidden information. Followers can decipher complex magical rituals, peer into hidden truths, and use fairy tales or mystical knowledge as physical attacks. They are the ultimate sages of mysticism, but are constantly threatened by the madness of raw, corrupted knowledge." },
+  { name: "Paragon", description: "The pathway of machinery, alchemy, and civilization. Its Beyonders have absolute understanding of tools, physics, and creation. They can infuse life into machines, create miraculous artifacts, flawlessly recall any information, and push the boundaries of technological and mystical enlightenment beyond mortal comprehension." },
+  { name: "Mother", description: "The origin of life, nature, and mutation. Beyonders of this route can command plants, breed terrifying biological mutations, and manipulate the flesh and blood of all living creatures. They represent both the nurturing aspect of creation and the terrifying, grotesque sides of raw, unrestrained life and cross-breeding." },
+  { name: "Moon", description: "Tied to vampires, spirituality, and life force. Followers possess immense vitality, mastery over potions, and the ability to control darkness and the moon's phases. They excel in healing and herbalism, but can also use curses, blood manipulation, and summon corrupted crimson moonlight." },
+  { name: "Wheel of Fortune", description: "The most unique pathway, revolving entirely around luck, probability, and fate. Its followers are monsters of luck, capable of predicting the future, manipulating fortune, and continuously reincarnating to accumulate power. They do not rely on direct combat, but let the terrifying weight of fate destroy their enemies." },
+  { name: "Chained", description: "A pathway of extreme temperance, curses, and monstrous transformations. Followers often appear as zombies, wraiths, or puppets. They suppress their darkest desires to gain power, but can unleash them to transform into horrifying, uncontrollable monsters, utilizing absolute malicious malice and curses." },
+  { name: "Abyss", description: "The epitome of pure evil, corruption, and demonic desires. Followers are capable of sensing extreme danger, using foul language to curse enemies, and manipulating lava and the abyss itself. They transform into genuine devils, committing atrocious acts and utilizing absolute malice to corrupt everything around them." },
+  { name: "Hanged Man", description: "Associated with flesh, secrets, and degeneration. Its Beyonders can manipulate shadows, corrupt the environment, and use their own flesh and blood for terrifying magical effects. They thrive in the shadows, graze on the souls of others to steal their powers, and embrace the ultimate depravity." },
+  { name: "Twilight Giant", description: "The pinnacle of physical combat, decay, and dusk. Followers are heavily armored warriors, wielding giant broadswords and the power of twilight, which accelerates decay and the end of all things. They are unmatched in close combat, utilizing dawn light and absolute physical defenses to crush opposition." },
+  { name: "White Tower", description: "The pathway of omniscience, prophecy, and imitation. Beyonders here can analyze and replicate almost any Beyonder ability they witness. They are ultimate scholars who predict the future, decipher the enemy's weaknesses through deduction, and use raw knowledge and mental manipulation as their absolute weapons." }
 ];
 
 const lbBtn = document.getElementById("leaderboardBtn");
@@ -103,9 +104,31 @@ function todayKey() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+function dailySaveKey() { return `lotmdle_pathway_dailysave_${todayKey()}`; }
 function dailyDoneKey() { return `lotmdle_pathway_daily_done_${todayKey()}`; }
+
 function isDailyDone() { return localStorage.getItem(dailyDoneKey()) === "1"; }
 function setDailyDone() { localStorage.setItem(dailyDoneKey(), "1"); }
+
+function saveDailyState() {
+  if (!currentPuzzle) return;
+  const state = {
+    attempts,
+    gameOver,
+    usedNames: Array.from(usedNames)
+  };
+  localStorage.setItem(dailySaveKey(), JSON.stringify(state));
+}
+
+function loadDailyState() {
+  const raw = localStorage.getItem(dailySaveKey());
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
 
 function dailyIndex(key, size) {
   let h = 0;
@@ -151,7 +174,7 @@ function pickPuzzle() {
 function setupDescriptionForCurrentPuzzle() {
   const desc = currentPuzzle?.description || "";
   const words = desc.split(" ");
-  const numSegments = maxAttempts; // Podział na 7 fragmentów
+  const numSegments = maxAttempts; 
   
   descriptionSegments = [];
   for (let i = 0; i < numSegments; i++) {
@@ -184,14 +207,14 @@ function renderDescription() {
     }
   }
   
-
   emotesText.textContent = `"${out.join(" ")}"`;
-
   emotesText.style.fontSize = "1.0rem"; 
   emotesText.style.fontWeight = "400";
+  emotesText.style.fontStyle = "italic";
   emotesText.style.lineHeight = "1.6";
   emotesText.style.padding = "0 10px";
 }
+
 function revealMoreWords() {
   if (revealedSegmentsCount >= maxAttempts) return false;
   revealedSegmentsCount++;
@@ -428,17 +451,52 @@ function resetDaily() {
   if (searchInput) searchInput.value = "";
   closeList();
 
-  if (isDailyDone()) {
+  const savedState = loadDailyState();
+  if (savedState) {
+    attempts = savedState.attempts || 0;
+    gameOver = !!savedState.gameOver;
+    usedNames = new Set(savedState.usedNames || []);
+
+    if (grid) {
+      usedNames.forEach(name => {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.style.gridTemplateColumns = "1fr";
+
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.textContent = name;
+        
+        if (name === currentPuzzle?.name) {
+          cell.classList.add("correct");
+        } else {
+          cell.classList.add("wrong");
+        }
+        row.appendChild(cell);
+        grid.appendChild(row);
+      });
+    }
+  }
+
+  if (isDailyDone() || gameOver) {
     gameOver = true;
     if (statusText) statusText.textContent = "Daily completed. Come back tomorrow.";
-    if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
+    if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
     revealAllWords();
     return;
   }
 
   if (statusText) statusText.textContent = "Which Pathway is this?";
-  if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
+  if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
+
+  if (savedState) {
+    revealedSegmentsCount = Math.min(attempts, maxAttempts - 1);
+  } else {
+    revealedSegmentsCount = 0;
+  }
+  
   revealMoreWords();
+  saveDailyState();
 }
 
 function makeGuess(name) {
@@ -446,6 +504,7 @@ function makeGuess(name) {
   if (usedNames.has(name)) return;
 
   usedNames.add(name);
+  attempts++;
 
   const row = document.createElement("div");
   row.className = "row";
@@ -460,11 +519,13 @@ function makeGuess(name) {
   if (correct) {
     cell.classList.add("correct");
     if (statusText) statusText.textContent = `Correct! It was ${currentPuzzle.name}.`;
+    if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
 
     row.appendChild(cell);
     if (grid) grid.appendChild(row);
 
     gameOver = true;
+    saveDailyState();
     showEndScreen(true);
     return;
   }
@@ -475,7 +536,6 @@ function makeGuess(name) {
   row.appendChild(cell);
   if (grid) grid.appendChild(row);
 
-  attempts++;
   if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
 
   revealMoreWords();
@@ -483,9 +543,12 @@ function makeGuess(name) {
   if (attempts >= maxAttempts) {
     if (statusText) statusText.textContent = `Game Over. It was ${currentPuzzle?.name || "???"}.`;
     gameOver = true;
+    saveDailyState();
     showEndScreen(false);
     return;
   }
+
+  saveDailyState();
 }
 
 function openLb() {

@@ -61,7 +61,7 @@ const characters = [
   { name: "Katarina Pelle", age: "4th Epoch", gender: "Female", pathway: "Demoness", sequence: "3", factions: ["Demoness Sect"], firstChapter: "199", diff: "normal" },
   { name: "Lanevus", age: "5th Epoch", gender: "Male", pathway: "Error", sequence: "8", factions: ["Aurora Order", "True Creator Faction"], firstChapter: "46", diff: "normal" },
   { name: "Lovia Tiffany", age: "5th Epoch", gender: "Female", pathway: "Hanged Man", sequence: "4", factions: ["City of Silver"], firstChapter: "202", diff: "normal" },
-  { name: "Maric", age: "5th Epoch", gender: "Male", pathway: "Chained", sequence: "4", factions: ["Church of the Fool", "Rose School"], firstChapter: "233", diff: "normal" },
+  { name: "Maric", age: "5th Epoch", gender: "Male", pathway: "Chained", sequence: "5", factions: ["Church of the Fool", "Rose School"], firstChapter: "233", diff: "normal" },
   { name: "Medici", age: "3rd Epoch", gender: "Male", pathway: "Red Priest", sequence: "1", factions: ["King of Angels", "Rose Redemption"], firstChapter: "486", diff: "easy" },
   { name: "Mobet Zoroast", age: "4th Epoch", gender: "Male", pathway: "Error", sequence: "5", factions: ["Groselle's Travels", "Elves"], firstChapter: "697", diff: "normal" },
   { name: "Old Neil", age: "5th Epoch", gender: "Male", pathway: "Hermit", sequence: "9", factions: ["Nighthawks"], firstChapter: "25", diff: "easy" },
