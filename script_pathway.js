@@ -1,11 +1,7 @@
 // script_pathway.js 
-
-// imports
 import { auth, submitScoreLoggedIn, loadLeaderboardLoggedIn, submitDailyResultLoggedIn } from "./leaderboard.js";
-
 import { initTheme } from "./theme.js";
 
-// data
 const pathways = [
   { name: "Fool", emotes: ["🃏", "🌫️", "🕯️", "🕵️", "🎭", "🪞", "🗝️", "🕰️", "🧩", "🪶"] },
   { name: "Door", emotes: ["🚪", "🗝️", "🧳", "🌌", "🌀", "📍", "🧭", "🧿", "🛰️", "🧱"] },
@@ -30,14 +26,11 @@ const pathways = [
   { name: "Wheel of Fortune", emotes: ["🎡", "🍀", "🐍", "⏳", "🧿", "🔁", "🪙", "🌀", "🕰️", "🎲"] },
 ];
 
-// leaderboard elements
 const lbBtn = document.getElementById("leaderboardBtn");
 const lbOverlay = document.getElementById("leaderboardOverlay");
 const lbCloseBtn = document.getElementById("closeLeaderboard");
 const lbDailyBtn = document.getElementById("lbDailyBtn");
 
-
-// overlays
 const howBtn = document.getElementById("howBtn");
 const howOverlay = document.getElementById("howOverlay");
 const howCloseBtn = document.getElementById("howCloseBtn");
@@ -50,9 +43,6 @@ const patchBtn = document.getElementById("patchBtn");
 const patchOverlay = document.getElementById("patchOverlay");
 const patchCloseBtn = document.getElementById("patchCloseBtn");
 
-// game elements
-let mode = localStorage.getItem("lotmdle_pathway_mode") || "daily";
-
 const grid = document.getElementById("grid");
 const list = document.getElementById("list");
 const searchInput = document.getElementById("searchInput");
@@ -62,18 +52,13 @@ const statusText = document.getElementById("statusText");
 const attemptsText = document.getElementById("attemptsText");
 const emotesText = document.getElementById("emotesText");
 
-const dailyBtn = document.getElementById("dailyBtn");
-const PractiseBtn = document.getElementById("PractiseBtn");
-
 const endOverlay = document.getElementById("endOverlay");
 const endTitle = document.getElementById("endTitle");
 const endDesc = document.getElementById("endDesc");
 const playAgainBtn = document.getElementById("playAgainBtn");
 const closeOverlayBtn = document.getElementById("closeOverlayBtn");
 
-// state
 const maxAttempts = 7;
-
 let attempts = 0;
 let gameOver = false;
 let usedNames = new Set();
@@ -85,24 +70,30 @@ let remainingEmotes = [];
 
 function updateSuggestions() {
   if (!list || !searchInput) return;
-
   const q = searchInput.value.trim().toLowerCase();
+  
   if (!q) {
     closeList();
     return;
   }
 
-  currentSuggestions = pathways
-    .filter((p) => p.name.toLowerCase().includes(q))
-    .slice(0, 30);
+  let matched = characters.filter(c => c.name.toLowerCase().includes(q));
 
+  matched.sort((a, b) => {
+    const aStarts = a.name.toLowerCase().startsWith(q);
+    const bStarts = b.name.toLowerCase().startsWith(q);
+    
+    if (aStarts && !bStarts) return -1;
+    if (!aStarts && bStarts) return 1;
+    return 0;
+  });
+
+  currentSuggestions = matched.slice(0, 30);
   renderList(currentSuggestions);
-
-  if (currentSuggestions.length > 0) openList();
+  
+  if (currentSuggestions.length > 0) openList(); 
   else closeList();
 }
-
-// ===== daily helpers
 function todayKey() {
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -111,17 +102,9 @@ function todayKey() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function dailyDoneKey() {
-  return `lotmdle_pathway_daily_done_${todayKey()}`;
-}
-
-function isDailyDone() {
-  return localStorage.getItem(dailyDoneKey()) === "1";
-}
-
-function setDailyDone() {
-  localStorage.setItem(dailyDoneKey(), "1");
-}
+function dailyDoneKey() { return `lotmdle_pathway_daily_done_${todayKey()}`; }
+function isDailyDone() { return localStorage.getItem(dailyDoneKey()) === "1"; }
+function setDailyDone() { localStorage.setItem(dailyDoneKey(), "1"); }
 
 function dailyIndex(key, size) {
   let h = 0;
@@ -129,7 +112,6 @@ function dailyIndex(key, size) {
   return h % size;
 }
 
-// ===== rng 
 function hash32(str) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -160,65 +142,9 @@ function seededShuffle(arr, seedStr) {
   return a;
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-
-function infSaveKey() {
-  return "lotmdle_pathway_inf_save_v1";
-}
-
-function savePractiseState() {
-  if (mode !== "Practise") return;
-  if (!currentPuzzle) return;
-
-  const rows = Array.from(grid?.children || []);
-  const guesses = rows.map((row) => {
-    const cell = row.querySelector(".cell");
-    return {
-      text: cell?.textContent || "",
-      cls: cell?.className || "cell",
-    };
-  });
-
-  const payload = {
-    puzzleName: currentPuzzle.name,
-    attempts,
-    gameOver,
-    usedNames: Array.from(usedNames),
-    revealedEmotes,
-    remainingEmotes,
-    guesses,
-  };
-
-  localStorage.setItem(infSaveKey(), JSON.stringify(payload));
-}
-
-function clearPractiseState() {
-  localStorage.removeItem(infSaveKey());
-}
-
-function loadPractiseState() {
-  const raw = localStorage.getItem(infSaveKey());
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-
 function pickPuzzle() {
   if (!pathways || pathways.length === 0) return { name: "Error", emotes: ["❌"] };
-  if (mode === "daily") return pathways[dailyIndex(todayKey(), pathways.length)];
-  return pathways[Math.floor(Math.random() * pathways.length)];
+  return pathways[dailyIndex(todayKey(), pathways.length)];
 }
 
 function renderEmotes() {
@@ -241,41 +167,24 @@ function revealAllEmotes() {
 function setupEmotesForCurrentPuzzle() {
   const base = (currentPuzzle?.emotes || []).filter(Boolean);
   revealedEmotes = [];
-
-  if (mode === "daily") {
-    remainingEmotes = seededShuffle(base, `${todayKey()}|${currentPuzzle?.name || ""}`);
-  } else {
-    remainingEmotes = shuffle(base);
-  }
+  remainingEmotes = seededShuffle(base, `${todayKey()}|${currentPuzzle?.name || ""}`);
 }
 
-function openList() {
-  if (list) list.classList.remove("hidden");
-}
-
-function closeList() {
-  if (list) list.classList.add("hidden");
-}
+function openList() { if (list) list.classList.remove("hidden"); }
+function closeList() { if (list) list.classList.add("hidden"); }
 
 function streakKeyPathwayDaily() {
-  const uid = auth.currentUser?.uid || "guest";
+  const uid = auth?.currentUser?.uid || "guest";
   return `lotmdle_pathway_dailystreak_${uid}`;
-}
-
-function streakKeyPathwayInf() {
-  const uid = auth.currentUser?.uid || "guest";
-  return `lotmdle_pathway_infstreak_${uid}`;
 }
 
 function renderList(items) {
   if (!list) return;
   list.innerHTML = "";
-
   items.forEach((p) => {
     const div = document.createElement("div");
     div.className = "list-item";
     div.textContent = p.name;
-
     if (usedNames.has(p.name) || gameOver) {
       div.classList.add("used");
       div.onclick = null;
@@ -288,15 +197,13 @@ function renderList(items) {
         closeList();
       };
     }
-
     list.appendChild(div);
   });
 }
 
 async function updateStreak(won) {
-  const streakKey = mode === "daily" ? streakKeyPathwayDaily() : streakKeyPathwayInf();
+  const streakKey = streakKeyPathwayDaily();
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
-
   if (won) {
     current++;
     localStorage.setItem(streakKey, String(current));
@@ -305,46 +212,19 @@ async function updateStreak(won) {
   }
 }
 
-
-
-
-
-function syncModeUI() {
-  if (dailyBtn) dailyBtn.classList.toggle("is-active", mode === "daily");
-  if (PractiseBtn) PractiseBtn.classList.toggle("is-active", mode !== "daily");
-}
-
-function setMode(newMode) {
-  if (mode === newMode) return;
-  mode = newMode;
-  localStorage.setItem("lotmdle_pathway_mode", mode);
-
-  syncModeUI();
-
-  if (mode === "Practise") startPractise({ forceNew: false });
-  else resetDaily();
-}
-
-
 function hideEndScreen() {
   clearInterval(window.__lotmdleNextDailyTimerPathway);
   if (endOverlay) endOverlay.classList.add("hidden");
 }
 
-
-
-
 function renderShareTiles(won) {
   const shareEl = document.getElementById("owShare");
   if (!shareEl) return;
-
   shareEl.innerHTML = "";
   const total = Math.min(maxAttempts, 7);
-
   for (let i = 0; i < total; i++) {
     const t = document.createElement("div");
     t.className = "ow-tile";
-
     if (i < attempts) {
       if (won && i === attempts - 1) t.classList.add("correct");
       else t.classList.add("wrong");
@@ -352,7 +232,6 @@ function renderShareTiles(won) {
       t.classList.add("wrong");
       t.style.opacity = "0.35";
     }
-
     shareEl.appendChild(t);
   }
 }
@@ -366,19 +245,18 @@ function showEndScreen(won) {
   renderShareTiles(won);
   updateStreak(won).catch(console.warn);
 
-if (mode === "daily") {
-  const u = auth.currentUser;
+  const u = auth?.currentUser;
   if (u) {
     const current = parseInt(localStorage.getItem(streakKeyPathwayDaily()) || "0", 10);
-    submitDailyResultLoggedIn({
-      mode: "dailypathwayemotes",
-      didWin: !!won,
-      playedKey: todayKey(),
-      currentStreakAfter: won ? current : 0,
-    }).catch(console.warn);
+    if (typeof submitDailyResultLoggedIn === "function") {
+      submitDailyResultLoggedIn({
+        mode: "dailypathway",
+        didWin: !!won,
+        playedKey: todayKey(),
+        currentStreakAfter: won ? current : 0,
+      }).catch(console.warn);
+    }
   }
-}
-
 
   const triesEl = document.getElementById("owTries");
   const maxEl = document.getElementById("owMax");
@@ -386,23 +264,13 @@ if (mode === "daily") {
 
   if (triesEl) triesEl.textContent = String(attempts);
   if (maxEl) maxEl.textContent = String(maxAttempts);
-  if (modeEl) modeEl.textContent = mode === "daily" ? "DAILY" : "PATHWAY";
+  if (modeEl) modeEl.textContent = "DAILY";
 
-  if (mode === "daily") {
-    setDailyDone();
-    if (playAgainBtn) {
-      playAgainBtn.disabled = true;
-      playAgainBtn.textContent = "Come back tomorrow";
-    }
-  } else {
-    clearInfiniteState();
-    if (playAgainBtn) {
-      playAgainBtn.disabled = false;
-      playAgainBtn.textContent = "Play again";
-    }
+  setDailyDone();
+  if (playAgainBtn) {
+    playAgainBtn.disabled = true;
+    playAgainBtn.textContent = "Come back tomorrow";
   }
-
-
 
   const keyForOffsetDays = (offset) => {
     const d = new Date();
@@ -434,7 +302,6 @@ if (mode === "daily") {
     return next - now;
   };
 
- 
   const badge = document.getElementById("owBadge");
   if (badge) {
     badge.textContent = won ? "WIN" : "LOSE";
@@ -442,33 +309,21 @@ if (mode === "daily") {
     badge.classList.toggle("lose", !won);
   }
 
-
   const ydEl = document.getElementById("yesterdayDaily");
   if (ydEl) {
-    if (mode === "daily") {
-      const yKey = keyForOffsetDays(-1);
-      const yP = pickDailyPuzzleForKey(yKey);
-      ydEl.textContent = yP?.name ?? "—";
-    } else {
-      ydEl.textContent = "—";
-    }
+    const yKey = keyForOffsetDays(-1);
+    const yP = pickDailyPuzzleForKey(yKey);
+    ydEl.textContent = yP?.name ?? "—";
   }
-
 
   const nextEl = document.getElementById("nextDailyIn");
   if (nextEl) {
-    if (mode === "daily") {
+    nextEl.textContent = msToHMS(msToNextLocalMidnight());
+    clearInterval(window.__lotmdleNextDailyTimerPathway);
+    window.__lotmdleNextDailyTimerPathway = setInterval(() => {
       nextEl.textContent = msToHMS(msToNextLocalMidnight());
-      clearInterval(window.__lotmdleNextDailyTimerPathway);
-      window.__lotmdleNextDailyTimerPathway = setInterval(() => {
-        nextEl.textContent = msToHMS(msToNextLocalMidnight());
-      }, 1000);
-    } else {
-      nextEl.textContent = "—";
-      clearInterval(window.__lotmdleNextDailyTimerPathway);
-    }
+    }, 1000);
   }
-
 
   const endXBtn = document.getElementById("endXBtn");
   if (endXBtn) {
@@ -478,21 +333,15 @@ if (mode === "daily") {
     };
   }
 
-
   const toast = document.getElementById("owToast");
   const copyBtn = document.getElementById("copyResultBtn");
   const openLbBtn = document.getElementById("openLbBtn");
 
-  const pageUrl =
-    (location && location.origin ? location.origin : "") +
-    (location && location.pathname ? location.pathname : "");
-
-  const shareText =
-    `LOTMDLE PATHWAY ${mode === "daily" ? "DAILY" : "PRACTISE"}: ` +
+  const pageUrl = (location && location.origin ? location.origin : "") + (location && location.pathname ? location.pathname : "");
+  const shareText = `LOTMDLE PATHWAY DAILY: ` +
     `${won ? "WIN" : "LOSE"} (${attempts}/${maxAttempts})\n` +
     `Pathway: ${currentPuzzle?.name ?? "???"}\n` +
-    (mode === "daily" ? `Yesterday daily: ${ydEl?.textContent ?? "—"}\n` : "") +
-    pageUrl;
+    `Yesterday daily: ${ydEl?.textContent ?? "—"}\n` + pageUrl;
 
   const showToast = (msg) => {
     if (!toast) return;
@@ -521,12 +370,10 @@ if (mode === "daily") {
   }
 }
 
-
-
 function resetDaily() {
   hideEndScreen();
 
-  currentPuzzle = pathways[dailyIndex(todayKey(), pathways.length)];
+  currentPuzzle = pickPuzzle();
   attempts = 0;
   gameOver = false;
   usedNames = new Set();
@@ -550,70 +397,6 @@ function resetDaily() {
   if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
   revealOneMoreEmote();
 }
-
-function startPractise({ forceNew = false } = {}) {
-  hideEndScreen();
-
-  if (!forceNew) {
-    const s = loadPractiseState();
-
-    if (s && s.puzzleName) {
-      const p = pathways.find((x) => x.name === s.puzzleName);
-      if (p) {
-        currentPuzzle = p;
-        attempts = typeof s.attempts === "number" ? s.attempts : 0;
-        gameOver = !!s.gameOver;
-        usedNames = new Set(Array.isArray(s.usedNames) ? s.usedNames : []);
-        revealedEmotes = Array.isArray(s.revealedEmotes) ? s.revealedEmotes : [];
-        remainingEmotes = Array.isArray(s.remainingEmotes) ? s.remainingEmotes : [];
-        currentSuggestions = [];
-
-        if (grid) {
-          grid.innerHTML = "";
-          const guesses = Array.isArray(s.guesses) ? s.guesses : [];
-          guesses.forEach((g) => {
-            const row = document.createElement("div");
-            row.className = "row";
-            row.style.gridTemplateColumns = "1fr";
-
-            const cell = document.createElement("div");
-            cell.className = g.cls || "cell wrong";
-            cell.textContent = g.text || "";
-
-            row.appendChild(cell);
-            grid.appendChild(row);
-          });
-        }
-
-        renderEmotes();
-        if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
-        if (statusText)
-          statusText.textContent = gameOver ? "Game finished." : "Which Pathway is this?";
-        if (searchInput) searchInput.value = "";
-        closeList();
-        return;
-      }
-    }
-  }
-
-  attempts = 0;
-  gameOver = false;
-  usedNames = new Set();
-  currentSuggestions = [];
-
-  currentPuzzle = pickPuzzle();
-  setupEmotesForCurrentPuzzle();
-
-  if (grid) grid.innerHTML = "";
-  if (statusText) statusText.textContent = "Which Pathway is this?";
-  if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
-  if (searchInput) searchInput.value = "";
-  closeList();
-
-  revealOneMoreEmote();
-  savePractiseState();
-}
-
 
 function makeGuess(name) {
   if (gameOver || attempts >= maxAttempts) return;
@@ -639,7 +422,6 @@ function makeGuess(name) {
     if (grid) grid.appendChild(row);
 
     gameOver = true;
-    if (mode === "Practise") savePractiseState();
     showEndScreen(true);
     return;
   }
@@ -658,46 +440,31 @@ function makeGuess(name) {
   if (attempts >= maxAttempts) {
     if (statusText) statusText.textContent = `Game Over. It was ${currentPuzzle?.name || "???"}.`;
     gameOver = true;
-    if (mode === "Practise") savePractiseState();
     showEndScreen(false);
     return;
   }
-
-  if (mode === "Practise") savePractiseState();
 }
 
 function openLb() {
   if (!lbOverlay) return;
   lbOverlay.classList.remove("hidden");
-
   lbDailyBtn?.classList.add("is-active");
-
-  loadLeaderboardLoggedIn("dailypathwayemotes");
+  if (typeof loadLeaderboardLoggedIn === "function") loadLeaderboardLoggedIn("dailypathway");
 }
-
 
 if (lbBtn) lbBtn.addEventListener("click", openLb);
-
-if (lbCloseBtn && lbOverlay) {
-  lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
-}
-
+if (lbCloseBtn && lbOverlay) lbCloseBtn.addEventListener("click", () => lbOverlay.classList.add("hidden"));
 if (lbOverlay) {
   lbOverlay.addEventListener("click", (e) => {
     if (e.target === lbOverlay) lbOverlay.classList.add("hidden");
   });
 }
-
 if (lbDailyBtn) {
   lbDailyBtn.addEventListener("click", () => {
     lbDailyBtn.classList.add("is-active");
-    loadLeaderboardLoggedIn("dailypathwayemotes");
+  if (typeof loadLeaderboardLoggedIn === "function") loadLeaderboardLoggedIn("dailypathway");
   });
 }
-
-
-
-
 
 if (howBtn && howOverlay) howBtn.onclick = () => howOverlay.classList.remove("hidden");
 if (howCloseBtn && howOverlay) howCloseBtn.onclick = () => howOverlay.classList.add("hidden");
@@ -706,8 +473,7 @@ if (howOverlay) howOverlay.onclick = (e) => {
 };
 
 if (feedbackBtn && feedbackOverlay) feedbackBtn.onclick = () => feedbackOverlay.classList.remove("hidden");
-if (feedbackCloseBtn && feedbackOverlay)
-  feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
+if (feedbackCloseBtn && feedbackOverlay) feedbackCloseBtn.onclick = () => feedbackOverlay.classList.add("hidden");
 if (feedbackOverlay) feedbackOverlay.onclick = (e) => {
   if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden");
 };
@@ -718,27 +484,20 @@ if (patchOverlay) patchOverlay.onclick = (e) => {
   if (e.target === patchOverlay) patchOverlay.classList.add("hidden");
 };
 
-
-if (dailyBtn) dailyBtn.onclick = () => setMode("daily");
-if (PractiseBtn) PractiseBtn.onclick = () => setMode("Practise");
-
 if (playAgainBtn) {
   playAgainBtn.onclick = () => {
-    if (mode === "Practise") startPractise({ forceNew: true });
-    else resetDaily();
+    resetDaily();
   };
 }
 
 if (closeOverlayBtn) closeOverlayBtn.onclick = () => {
-  if (mode === "Practise" && gameOver) startPractise({ forceNew: true });
-  else hideEndScreen();
+  hideEndScreen();
 };
 
 if (endOverlay) {
   endOverlay.addEventListener("click", (e) => {
     if (e.target !== endOverlay) return;
-    if (mode === "Practise" && gameOver) startPractise({ forceNew: true });
-    else hideEndScreen();
+    hideEndScreen();
   });
 }
 
@@ -788,30 +547,6 @@ if (guessBtn) {
     closeList();
   };
 }
-(function practiseHardResetOnce() {
-  const KEY = "lotmdleclassic_practise_hard_reset_v2"; 
-  if (localStorage.getItem(KEY) === "1") return;
-  localStorage.setItem(KEY, "1");
-  clearPractiseState(); 
-})();
 
-
-initTheme();
-syncModeUI();
-
-const ONCE_KEY = "lotmdle_practise_force_new_once_v1";
-
-
-
-
-if (mode === "Practise") {
-  if (localStorage.getItem(ONCE_KEY) !== "1") {
-    localStorage.setItem(ONCE_KEY, "1");
-    startPractise({ forceNew: true });
-  } else {
-    startPractise({ forceNew: false });
-  }
-} else {
-  resetDaily();
-}
-
+if (typeof initTheme === "function") initTheme();
+resetDaily();

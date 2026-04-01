@@ -191,7 +191,7 @@
         </div>
         <div class="mode-tags">
           <span class="tag">Daily</span>
-          <span class="tag">Practise</span>
+     
         </div>
       </a>
 
@@ -205,7 +205,7 @@
         </div>
         <div class="mode-tags">
           <span class="tag">Daily</span>
-          <span class="tag">Practise</span>
+     
         </div>
       </a>
 
@@ -219,7 +219,7 @@
         </div>
         <div class="mode-tags">
           <span class="tag">Daily</span>
-          <span class="tag">Practise</span>
+
         </div>
       </a>
 
@@ -588,5 +588,11 @@
     import { initTheme } from "./theme.js";
     initTheme();
   </script>
+  <script>
+  (function() {
+    const savedTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
+    document.documentElement.className = savedTheme;
+  })();
+</script>
 </body>
 </html>

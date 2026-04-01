@@ -96,7 +96,7 @@
                         <button class="mode-btn is-active" id="dailyBtn">DAILY</button>
                     </div>
                     <div class="mode-secondary">
-                        <button class="mode-btn" id="PractiseBtn">PRACTISE</button>
+                      
                     </div>
                 </div>
 
@@ -183,7 +183,12 @@
 
   <script type="module" src="script_pathway.js"></script>
   
-
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
+    document.documentElement.className = savedTheme;
+  })();
+</script>
   <script>
 
     const b = document.getElementById("closeOverlayBtn2");

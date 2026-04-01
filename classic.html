@@ -75,7 +75,6 @@
                         <button class="mode-btn is-active" id="dailyBtn">DAILY</button>
                     </div>
                     <div class="mode-secondary">
-                        <button class="mode-btn" id="PractiseBtn">PRACTISE</button>
                     </div>
                 </div>  
 
@@ -110,7 +109,7 @@
      
             <div class="game-status">
                 <span id="statusText">Select a character to start</span>
-                <span id="attemptsText">Attempts: 0 / 7</span>
+                <span id="attemptsText">Attempts: 0 / 10</span>
             </div>
         </div>
     </div>
@@ -119,7 +118,7 @@
     <div class="overlay hidden" id="howOverlay">
         <div class="overlay-card">
             <h2>How to Play</h2>
-            <p>Select a character from the list. You have 7 tries.</p>
+            <p>Select a character from the list. You have 10 tries.</p>
             <p><strong style="color: var(--good)">Green:</strong> correct. <strong style="color: var(--mid)">Yellow:</strong> close/partial (e.g. sequence ±1, same pathway group). <strong style="color: var(--muted)">Gray:</strong> wrong.</p>
             <p>In FIRST CHAPTER arrows show if your guess is too low (↑) or too high (↓).</p>
             <div class="overlay-actions">
@@ -178,7 +177,7 @@
         <div class="ow-stat-label">TRIES</div>
       </div>
       <div class="ow-stat">
-        <div class="ow-stat-num" id="owMax">7</div>
+        <div class="ow-stat-num" id="owMax">10</div>
         <div class="ow-stat-label">MAX</div>
       </div>
       <div class="ow-stat">
@@ -206,6 +205,11 @@
   import { initTheme } from "./theme.js";
   initTheme();
 </script>
-
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("lotmdle_theme") || "theme-lotm";
+    document.documentElement.className = savedTheme;
+  })();
+</script>
 </body>
 </html>
