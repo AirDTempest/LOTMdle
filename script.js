@@ -28,7 +28,7 @@ const characters = [
   { name: "Sherlock Moriarty", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "6", factions: ["Loen Kingdom", "Backlund City", "Tarot Club", "The Fool's Blessed"], firstChapter: "214", diff: "easy" },
   { name: "Hero Bandit Black Emperor", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "7", factions: ["Loen Kingdom", "Tarot Club", "The Fool's Blessed"], firstChapter: "443", diff: "easy" },
   { name: "Gehrman Sparrow", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "1", factions: ["Rorsted Archipelago", "Tarot Club", "The Fool's Blessed", "Treasure Hunter"], firstChapter: "483", diff: "easy" },
-  { name: "Dwayne Dants", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "4", factions: ["Southern Continent", "Backlund City", "Tarot Club"], firstChapter: "783", diff: "easy" },
+  { name: "Dwayne Dantès", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "4", factions: ["Southern Continent", "Backlund City", "Tarot Club"], firstChapter: "783", diff: "easy" },
   { name: "Merlin Hermes", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "2", factions: ["Intis Republic", "Tarot Club", "The Fool's Blessed"], firstChapter: "1276", diff: "easy" },
   { name: "The Fool", age: "5th Epoch", gender: "Male", pathway: "Fool, Error, Door", sequence: "Above the Sequences", factions: ["Tarot Club", "The Gray Fog", "Church of the Fool"], firstChapter: "7", diff: "easy" },
   { name: "Alger Wilson", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: "3", factions: ["Tarot Club", "Church of Storms", "Church of the Fool"], firstChapter: "5", diff: "easy" },
