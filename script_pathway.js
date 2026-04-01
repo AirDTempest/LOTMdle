@@ -1,29 +1,28 @@
-// script_pathway.js 
 import { auth, submitScoreLoggedIn, loadLeaderboardLoggedIn, submitDailyResultLoggedIn } from "./leaderboard.js";
 import { initTheme } from "./theme.js";
 
 const pathways = [
-  { name: "Fool", emotes: ["🃏", "🌫️", "🕯️", "🕵️", "🎭", "🪞", "🗝️", "🕰️", "🧩", "🪶"] },
-  { name: "Door", emotes: ["🚪", "🗝️", "🧳", "🌌", "🌀", "📍", "🧭", "🧿", "🛰️", "🧱"] },
-  { name: "Error", emotes: ["🧐", "🪙", "🌀", "🎭", "🕳️", "🪞", "🔁", "🧩", "🕰️", "🃏"] },
-  { name: "Visionary", emotes: ["👁️", "🧠", "💭", "🎬", "🪄", "🪞", "🧩", "📖", "🎭", "🕯️"] },
-  { name: "Tyrant", emotes: ["⚡", "🌊", "🌪️", "⛈️", "🔱", "🛳️", "🌩️", "💥", "🪨", "🌀"] },
-  { name: "Sun", emotes: ["☀️", "✨", "🔥", "🙏", "🕯️", "🛡️", "🌅", "📜", "🪽", "💛"] },
-  { name: "Darkness", emotes: ["🌙", "🕯️", "😴", "🕳️", "🌑", "🛏️", "🦉", "🖤", "🌫️", "🔕"] },
-  { name: "Death", emotes: ["⚰️", "🦴", "🕸️", "🪦", "💀", "🕯️", "🗝️", "🪶", "🧟", "🌫️"] },
-  { name: "Red Priest", emotes: ["🩸", "⚔️", "🔥", "🎺", "🪖", "🏹", "💥", "🧨", "🪓", "🏴"] },
-  { name: "Demoness", emotes: ["💄", "🕷️", "🌹", "😈", "🩸", "🪞", "🧪", "🖤", "🎭", "🪡"] },
-  { name: "Black Emperor", emotes: ["👑", "⚖️", "🖋️", "🏛️", "📜", "🧿", "🪙", "🕳️", "🧱", "🗝️"] },
-  { name: "Hermit", emotes: ["📚", "🔮", "🧪", "🧩", "🧠", "🕯️", "📜", "🧿", "🗝️", "🪶"] },
-  { name: "Paragon", emotes: ["⚙️", "🔧", "🧠", "🏭", "🧪", "📐", "🪛", "🔩", "🛰️", "🔋"] },
-  { name: "Moon", emotes: ["🌙", "🩸", "🧸", "🧛", "🦇", "🕯️", "🥀", "🖤", "🪞", "🍷"] },
-  { name: "Mother", emotes: ["🌱", "🧬", "🌍", "🤱", "🍃", "🌸", "🐝", "🍄", "🫀", "🧪"] },
-  { name: "Chained", emotes: ["⛓️", "🕳️", "🐺", "🩸", "🔒", "🖤", "🪝", "🕯️", "🌫️", "🧿"] },
-  { name: "Hanged Man", emotes: ["🪢", "🪝", "🩸", "🎪", "🕯️", "🖤", "🫀", "🧿", "🌫️", "🩻"] },
-  { name: "Twilight Giant", emotes: ["🗡️", "🛡️", "🗿", "🌄", "🏔️", "⚔️", "🪨", "🦴", "🌅", "👣"] },
-  { name: "White Tower", emotes: ["🏰", "📖", "👓", "🔦", "📚", "🧠", "🕯️", "📜", "🧩", "🪶"] },
-  { name: "Justiciar", emotes: ["⚖️", "📜", "👮♂️", "🔒", "🏛️", "🖋️", "🧿", "🧱", "🪙", "🕯️"] },
-  { name: "Wheel of Fortune", emotes: ["🎡", "🍀", "🐍", "⏳", "🧿", "🔁", "🪙", "🌀", "🕰️", "🎲"] },
+  { name: "Fool", description: "This pathway represents the authority over history, time, and change. High-level Beyonders can summon Historical Void projections, perform terrifying miracles, and effortlessly fool fate, time, and history itself. Its sequences are often associated with divination, magic tricks, bizarre occurrences, and the power to resurrect from the dead." },
+  { name: "Door", description: "Known for the ultimate mastery over space, sealing, and wandering. Beyonders of this route can travel through the cosmos, record and replicate other people's Beyonder powers, and pass through any physical or conceptual barrier. They are scholars of the starry sky and the ultimate escape artists." },
+  { name: "Error", description: "The pathway of deception, time-theft, and paradoxes. Its Beyonders specialize in stealing powers, thoughts, destinies, and even the lifespans of others. They are swindlers of the highest order, capable of exploiting loopholes in the rules of the world and creating countless avatars." },
+  { name: "Visionary", description: "This route revolves around the mind, dreams, and the power of imagination. Its followers can manipulate human consciousness, implant psychological cues, and eventually turn imagined things into reality. They orchestrate the tides of the times behind the scenes, treating the world as their personal theater." },
+  { name: "Tyrant", description: "The embodiment of extreme power, storms, oceans, and lightning. Followers of this route possess terrifying physical destruction capabilities, commanding the weather and dominating the seas. They are irascible, domineering, and often act as the absolute rulers of the oceans." },
+  { name: "Sun", description: "A pathway of purification, light, and oaths. Its Beyonders are the nemesis of the undead and evil spirits, wielding holy light to cleanse corruption. They can create powerful buffs, enforce unbreakable contracts, and eventually become a miniature sun that illuminates the darkness." },
+  { name: "Darkness", description: "Associated with night, sleep, concealment, and serenity. Followers of this route can drag enemies into deep slumber, manipulate bad luck, and erase concepts from reality using absolute concealment. They find comfort in the dark and hold authority over the resting dead." },
+  { name: "Death", description: "The masters of the Underworld and spirits. They can command the undead, induce decay and death, and communicate directly with spirits. At higher levels, they become immortal entities, turning their surroundings into a realm of the dead where no living thing can survive." },
+  { name: "Red Priest", description: "The pathway of war, conspiracy, and destruction. Its Beyonders excel at provoking enemies, manipulating flames, and leading armies into battle. They turn every conflict into a fiery massacre and gain their true power through warfare and the blood of their enemies." },
+  { name: "Demoness", description: "A path of curses, plagues, and deadly allure. It fundamentally changes the gender of its followers to female at higher sequences. They manipulate black flames, ice, invisible threads, and devastating diseases, hiding extreme danger behind an incredibly beautiful and seductive appearance." },
+  { name: "Black Emperor", description: "The embodiment of order, distortion, and loopholes. Beyonders here can distort physical rules, exploit the law, and enforce their own chaotic order upon the world. As long as their nation and rules stand, they can continuously resurrect from their mausoleums." },
+  { name: "Hermit", description: "Deeply connected to esoteric knowledge, mystery, and hidden information. Followers can decipher complex magical rituals, peer into hidden truths, and use fairy tales or mystical knowledge as physical attacks. They are the ultimate sages, but constantly threatened by the madness of raw knowledge." },
+  { name: "Paragon", description: "The pathway of machinery, alchemy, and civilization. Its Beyonders have absolute understanding of tools, physics, and creation. They can infuse life into machines, create miraculous artifacts, and push the boundaries of technological and mystical enlightenment." },
+  { name: "Moon", description: "Tied to vampires, spirituality, and life force. Followers possess immense vitality, mastery over potions, and the ability to control darkness and the moon's phases. They excel in healing, but can also use curses and blood manipulation." },
+  { name: "Mother", description: "The origin of life, nature, and mutation. Beyonders of this route can command plants, breed terrifying biological mutations, and manipulate the flesh and blood of all living creatures. They represent both the nurturing and the terrifying, grotesque sides of raw life." },
+  { name: "Chained", description: "A pathway of extreme temperance, curses, and monstrous transformations. Followers often appear as zombies, wraiths, or puppets. They suppress their desires to gain power, but can unleash them to transform into horrifying, uncontrollable monsters." },
+  { name: "Hanged Man", description: "Associated with flesh, secrets, and degeneration. Its Beyonders can manipulate shadows, corrupt the environment, and use their own flesh and blood for terrifying magical effects. They thrive in the shadows and graze on the souls of others." },
+  { name: "Twilight Giant", description: "The pinnacle of physical combat, decay, and dusk. Followers are heavily armored warriors, wielding giant broadswords and the power of twilight, which accelerates decay. They are unmatched in close combat and represent the inevitable end of all things." },
+  { name: "White Tower", description: "The pathway of omniscience, prophecy, and imitation. Beyonders here can analyze and replicate almost any Beyonder ability they witness. They are ultimate scholars who predict the future, decipher the enemy's weaknesses, and use knowledge as their absolute weapon." },
+  { name: "Justiciar", description: "The enforcers of law and order. They can lay down absolute rules that all within a certain range must follow (e.g., 'No magic allowed here'). They punish rule-breakers and rely on strict discipline and the judgment of their enforced laws." },
+  { name: "Wheel of Fortune", description: "The most unique pathway, revolving entirely around luck, probability, and fate. Its followers are monsters of luck, capable of predicting the future, manipulating fortune, and continuously reincarnating. They do not rely on direct combat, but let fate destroy their enemies." }
 ];
 
 const lbBtn = document.getElementById("leaderboardBtn");
@@ -65,8 +64,9 @@ let usedNames = new Set();
 let currentSuggestions = [];
 
 let currentPuzzle = null;
-let revealedEmotes = [];
-let remainingEmotes = [];
+let descriptionSegments = [];
+let segmentRevealOrder = [];
+let revealedSegmentsCount = 0;
 
 function updateSuggestions() {
   if (!list || !searchInput) return;
@@ -77,7 +77,7 @@ function updateSuggestions() {
     return;
   }
 
-  let matched = characters.filter(c => c.name.toLowerCase().includes(q));
+  let matched = pathways.filter(p => p.name.toLowerCase().includes(q));
 
   matched.sort((a, b) => {
     const aStarts = a.name.toLowerCase().startsWith(q);
@@ -94,6 +94,7 @@ function updateSuggestions() {
   if (currentSuggestions.length > 0) openList(); 
   else closeList();
 }
+
 function todayKey() {
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -109,7 +110,7 @@ function setDailyDone() { localStorage.setItem(dailyDoneKey(), "1"); }
 function dailyIndex(key, size) {
   let h = 0;
   for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
-  return h % size;
+  return Math.abs(h) % size;
 }
 
 function hash32(str) {
@@ -143,31 +144,64 @@ function seededShuffle(arr, seedStr) {
 }
 
 function pickPuzzle() {
-  if (!pathways || pathways.length === 0) return { name: "Error", emotes: ["❌"] };
+  if (!pathways || pathways.length === 0) return { name: "Error", description: "Error loading pathway." };
   return pathways[dailyIndex(todayKey(), pathways.length)];
 }
 
-function renderEmotes() {
-  if (!emotesText) return;
-  emotesText.textContent = revealedEmotes.join(" ");
+function setupDescriptionForCurrentPuzzle() {
+  const desc = currentPuzzle?.description || "";
+  const words = desc.split(" ");
+  const numSegments = maxAttempts; // Podział na 7 fragmentów
+  
+  descriptionSegments = [];
+  for (let i = 0; i < numSegments; i++) {
+    const start = Math.floor((i * words.length) / numSegments);
+    const end = Math.floor(((i + 1) * words.length) / numSegments);
+    descriptionSegments.push(words.slice(start, end));
+  }
+
+  const indices = Array.from({ length: numSegments }, (_, i) => i);
+  segmentRevealOrder = seededShuffle(indices, `${todayKey()}|${currentPuzzle?.name || ""}`);
+  revealedSegmentsCount = 0;
 }
 
-function revealOneMoreEmote() {
-  if (remainingEmotes.length === 0) return false;
-  const next = remainingEmotes.shift();
-  revealedEmotes.push(next);
-  renderEmotes();
+function renderDescription() {
+  if (!emotesText) return;
+  
+  let out = [];
+  let lastHidden = false;
+  const visibleIndices = new Set(segmentRevealOrder.slice(0, revealedSegmentsCount));
+
+  for (let i = 0; i < descriptionSegments.length; i++) {
+    if (visibleIndices.has(i)) {
+      out.push(descriptionSegments[i].join(" "));
+      lastHidden = false;
+    } else {
+      if (!lastHidden) {
+        out.push("[...]");
+        lastHidden = true;
+      }
+    }
+  }
+  
+
+  emotesText.textContent = `"${out.join(" ")}"`;
+
+  emotesText.style.fontSize = "1.0rem"; 
+  emotesText.style.fontWeight = "400";
+  emotesText.style.lineHeight = "1.6";
+  emotesText.style.padding = "0 10px";
+}
+function revealMoreWords() {
+  if (revealedSegmentsCount >= maxAttempts) return false;
+  revealedSegmentsCount++;
+  renderDescription();
   return true;
 }
 
-function revealAllEmotes() {
-  while (revealOneMoreEmote()) {}
-}
-
-function setupEmotesForCurrentPuzzle() {
-  const base = (currentPuzzle?.emotes || []).filter(Boolean);
-  revealedEmotes = [];
-  remainingEmotes = seededShuffle(base, `${todayKey()}|${currentPuzzle?.name || ""}`);
+function revealAllWords() {
+  revealedSegmentsCount = maxAttempts;
+  renderDescription();
 }
 
 function openList() { if (list) list.classList.remove("hidden"); }
@@ -241,7 +275,7 @@ function showEndScreen(won) {
   if (endDesc) endDesc.textContent = `Pathway: ${currentPuzzle?.name ?? "???"}`;
   if (endOverlay) endOverlay.classList.remove("hidden");
 
-  revealAllEmotes();
+  revealAllWords();
   renderShareTiles(won);
   updateStreak(won).catch(console.warn);
 
@@ -354,7 +388,16 @@ function showEndScreen(won) {
   if (copyBtn) {
     copyBtn.onclick = async () => {
       try {
-        await navigator.clipboard.writeText(shareText);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(shareText);
+        } else {
+          const textArea = document.createElement("textarea");
+          textArea.value = shareText;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+        }
         showToast("Copied!");
       } catch {
         alert(shareText);
@@ -379,7 +422,7 @@ function resetDaily() {
   usedNames = new Set();
   currentSuggestions = [];
 
-  setupEmotesForCurrentPuzzle();
+  setupDescriptionForCurrentPuzzle();
 
   if (grid) grid.innerHTML = "";
   if (searchInput) searchInput.value = "";
@@ -389,13 +432,13 @@ function resetDaily() {
     gameOver = true;
     if (statusText) statusText.textContent = "Daily completed. Come back tomorrow.";
     if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
-    revealAllEmotes();
+    revealAllWords();
     return;
   }
 
   if (statusText) statusText.textContent = "Which Pathway is this?";
   if (attemptsText) attemptsText.textContent = `Attempts: 0 / ${maxAttempts}`;
-  revealOneMoreEmote();
+  revealMoreWords();
 }
 
 function makeGuess(name) {
@@ -435,7 +478,7 @@ function makeGuess(name) {
   attempts++;
   if (attemptsText) attemptsText.textContent = `Attempts: ${attempts} / ${maxAttempts}`;
 
-  revealOneMoreEmote();
+  revealMoreWords();
 
   if (attempts >= maxAttempts) {
     if (statusText) statusText.textContent = `Game Over. It was ${currentPuzzle?.name || "???"}.`;

@@ -24,9 +24,10 @@
   <div class="overlay hidden" id="firstRunOverlay">
     <div class="overlay-card">
       <h2>Welcome!</h2>
-      <p>Quick info: You can log in to save stats, streaks, and appear on the leaderboard.</p>
-      <p>New UI :DDD</p>
-      <p>Join discord server: <a href="https://discord.gg/2JkpvR2b9y">DISCORD</a></p>
+      <p>Practise mode is no longer with us [*]
+      </p>
+      <p>Added new characters, repaired some bugs and pathway mode was reworked</p>
+      <p> For more detailed change log join <a href="https://discord.gg/2JkpvR2b9y">discord</a> server: <a href="https://discord.gg/2JkpvR2b9y">DISCORD</a></p>
       <div class="overlay-actions">
         <button class="btn ow-primary" id="firstRunOkBtn" type="button">Got it</button>
       </div>
@@ -214,7 +215,7 @@
           <div class="mode-ico">🗺️</div>
           <div>
             <div class="mode-name">Pathway</div>
-            <div class="mode-desc">Guess the Pathway from emotes.</div>
+            <div class="mode-desc">Guess the Pathway from description.</div>
           </div>
         </div>
         <div class="mode-tags">
@@ -257,7 +258,7 @@
       feedbackOverlay.onclick = (e) => { if (e.target === feedbackOverlay) feedbackOverlay.classList.add("hidden"); };
     }
 
-    const FIRST_RUN_KEY = "lotmdle_first_run_seen_v4";
+    const FIRST_RUN_KEY = "lotmdle_first_run_seen_v5";
     const firstRunOverlay = document.getElementById("firstRunOverlay");
     const firstRunOkBtn = document.getElementById("firstRunOkBtn");
 

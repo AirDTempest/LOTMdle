@@ -21,7 +21,7 @@ body {
     url("bg.png");
 }
 
-/* TEMATY */
+
 
 body.theme-classic {
   --bg: #0a0a0a;
@@ -37,7 +37,7 @@ body.theme-classic {
   --bad: #374151;
   --font-main: 'Poppins', sans-serif;
   --font-head: 'Poppins', sans-serif;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23111" width="100" height="100"/></svg>');
+ 
 }
 
 body.theme-lotm {
