@@ -87,7 +87,7 @@ const characters = [
   { name: "Ray Bieber", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "9", factions: ["Bieber Family", "Antigonus Family", "Loen Kingdom"], firstChapter: "15", diff: "hard" },
   { name: "Hood Eugen", age: "5th Epoch", gender: "Male", pathway: "Visionary", sequence: "7", factions: ["Psychology Alchemists", "Tingen Asylum", "Loen Kingdom"], firstChapter: "67", diff: "hard" },
   { name: "George III", age: "5th Epoch", gender: "Male", pathway: "Black Emperor", sequence: "1", factions: ["Loen Kingdom", "Augustus Family"], firstChapter: "5", diff: "normal" },
-  { name: "Pallas Negan", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: "3", factions: ["Loen Kingdom", "House Negan", "Conservative Party", "Church of Storms"], firstChapter: "18", diff: "hard" },
+  { name: "Pallas Negan", age: "5th Epoch", gender: "Male", pathway: "Justiciar", sequence: "6", factions: ["Loen Kingdom", "House Negan", "Conservative Party", "Church of Storms"], firstChapter: "18", diff: "hard" },
   { name: "Alfred Hall", age: "5th Epoch", gender: "Male", pathway: "Justiciar", sequence: "5", factions: ["Loen Kingdom", "Hall Family", "Loen Military"], firstChapter: "18", diff: "hard" },
   { name: "Father Utravsky", age: "5th Epoch", gender: "Male", pathway: "Twilight Giant", sequence: "6", factions: ["Church of Earth Mother", "Harvest Church", "Feynapotter Kingdom", "Loen Kingdom"], firstChapter: "256", diff: "normal" },
   { name: "Isengard Stanton", age: "5th Epoch", gender: "Male", pathway: "White Tower", sequence: "7", factions: ["Church of the God of Knowledge and Wisdom", "Loen Kingdom"], firstChapter: "305", diff: "normal" },
