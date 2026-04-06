@@ -130,12 +130,6 @@ function loadDailyState() {
   }
 }
 
-function dailyIndex(key, size) {
-  let h = 0;
-  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
-  return Math.abs(h) % size;
-}
-
 function hash32(str) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -154,6 +148,11 @@ function mulberry32(seed) {
     t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function dailyIndex(key, size) {
+  const rand = mulberry32(hash32(key));
+  return Math.floor(rand() * size);
 }
 
 function seededShuffle(arr, seedStr) {
@@ -257,15 +256,28 @@ function renderList(items) {
     list.appendChild(div);
   });
 }
+function dailyWinRecordedKeyPathway() {
+  const uid = auth?.currentUser?.uid || "guest";
+  return `lotmdle_pathway_dailywin_${todayKey()}_${uid}`;
+}
 
 async function updateStreak(won) {
   const streakKey = streakKeyPathwayDaily();
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
+  const winKey = dailyWinRecordedKeyPathway();
+  
+  const alreadyWonToday = localStorage.getItem(winKey) === "1";
+
   if (won) {
-    current++;
-    localStorage.setItem(streakKey, String(current));
+    if (!alreadyWonToday) {
+      current++;
+      localStorage.setItem(streakKey, String(current));
+      localStorage.setItem(winKey, "1");
+    }
   } else {
-    localStorage.setItem(streakKey, "0");
+    if (!alreadyWonToday) {
+      localStorage.setItem(streakKey, "0");
+    }
   }
 }
 
@@ -310,7 +322,7 @@ function showEndScreen(won) {
         mode: "dailypathway",
         didWin: !!won,
         playedKey: todayKey(),
-        currentStreakAfter: won ? current : 0,
+                  currentStreakAfter: current,
       }).catch(console.warn);
     }
   }

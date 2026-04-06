@@ -190,29 +190,29 @@ if (diffHardBtn) {
   diffHardBtn.classList.toggle("is-active", currentDifficulty === "hard");
 }
 
-function todayKey() {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+function hash32(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
 }
 
-function keyForOffsetDays(offset) {
-  const d = new Date();
-  d.setDate(d.getDate() + offset);
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
 function dailyIndex(key, size) {
-  let h = 0;
-  for (let i = 0; i < key.length; i++) {
-    h = (Math.imul(31, h) + key.charCodeAt(i)) | 0;
-  }
-  return Math.abs(h) % size;
+  const rand = mulberry32(hash32(key));
+  return Math.floor(rand() * size);
 }
 
 function pickDailyAnswerForKey(key, diffFilter) {
@@ -240,7 +240,22 @@ function msToNextLocalMidnight() {
   next.setHours(24, 0, 0, 0);
   return next - now;
 }
+function todayKey() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
 
+function keyForOffsetDays(offset) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
 function dailyDoneKey() {
   return `lotmdleclassic_daily_done_${todayKey()}_${currentDifficulty}`;
 }
@@ -483,14 +498,28 @@ function hideEndScreen() {
   clearInterval(window.lotmdleNextDailyTimer);
 }
 
-async function updateStreak(won) {
-  const streakKey = streakKeyDaily();
+function dailyWinRecordedKey() {
+  const uid = auth?.currentUser?.uid || "guest";
+  return `lotmdle_classic_dailywin_${todayKey()}_${uid}_${currentDifficulty}`; 
+}
+
+function updateStreak(won) {
+  const streakKey = streakKeyDaily(); 
   let current = parseInt(localStorage.getItem(streakKey) || "0", 10);
+  const winKey = dailyWinRecordedKey();
+  
+  const alreadyWonToday = localStorage.getItem(winKey) === "1";
+
   if (won) {
-    current++;
-    localStorage.setItem(streakKey, String(current));
+    if (!alreadyWonToday) {
+      current++;
+      localStorage.setItem(streakKey, String(current));
+      localStorage.setItem(winKey, "1");
+    }
   } else {
-    localStorage.setItem(streakKey, "0");
+    if (!alreadyWonToday) {
+      localStorage.setItem(streakKey, "0");
+    }
   }
 }
 
@@ -515,7 +544,7 @@ function showEndScreen(won) {
         mode: `daily_${currentDifficulty}`,
         didWin: !!won,
         playedKey: todayKey(),
-        currentStreakAfter: won ? current : 0,
+                  currentStreakAfter: current,
       }).catch(console.warn);
     }
   }
