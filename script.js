@@ -116,7 +116,7 @@ const characters = [
   { name: "Viscount Stratford", age: "5th Epoch", gender: "Male", pathway: "Justiciar", sequence: "5", factions: ["Loen Kingdom", "Royal Guards", "King George III's Faction"], firstChapter: "768", diff: "hard" },
   { name: "Enzo", age: "5th Epoch", gender: "Male", pathway: "Wheel of Fortune", sequence: "5", factions: ["Southern Continent", "Life School of Thought"], firstChapter: "909", diff: "hard" },
   { name: "Lucca Brewster", age: "5th Epoch", gender: "Male", pathway: "White Tower", sequence: "4", factions: ["West Balam", "Church of the God of Knowledge and Wisdom"], firstChapter: "953", diff: "hard" },
-  { name: "Klarman", age: "5th Epoch", gender: "Male", pathway: "Death", sequence: "4", factions: ["West Balam", "Numinous Episcopate"], firstChapter: "968", diff: "hard" },
+  { name: "Klarman", age: "5th Epoch", gender: "Male", pathway: "Moon", sequence: "4", factions: ["West Balam", "Numinous Episcopate"], firstChapter: "968", diff: "hard" },
   { name: "Sia Palenque Eggers", age: "5th Epoch", gender: "Female", pathway: "Death", sequence: "2", factions: ["Southern Continent", "Numinous Episcopate"], firstChapter: "973", diff: "hard" },
   { name: "Qonas Kilgor", age: "5th Epoch", gender: "Male", pathway: "Black Emperor", sequence: "4", factions: ["Loen Kingdom", "MI9"], firstChapter: "1017", diff: "hard" },
   { name: "Grove Augustus", age: "5th Epoch", gender: "Male", pathway: "Justiciar", sequence: "3", factions: ["Loen Kingdom", "Augustus Family"], firstChapter: "1030", diff: "hard" },
