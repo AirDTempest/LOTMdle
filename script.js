@@ -84,7 +84,7 @@ const characters = [
   { name: "Daxter Goudreau", age: "5th Epoch", gender: "Male", pathway: "Visionary", sequence: "8", factions: ["Psychology Alchemists", "Tingen Asylum", "Loen Kingdom"], firstChapter: "53", diff: "hard" },
   { name: "Madam Sharon", age: "5th Epoch", gender: "Female", pathway: "Demoness", sequence: "6", factions: ["Demoness Sect", "Loen Kingdom"], firstChapter: "116", diff: "hard" },
   { name: "Qilangos", age: "5th Epoch", gender: "Male", pathway: "Tyrant", sequence: "6", factions: ["Sonia Sea", "Pirate Faction", "Twilight Hermit Order"], firstChapter: "56", diff: "hard" },
-  { name: "Ray Bieber", age: "5th Epoch", gender: "Male", pathway: "Fool", sequence: "9", factions: ["Bieber Family", "Antigonus Family", "Loen Kingdom"], firstChapter: "15", diff: "hard" },
+  { name: "Ray Bieber", age: "5th Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Bieber Family", "Antigonus Family", "Loen Kingdom"], firstChapter: "15", diff: "hard" },
   { name: "Hood Eugen", age: "5th Epoch", gender: "Male", pathway: "Visionary", sequence: "7", factions: ["Psychology Alchemists", "Tingen Asylum", "Loen Kingdom"], firstChapter: "67", diff: "hard" },
   { name: "George III", age: "5th Epoch", gender: "Male", pathway: "Black Emperor", sequence: "1", factions: ["Loen Kingdom", "Augustus Family"], firstChapter: "5", diff: "normal" },
   { name: "Pallas Negan", age: "5th Epoch", gender: "Male", pathway: "Justiciar", sequence: "6", factions: ["Loen Kingdom", "House Negan", "Conservative Party", "Church of Storms"], firstChapter: "18", diff: "hard" },
