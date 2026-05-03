@@ -72,7 +72,7 @@ const characters = [
   { name: "Siatas", age: "2nd Epoch", gender: "Female", pathway: "Tyrant", sequence: "5", factions: ["Groselle's Travels", "Elves"], firstChapter: "696", diff: "normal" },
   { name: "Snowman", age: "3rd Epoch", gender: "Male", pathway: "Sun", sequence: "5", factions: ["Groselle's Travels"], firstChapter: "697", diff: "normal" },
   { name: "Sharron", age: "5th Epoch", gender: "Female", pathway: "Chained", sequence: "4", factions: ["Church of the Fool", "Rose School"], firstChapter: "246", diff: "normal" },
-  { name: "Suah", age: "4th Epoch", gender: "Male", pathway: "Chained", sequence: "1", factions: ["Church of the Fool", "Rose School"], firstChapter: "729", diff: "normal" },
+  { name: "Suah", age: "4th Epoch", gender: "Male", pathway: "Chained", sequence: "1", factions: ["Rose School"], firstChapter: "729", diff: "normal" },
   { name: "Susie", age: "5th Epoch", gender: "Female", pathway: "Visionary", sequence: "5", factions: ["None"], firstChapter: "36", diff: "normal" },
   { name: "Trissy", age: "5th Epoch", gender: "Female", pathway: "Demoness", sequence: "4", factions: ["Demoness Sect", "Theosophy Order", "Iron and Blood Cross Order"], firstChapter: "56", diff: "normal" },
   { name: "Will Auceptin", age: "5th Epoch", gender: "Male", pathway: "Wheel of Fortune", sequence: "1", factions: ["Church of the Fool"], firstChapter: "326", diff: "easy" },
