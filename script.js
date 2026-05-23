@@ -138,13 +138,13 @@ const characters = [
   { name: "Edessak Augustus", age: "5th Epoch", gender: "Male", pathway: "Justiciar", sequence: "6", factions: ["Loen Kingdom", "Augustus Family"], firstChapter: "369", diff: "hard" },
   { name: "Butler Walter", age: "5th Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Loen Kingdom", "Dwayne Dants Household"], firstChapter: "738", diff: "hard" },
   { name: "Dio Derecha", age: "5th Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Loen Kingdom"], firstChapter: "1391", diff: "hard" },
-  { name: "Yellow Light Venithan", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" },
+  { name: "Yellow Light Venithan", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "397", diff: "hard" },
   { name: "Blue Light Kuthumi", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" },
   { name: "Green Light Serapis", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" },
   { name: "Indigo Light Iesus", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" },
   { name: "Violet Light Saint Germain", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" },
-  { name: "Orange Light Hilarion", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" },
-  { name: "Red Light Aiur Moria", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "1270", diff: "hard" }
+  { name: "Orange Light Hilarion", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "247", diff: "hard" },
+  { name: "Red Light Aiur Moria", age: "1st Epoch", gender: "Male", pathway: "None", sequence: "None", factions: ["Spirit World", "Seven Lights"], firstChapter: "417", diff: "hard" }
 ];
 
 const pathwayGroups = [
